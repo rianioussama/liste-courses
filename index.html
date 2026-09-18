@@ -431,6 +431,17 @@ button{
 
 }
 
+.category-arrow{
+  font-size:18px;
+  width:24px;
+  text-align:center;
+  flex-shrink:0;
+}
+
+.category-arrow.open{
+  transform:rotate(90deg);
+}
+
 </style>
       
 </head>
@@ -1986,7 +1997,9 @@ if(items.length===0){
 let html=
 '<div class="card category-card" draggable="true" data-id="'+cat.id+'">'+
 '<div class="row category-header" onclick="toggleCategory('+cat.id+')">'+
-(cat.collapsed ? '▶' : '▼')+
+'<span class="category-arrow ' +
+(cat.collapsed ? '' : 'open') +
+'">❯</span>'+
 '<h3 class="grow">'+
 categoryIcon(cat.name)+' '+cat.name+
 '<span class="category-count">'+
