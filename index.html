@@ -48,12 +48,50 @@ body{
 }
 
 header{
- background:var(--primary);
- color:white;
- padding:12px;
- display:flex;
- gap:8px;
- flex-wrap:wrap;
+  background:
+    linear-gradient(
+      135deg,
+      #4f46e5,
+      #6366f1
+    );
+
+  padding:20px;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+.header-top{
+  margin-bottom:16px;
+}
+
+.header-top h1{
+  color:white;
+  margin:0;
+  font-size:1.7rem;
+  font-weight:700;
+}
+
+.search-container{
+  margin-bottom:16px;
+}
+
+#search{
+  width:100%;
+  max-width:none;
+  border:none;
+  padding:14px 18px;
+  border-radius:16px;
+  font-size:1rem;
+
+  box-shadow:
+    0 4px 14px
+    rgba(0,0,0,.08);
+}
+
+.header-nav{
+  display:flex;
+  gap:10px;
 }
 
 button,
@@ -64,7 +102,21 @@ input{
 }
 
 button{
- cursor:pointer;
+  cursor:pointer;
+  border:none;
+  transition:.2s;
+}
+
+.header-nav button{
+  flex:1;
+
+  padding:14px;
+
+  border-radius:14px;
+
+  background:white;
+
+  font-weight:600;
 }
 
 .main{
@@ -74,10 +126,16 @@ button{
 }
 
 .card{
- background:var(--card);
- padding:12px;
- border-radius:14px;
- margin-bottom:12px;
+  background:var(--card);
+
+  border-radius:20px;
+
+  padding:18px;
+
+  margin-bottom:16px;
+
+  box-shadow:
+    0 4px 20px rgba(0,0,0,.04);
 }
 
 .row{
@@ -103,8 +161,11 @@ button{
 }
 
 .active{
- background:#22c55e;
- color:white;
+  background:#22c55e !important;
+  color:white;
+  box-shadow:
+    0 4px 12px
+    rgba(34,197,94,.3);
 }
 
 .meta{
@@ -136,6 +197,211 @@ button{
  min-width:40px;
 }
 
+.tools-menu{
+  position:relative;
+}
+
+.dropdown{
+  display:none;
+
+  position:fixed;
+
+  top:140px;
+  right:20px;
+
+  background:var(--card);
+
+  border-radius:16px;
+
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.15);
+
+  padding:8px;
+
+  min-width:240px;
+
+  z-index:9999;
+}
+
+.dropdown button{
+  display:block;
+  width:100%;
+  margin-bottom:6px;
+  text-align:left;
+}
+
+.dropdown button:last-child{
+  margin-bottom:0;
+}
+
+.dropdown.show{
+  display:block;
+}
+
+.product-row{
+ display:flex;
+ align-items:center;
+ gap:12px;
+ padding:10px 0;
+ border-top:1px solid rgba(0,0,0,.08);
+}
+
+.product-main{
+ flex:1;
+}
+
+.product-name{
+ font-size:1.15rem;
+ font-weight:600;
+}
+
+.product-meta{
+ font-size:.85rem;
+ opacity:.7;
+ margin-top:4px;
+}
+
+.badge{
+ display:inline-block;
+ padding:3px 8px;
+ border-radius:999px;
+ font-size:.75rem;
+ font-weight:600;
+ margin-left:8px;
+}
+
+.badge-warning{
+ background:#fef3c7;
+ color:#92400e;
+}
+
+.product-actions{
+  gap:10px;
+}
+
+.qty-btn{
+  width:36px;
+  height:36px;
+
+  border-radius:10px;
+
+  background:#f3f4f6;
+}
+
+.product-actions strong{
+  min-width:24px;
+  text-align:center;
+}
+
+.favorite-active{
+ color:#facc15;
+}
+
+.menu-btn{
+ width:42px;
+ min-width:42px;
+}
+
+.category-header{
+ cursor:pointer;
+ user-select:none;
+}
+
+.category-header:hover{
+ opacity:.9;
+}
+
+.dropdown-menu{
+ position:absolute;
+ background:white;
+ border-radius:10px;
+ box-shadow:0 4px 12px rgba(0,0,0,.15);
+ padding:6px;
+ z-index:999;
+}
+
+.dropdown-menu button{
+ display:block;
+ width:100%;
+ margin:4px 0;
+}
+
+.category-icon{
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ width:38px;
+ height:38px;
+ border-radius:50%;
+ background:#eef2ff;
+ margin-right:10px;
+ font-size:20px;
+}
+
+.category-menu-btn{
+ width:44px;
+ height:44px;
+ border-radius:12px;
+ font-size:22px;
+ font-weight:bold;
+}
+
+.category-count{
+ background:#e0e7ff;
+ color:#4338ca;
+ border-radius:999px;
+ padding:4px 10px;
+ font-size:.8rem;
+ font-weight:700;
+ margin-left:10px;
+}
+
+.category-card{
+  border:1px solid rgba(0,0,0,.05);
+}
+
+.category-card:hover{
+ transform:translateY(-2px);
+ box-shadow:0 6px 18px rgba(0,0,0,.08);
+}
+
+#toolsBtn{
+  flex:0;
+  min-width:60px;
+}
+
+.badge-count{
+  margin-left:6px;
+
+  background:white;
+
+  color:#22c55e;
+
+  padding:2px 8px;
+
+  border-radius:999px;
+
+  font-size:.75rem;
+
+  font-weight:bold;
+}
+
+.menu-btn,
+.category-menu-btn{
+  opacity:0;
+  transition:.2s;
+}
+
+.product-row:hover .menu-btn,
+.category-card:hover .category-menu-btn{
+  opacity:1;
+}
+
+#favoritesBtn.active{
+  background:#facc15;
+  color:#111827;
+}
+
 </style>
       
 </head>
@@ -143,53 +409,63 @@ button{
 <body>
 
 <header>
+  <div class="header-top">
+    <h1>🛒 Liste de Courses</h1>
+  </div>
 
-<strong>
-🛒 Liste de Courses
-</strong>
+  <div class="search-container">
+    <input
+      id="search"
+      placeholder="🔍 Rechercher un produit..."
+    >
+  </div>
 
-<input
- id="search"
- placeholder="Recherche">
+  <div class="header-nav">
 
-<button id="favoritesBtn">
-⭐ Favoris
-</button>
+    <button id="catalogBtn">
+      Catalogue
+    </button>
 
-<button id="catalogBtn">
-Catalogue
-</button>
+    <button id="storeBtn">
+      🛒 Magasin
+    </button>
 
-<button id="storeBtn">
-Magasin
-</button>
+    <button id="toolsBtn">
+      ⚙️
+    </button>
 
-<button id="resetBtn">
-🧹 Vider le panier
-</button>
+  </div>
 
-<button id="importTxtBtn">
-📄 Import TXT
-</button>
+  <div id="toolsDropdown" class="dropdown">
 
-<input
- id="txtFile"
- type="file"
- accept=".txt"
- style="display:none">
+    <button id="resetBtn">
+      🧹 Vider le panier
+    </button>
 
-<button id="collapseAllBtn">
-➖ Tout plier
-</button>
+    <button id="importTxtBtn">
+      📄 Import TXT
+    </button>
 
-<button id="expandAllBtn">
-➕ Tout déplier
-</button>
+    <button id="collapseAllBtn">
+      ➖ Tout plier
+    </button>
 
-<button id="darkBtn">
-🌙
-</button>
+    <button id="expandAllBtn">
+      ➕ Tout déplier
+    </button>
 
+    <button id="darkBtn">
+      🌙 Mode sombre
+    </button>
+
+  </div>
+
+  <input
+    id="txtFile"
+    type="file"
+    accept=".txt"
+    style="display:none"
+  >
 </header>
 
 <div class="main">
@@ -282,12 +558,6 @@ db.categories.forEach(category=>{
  if(category.collapsed===undefined){
 
   category.collapsed=true;
-
- }
-
- if(!category.color){
-
-  category.color='#3b82f6';
 
  }
 
@@ -470,8 +740,6 @@ function addCategory(){
   id:uid(),
 
   name:name,
-
-  color:'#3b82f6',
 
   order:
    db.categories.length+1,
@@ -980,8 +1248,6 @@ function importTxtCatalog(file){
 
       name:categoryName,
 
-      color:'#3b82f6',
-
       order:
        db.categories.length+1,
 
@@ -1264,11 +1530,325 @@ function addToList(id){
 
 }
 
+function showProductMenu(event,id){
+
+ event.stopPropagation();
+
+ document
+ .querySelectorAll('.product-context')
+ .forEach(x=>x.remove());
+
+ const menu =
+ document.createElement('div');
+
+ menu.className =
+ 'dropdown-menu product-context';
+
+ menu.innerHTML =
+
+ '<button onclick="editProduct('+id+')">✏️ Modifier</button>'+
+
+ '<button onclick="deleteProduct('+id+')">🗑️ Supprimer</button>';
+
+ document.body.appendChild(menu);
+
+ menu.style.left =
+ event.pageX+'px';
+
+ menu.style.top =
+ event.pageY+'px';
+}
+
+function categoryIcon(name){
+
+ const n = name.toLowerCase();
+
+ // Fruits et légumes
+ if(
+  n.includes('fruit') ||
+  n.includes('légume') ||
+  n.includes('legume')
+ ){
+  return '🥬';
+ }
+
+ // Viandes
+ if(
+  n.includes('viande') ||
+  n.includes('boucherie') ||
+  n.includes('boeuf') ||
+  n.includes('porc') ||
+  n.includes('poulet')
+ ){
+  return '🥩';
+ }
+
+ // Poissons
+ if(
+  n.includes('poisson') ||
+  n.includes('saumon') ||
+  n.includes('thon') ||
+  n.includes('cabillaud')
+ ){
+  return '🐟';
+ }
+
+ // Produits laitiers
+ if(
+  n.includes('lait') ||
+  n.includes('fromage') ||
+  n.includes('yaourt') ||
+  n.includes('beurre')
+ ){
+  return '🥛';
+ }
+
+ // Boulangerie
+ if(
+  n.includes('pain') ||
+  n.includes('boulangerie') ||
+  n.includes('baguette')
+ ){
+  return '🥖';
+ }
+
+// Petit-déjeuner
+if(
+ n.includes('petit déjeuner') ||
+ n.includes('petit-déjeuner') ||
+ n.includes('petit déjeuner') ||
+ n.includes('muesli') ||
+ n.includes('céréale') ||
+ n.includes('cereale')
+){
+ return '🥣';
+}
+
+ // Café / Thé
+ if(
+  n.includes('café') ||
+  n.includes('cafe') ||
+  n.includes('thé') ||
+  n.includes('the')
+ ){
+  return '☕';
+ }
+
+ // Boissons
+ if(
+  n.includes('boisson') ||
+  n.includes('eau') ||
+  n.includes('jus') ||
+  n.includes('soda')
+ ){
+  return '🥤';
+ }
+
+ // Épicerie salée
+ if(
+  n.includes('épicerie salée') ||
+  n.includes('epicerie salee') ||
+  n.includes('riz') ||
+  n.includes('pâtes') ||
+  n.includes('pates') ||
+  n.includes('semoule')
+ ){
+  return '🍝';
+ }
+
+ // Épicerie sucrée
+ if(
+  n.includes('épicerie sucrée') ||
+  n.includes('epicerie sucree') ||
+  n.includes('sucre') ||
+  n.includes('farine')
+ ){
+  return '🧁';
+ }
+
+ // Chocolat
+ if(
+  n.includes('chocolat') ||
+  n.includes('pépite') ||
+  n.includes('pepite') ||
+  n.includes('cacao')
+ ){
+  return '🍫';
+ }
+
+ // Goûter
+ if(
+  n.includes('goûter') ||
+  n.includes('gouter') ||
+  n.includes('biscuit') ||
+  n.includes('cookie')
+ ){
+  return '🍪';
+ }
+
+ // Bonbons
+ if(
+  n.includes('bonbon') ||
+  n.includes('confiserie')
+ ){
+  return '🍬';
+ }
+
+ // Apéro
+ if(
+  n.includes('apéro') ||
+  n.includes('apero') ||
+  n.includes('snack')
+ ){
+  return '🍿';
+ }
+
+ // Épices
+ if(
+  n.includes('épice') ||
+  n.includes('epice') ||
+  n.includes('sel') ||
+  n.includes('poivre')
+ ){
+  return '🧂';
+ }
+
+ // Huiles
+ if(
+  n.includes('huile') ||
+  n.includes('olive')
+ ){
+  return '🍶';
+ }
+
+ // Vinaigres
+ if(
+  n.includes('vinaigre')
+ ){
+  return '🍶';
+ }
+
+ // Sauces
+ if(
+  n.includes('sauce') ||
+  n.includes('ketchup') ||
+  n.includes('mayonnaise') ||
+  n.includes('mayo')
+ ){
+  return '🥫';
+ }
+
+ // Surgelés
+ if(
+  n.includes('surgelé') ||
+  n.includes('surgele') ||
+  n.includes('congelé') ||
+  n.includes('congele')
+ ){
+  return '❄️';
+ }
+
+ // Pharmacie
+ if(
+  n.includes('pharmacie') ||
+  n.includes('médicament') ||
+  n.includes('medicament')
+ ){
+  return '🩹';
+ }
+
+ // Hygiène
+ if(
+  n.includes('hygiène') ||
+  n.includes('hygiene')
+ ){
+  return '🧴';
+ }
+
+ // Beauté
+ if(
+  n.includes('beauté') ||
+  n.includes('beaute')
+ ){
+  return '💄';
+ }
+
+ // Ménage
+ if(
+  n.includes('ménage') ||
+  n.includes('menage') ||
+  n.includes('entretien')
+ ){
+  return '🧽';
+ }
+
+ // Bébé
+ if(
+  n.includes('bébé') ||
+  n.includes('bebe')
+ ){
+  return '🍼';
+ }
+
+ return '📦';
+}
+
+function showCategoryMenu(event,id){
+
+ event.stopPropagation();
+
+ document
+ .querySelectorAll('.category-context')
+ .forEach(x=>x.remove());
+
+ const menu =
+ document.createElement('div');
+
+ menu.className =
+ 'dropdown-menu category-context';
+
+ menu.innerHTML =
+
+ '<button onclick="addProduct('+id+')">➕ Ajouter un produit</button>' +
+
+ '<button onclick="editCategory('+id+')">✏️ Modifier</button>' +
+
+ '<button onclick="deleteCategory('+id+')">🗑️ Supprimer</button>';
+
+ document.body.appendChild(menu);
+
+ menu.style.left =
+ event.pageX+'px';
+
+ menu.style.top =
+ event.pageY+'px';
+ 
+ menu.addEventListener(
+ 'click',
+ e => e.stopPropagation()
+);
+}
+
 function render(){
+
 document.body.className=
 db.dark
 ? 'dark'
 : '';
+
+const cartCount =
+ db.products.filter(
+  p => p.inList
+ ).length;
+
+storeBtn.innerHTML =
+ '🛒 Magasin ' +
+ (
+   cartCount > 0
+   ? '<span class="badge-count">'+cartCount+'</span>'
+   : ''
+ );
+
 catalogBtn.className=
 db.mode==='catalog'
 ? 'active'
@@ -1277,16 +1857,24 @@ storeBtn.className=
 db.mode==='store'
 ? 'active'
 : '';
-favoritesBtn.className=
 
- db.showFavorites
+actions.innerHTML =
+db.mode === 'catalog'
+? `
+<div class="row">
+  <button onclick="addCategory()">
+    ➕ Catégorie
+  </button>
 
- ? 'active'
-
- : '';
-actions.innerHTML=
-db.mode==='catalog'
-? '<button onclick="addCategory()">+ Catégorie</button>'
+  <button
+    id="favoritesBtn"
+    class="${db.showFavorites ? 'active' : ''}"
+    onclick="toggleFavorites()"
+  >
+    ⭐ Favoris
+  </button>
+</div>
+`
 : '';
 const q=
 (
@@ -1368,92 +1956,79 @@ if(items.length===0){
 }
 let html=
 '<div class="card category-card" draggable="true" data-id="'+cat.id+'">'+
-'<div class="row">'+
-'<button class="category-toggle" onclick="toggleCategory('+cat.id+')">'+
-(
-cat.collapsed
-? '▶'
-: '▼'
-)+
-'</button>'+
-'<h3 class="grow" style="color:'+cat.color+'">'+
-cat.name+
-' ('+items.length+')'+
-'</h3>';
+'<div class="row category-header" onclick="toggleCategory('+cat.id+')">'+
+(cat.collapsed ? '▶' : '▼')+
+'<h3 class="grow">'+
+categoryIcon(cat.name)+' '+cat.name+
+'<span class="category-count">'+
+'<span class="category-count">'+
+items.length+
+'</span>'+
+'</span></h3>';
 if(
 db.mode==='catalog'
 ){
-html+=
-'<button onclick="addProduct('+cat.id+')">➕</button>'+
-'<button onclick="editCategory('+cat.id+')">✏️</button>'+
-'<button onclick="deleteCategory('+cat.id+')">🗑️</button>';
+html +=
+'<button class="category-menu-btn" onclick="event.stopPropagation();showCategoryMenu(event,'+cat.id+')">⋮</button>';
 }
 html+='</div>';
 if(!cat.collapsed){
 for(const p of items){
-const suggest=
-getSuggestionLabel(p);
+
+const badgeSuggest =
+shouldSuggest(p)
+? '<span class="badge badge-warning">🔔 À racheter</span>'
+: '';
+
 const avg=
 averageRepurchaseDays(p);
 if(db.mode==='catalog'){
-html+=
-'<div class="item">'+
-'<button class="favorite-btn" onclick="toggleFavorite('+p.id+')">'+
-(
-p.favorite
-? '⭐'
-: '☆'
-)+
+
+html +=
+'<div class="product-row">'+
+
+'<button class="favorite-btn '+(p.favorite ? 'favorite-active' : '')+'" onclick="toggleFavorite('+p.id+')">'+
+(p.favorite ? '⭐' : '☆')+
 '</button>'+
-'<span class="grow">'+
+
+'<div class="product-main">'+
+
+'<div class="product-name">'+
 p.name+
+badgeSuggest+
+'</div>'+
+
+'<div class="product-meta">'+
 (
-suggest
-? ' '+suggest
-: ''
-)+
-'<br>'+
-'<span class="meta">'+
-daysAgo(
 p.lastPurchase
+? 'Dernier achat : '+daysAgo(p.lastPurchase)
+: 'Jamais acheté'
 )+
-' • '+
-p.frequency+
-' achat(s)' +
+'</div>'+
+
+'</div>'+
+
+'<div class="product-actions">'+
+
 (
-avg
-? ' • moyenne '+avg+' j'
+p.inList
+? '<button onclick="toggleList('+p.id+')">✅</button>'
+: '<button onclick="addToList('+p.id+')">🛒</button>'
+)+
+
+(
+p.inList
+? '<button class="qty-btn" onclick="decreaseQuantity('+p.id+')">−</button>'+
+'<strong>'+getListQuantity(p)+'</strong>'+
+'<button class="qty-btn" onclick="increaseQuantity('+p.id+')">+</button>'
 : ''
 )+
-'</span>'+
-'<br>'+
-'<span class="meta">'+
-purchaseHistoryText(p)+
-'</span>'+
-'</span>'+
 
-(
- p.inList
+'<button class="menu-btn" onclick="showProductMenu(event,'+p.id+')">⋮</button>'+
 
- ? '<button onclick="toggleList('+p.id+')">✅</button>'
-
- : '<button onclick="addToList('+p.id+')">🛒</button>'
-)+
-
-(
- p.inList
-
- ? '<button class="qty-btn" onclick="decreaseQuantity('+p.id+')">−</button>'+
-   '<strong>'+getListQuantity(p)+'</strong>'+
-   '<button class="qty-btn" onclick="increaseQuantity('+p.id+')">+</button>'
-
- : ''
-)+
-
-'<button onclick="editProduct('+p.id+')">✏️</button>'+
-
-'<button onclick="deleteProduct('+p.id+')">🗑️</button>'+
+'</div>'+
 '</div>';
+
 }
 if(db.mode==='store'){
 
@@ -1529,14 +2104,46 @@ collapseAllBtn.onclick=
 expandAllBtn.onclick=
  ()=>expandAll();
 
-favoritesBtn.onclick=
- ()=>toggleFavorites();
+const toolsBtn =
+  document.getElementById('toolsBtn');
+
+const toolsDropdown =
+  document.getElementById('toolsDropdown');
+
+toolsBtn.onclick = () => {
+  toolsDropdown.classList.toggle('show');
+};
+
+document.addEventListener('click', e => {
+
+  if (
+    !e.target.closest('#toolsBtn') &&
+    !e.target.closest('#toolsDropdown')
+  ){
+    toolsDropdown.classList.remove('show');
+  }
+
+});
+
+document.addEventListener(
+'click',
+()=>{
+
+ document
+ .querySelectorAll('.product-context')
+ .forEach(x=>x.remove());
+
+ document
+ .querySelectorAll('.category-context')
+ .forEach(x=>x.remove());
+
+}
+);
 
 if(
  'serviceWorker'
  in navigator
 ){
-
  navigator.serviceWorker.register(
   './service-worker.js'
  );
