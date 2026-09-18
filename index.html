@@ -368,11 +368,6 @@ button{
   overflow:hidden;
 }
 
-.category-card:hover{
- transform:translateY(-2px);
- box-shadow:0 6px 18px rgba(0,0,0,.08);
-}
-
 #toolsBtn{
   flex:0;
   min-width:60px;
@@ -400,9 +395,22 @@ button{
   transition:.2s;
 }
 
-.product-row:hover .menu-btn,
-.category-card:hover .category-menu-btn{
-  opacity:1;
+@media (hover:hover){
+
+  .product-row:hover .menu-btn,
+  .category-card:hover .category-menu-btn{
+    opacity:1;
+  }
+
+}
+
+@media (hover:none){
+
+  .menu-btn,
+  .category-menu-btn{
+    opacity:1;
+  }
+
 }
 
 #favoritesBtn.active{
