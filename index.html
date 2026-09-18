@@ -303,12 +303,20 @@ button{
 }
 
 .category-header{
- cursor:pointer;
- user-select:none;
+  transition:0.2s;
 }
 
-.category-header:hover{
- opacity:.9;
+.category-header:active{
+  background:rgba(79,70,229,.08);
+}
+
+@media (hover:hover){
+
+  .category-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+  }
+
 }
 
 .dropdown-menu{
@@ -357,7 +365,7 @@ button{
 }
 
 .category-card{
-  border:1px solid rgba(0,0,0,.05);
+  overflow:hidden;
 }
 
 .category-card:hover{
@@ -1974,9 +1982,7 @@ let html=
 '<h3 class="grow">'+
 categoryIcon(cat.name)+' '+cat.name+
 '<span class="category-count">'+
-'<span class="category-count">'+
 items.length+
-'</span>'+
 '</span></h3>';
 if(
 db.mode==='catalog'
