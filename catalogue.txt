@@ -1,0 +1,321 @@
+Fruits et légumes frais:
+Pommes
+Poires
+Bananes
+Avocats
+Kiwis
+Oranges
+Clémentines
+Citrons
+Raisin
+Melon
+Pastèque
+Mangue
+Ananas
+Fruits rouges
+Fraises
+Framboises
+Myrtilles
+Pêches
+Nectarines
+Abricots
+Pommes de terre
+Patates douces
+Tomates
+Tomates cerises
+Carottes
+Oignons
+Échalotes
+Ail
+Courgettes
+Aubergines
+Poivrons
+Concombres
+Champignons
+Poireaux
+Salade verte
+Épinards
+Brocoli
+Chou-fleur
+Chou
+Haricots verts
+Asperges
+Fenouil
+Céleri
+Artichauts
+Betteraves
+Navets
+Radis
+Persil
+Coriandre
+Ciboulette
+Menthe
+Basilic
+Aneth
+
+Viandes et poissons:
+Blancs de poulet
+Cuisses de poulet
+Viande hachée
+Steaks hachés
+Bœuf
+Veau
+Agneau
+Merguez
+Saumon
+Cabillaud
+Dorade
+Bar
+Merlan
+Sole
+Sardines
+Maquereaux
+Thon frais
+Crevettes
+Calamars
+
+Produits laitiers et rayon frais:
+Lait
+Lait végétal
+Œufs
+Beurre
+Crème fraîche
+Crème liquide
+Yaourts nature
+Yaourts aux fruits
+Fromage blanc
+Skyr
+Yaourt grec
+Petits-suisses
+Mozzarella
+Burrata
+Feta
+Parmesan
+Emmental
+Comté
+Fromage à tartiner
+Pâte feuilletée
+Pâte brisée
+Pâte à pizza
+
+Boulangerie:
+Tradition
+Pain complet
+Pain aux céréales
+Pain au lait
+Brioche
+Pain burger
+Wraps
+Tortillas
+Pitas
+Muffins anglais
+Croissants
+Pains au chocolat
+
+Petit-déjeuner:
+Café grains
+Capsules café
+Filtres à café
+Thé vert
+Infusions
+Chocolat en poudre
+Céréales
+Muesli
+Granola
+Flocons d’avoine
+Graines de chia
+Confiture
+Miel
+Pâte à tartiner
+Beurre de cacahuète
+Sirop d’érable
+
+Épicerie salée:
+Riz basmati
+Riz thaï
+Riz complet
+Penne
+Fusilli
+Spaghetti
+Coquillettes
+Tagliatelles
+Nouilles
+Semoule
+Boulgour
+Quinoa
+Farine
+Chapelure
+Lentilles vertes
+Lentilles corail
+Pois chiches
+Pois cassés
+Haricots rouges
+Haricots blancs
+Sauce tomate
+Coulis de tomate
+Concentré de tomate
+Thon en conserve
+Sardines en conserve
+Maïs
+Petits pois
+Haricots verts en conserve
+Champignons en conserve
+Olives vertes
+Olives noires
+Cornichons
+Câpres
+
+Épicerie sucrée:
+Sucre blanc
+Sucre roux
+Sucre glace
+Sucre vanillé
+Vanille liquide
+Chocolat pâtissier
+Pépites de chocolat
+Cacao non sucré
+Levure chimique
+Levure boulangère
+Agar-agar
+Fécule de maïs
+Noix de coco râpée
+Poudre d’amandes
+Raisins secs
+
+Sauces et condiments:
+Ketchup
+Mayonnaise
+Moutarde
+Sauce barbecue
+Sauce soja
+Pesto
+Harissa
+Tahini
+Sauce piquante
+
+Huiles et vinaigres:
+Huile d’olive
+Huile de tournesol
+Huile de colza
+Vinaigre blanc
+Vinaigre balsamique
+
+Épices et aromates:
+Sel
+Poivre
+Paprika
+Curry
+Cumin
+Curcuma
+Cannelle
+Gingembre
+Piment
+Muscade
+Ail semoule
+Herbes de Provence
+Origan
+Thym
+Romarin
+Laurier
+Basilic séché
+Aneth séché
+
+Goûters et collations:
+Compotes
+Biscuits
+Madeleines
+Barres céréales
+Galettes de riz
+Chocolat noir
+Chocolat au lait
+Bonbons
+Chewing-gums
+Pop-corn
+Noix
+Amandes
+Pistaches
+Noix de cajou
+Dattes
+
+Boissons:
+Eau plate
+Eau gazeuse
+Jus d’orange
+Jus multifruits
+Limonade
+Thé glacé
+
+Surgelés:
+Frites
+Pommes noisette
+Mélange de légumes
+Petits pois surgelés
+Épinards surgelés
+Haricots verts surgelés
+Fruits rouges surgelés
+Mangue surgelée
+Glaces
+Sorbets
+Desserts glacés
+Herbes aromatiques surgelées
+
+Hygiène et soins personnels:
+Papier toilette
+Mouchoirs
+Coton
+Cotons-tiges
+Savon mains
+Gel douche
+Shampooing
+Après-shampooing
+Dentifrice
+Brosse à dents
+Bain de bouche
+Déodorant
+Mousse à raser
+Rasoirs
+
+Entretien de la maison:
+Lessive
+Adoucissant
+Détachant
+Désinfectant linge
+Liquide vaisselle
+Pastilles lave-vaisselle
+Liquide de rinçage
+Sel régénérant
+Sacs-poubelle
+Essuie-tout
+Lingettes
+Nettoyant multiusage
+Nettoyant cuisine & salle de bain
+Produit vitres
+Produit sanitaires
+Nettoyant sols
+Déboucheur
+Anticalcaire
+Vinaigre ménager
+Javel
+Crème à récurer
+Désodorisant
+Éponges
+Chiffons microfibres
+Gants ménagers
+Papier aluminium
+Film alimentaire
+Papier cuisson
+Sacs congélation
+
+Bébé:
+Couches
+Lingettes bébé
+Lait infantile
+Coton bébé
+
+Pharmacie:
+Pansements
+Antiseptique
+
+Divers:
+Piles
+Ampoules
