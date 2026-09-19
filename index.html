@@ -491,11 +491,6 @@ const APP_NOTIFICATION = {
   message: 'Ajout de nouvelles fonctionnalités'
 };
 
-const remainingItems =
- items.filter(
-  p => !p.purchased
- ).length;
-
 const defaults={
 
  mode:'catalog',
@@ -1461,6 +1456,23 @@ const cartCount =
   p => p.inList
  ).length;
 
+const total=
+db.products.filter(
+p=>p.inList
+).length;
+
+const done=
+db.products.filter(
+p=>
+p.inList
+&&
+p.purchased
+).length;
+
+const shoppingFinished =
+ total > 0 &&
+ done === total;
+
 storeBtn.innerHTML =
  '🛒 Magasin ' +
  (
@@ -1504,7 +1516,6 @@ if(db.mode === 'catalog'){
    p => p.inList && p.purchased
   ).length;
 
- actions.innerHTML=
 if(shoppingFinished){
 
  actions.innerHTML =
@@ -1551,21 +1562,6 @@ app.innerHTML='';
 if(db.mode==='store'){
 progressCard.style.display=
 'block';
-const total=
-db.products.filter(
-p=>p.inList
-).length;
-const done=
-db.products.filter(
-p=>
-p.inList
-&&
-p.purchased
-).length;
-
-const shoppingFinished =
- total > 0 &&
- done === total;
 
 const remaining =
  total - done;
@@ -1625,7 +1621,9 @@ progressCard.style.display=
 'none';
 }
 sortCategories();
+
 for(const cat of db.categories){
+
 let items=
 
  db.products.filter(p=>{
@@ -1670,6 +1668,15 @@ if(db.mode==='store'){
 
 }
 
+const remainingItems = items.length;
+
+if(
+ db.mode === 'store' &&
+ remainingItems === 0
+){
+ continue;
+}
+
 if(items.length===0){
  continue;
 }
@@ -1682,8 +1689,14 @@ let html =
   '<h3 class="grow">' +
   categoryIcon(cat.name)+' '+cat.name+
   '<span class="category-count">' +
-	items.length +
-	'</span></h3>';
+(
+ db.mode === 'store'
+ ? remainingItems +
+   ' à prendre' +
+   (remainingItems > 1 ? 's' : '')
+ : items.length
+) +
+'</span></h3>';
 
 html+='</div>';
 if(!cat.collapsed){
