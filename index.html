@@ -541,6 +541,10 @@ if(db.showFavorites===undefined){
 
 }
 
+if(db.showPurchased === undefined){
+db.showPurchased = false;
+}
+
 db.categories =
  Array.isArray(db.categories)
  ? db.categories
@@ -1440,6 +1444,26 @@ actions.style.display =
   db.mode === 'catalog'
   ? 'block'
   : 'none';
+  
+ if(db.mode === 'store'){
+
+ actions.style.display='block';
+
+ actions.innerHTML=
+ `
+ <div class="row">
+   <button
+     onclick="togglePurchasedVisibility()"
+   >
+     ${
+      db.showPurchased
+      ? '🙈 Masquer les articles récupérés'
+      : '✅ Afficher les articles récupérés ('+hiddenPurchased+')'
+     }
+   </button>
+ </div>
+ `;
+}
 
 actions.innerHTML =
 db.mode === 'catalog'
@@ -1490,6 +1514,11 @@ done*100/total
 :
 0
 )+'%';
+
+const hiddenPurchased =
+ db.products.filter(
+  p => p.inList && p.purchased
+ ).length;
 }else{
 progressCard.style.display=
 'none';
@@ -1527,10 +1556,17 @@ let items=
  });
 
 if(db.mode==='store'){
+
  items=
  items.filter(
-  p=>p.inList && !p.purchased
+  p =>
+   p.inList &&
+   (
+    db.showPurchased ||
+    !p.purchased
+   )
  );
+
 }
 
 if(items.length===0){
