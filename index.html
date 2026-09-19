@@ -1361,11 +1361,14 @@ function showAppNotification(){
     return;
   }
 
+setTimeout(() => {
   alert(
     APP_NOTIFICATION.title +
     '\n\n' +
     APP_NOTIFICATION.message
   );
+}, 500);
+
 
   localStorage.setItem(
     'notification-version',
