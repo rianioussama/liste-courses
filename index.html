@@ -1411,6 +1411,16 @@ setTimeout(() => {
 
 }
 
+function togglePurchasedVisibility(){
+
+ db.showPurchased =
+  !db.showPurchased;
+
+ save();
+ render();
+
+}
+
 function render(){
 
 document.body.className=
@@ -1440,17 +1450,32 @@ db.mode==='store'
 ? 'active'
 : '';
 
-actions.style.display =
-  db.mode === 'catalog'
-  ? 'block'
-  : 'none';
+if(db.mode === 'catalog'){
+
+ actions.style.display='block';
+
+ actions.innerHTML=
+ `
+ <div class="row">
+   <button
+     id="favoritesBtn"
+     class="${db.showFavorites ? 'active' : ''}"
+     onclick="toggleFavorites()"
+   >
+     ⭐ Favoris
+   </button>
+ </div>
+ `;
+
+}else if(db.mode === 'store'){
+
+ actions.style.display='block';
+
 
 const hiddenPurchased =
  db.products.filter(
   p => p.inList && p.purchased
  ).length;
-
- if(db.mode === 'store'){
 
  actions.style.display='block';
 
@@ -1469,21 +1494,6 @@ const hiddenPurchased =
  </div>
  `;
 }
-
-actions.innerHTML =
-db.mode === 'catalog'
-? `
-<div class="row">
-  <button
-    id="favoritesBtn"
-    class="${db.showFavorites ? 'active' : ''}"
-    onclick="toggleFavorites()"
-  >
-    ⭐ Favoris
-  </button>
-</div>
-`
-: '';
 
 const q=
 (
