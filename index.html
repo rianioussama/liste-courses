@@ -779,26 +779,30 @@ function toggleFavorite(id){
 
 function toggleList(id){
 
- const product=
+ if(isShoppingFinished()){
+
+  finishShopping();
+
+ }
+
+ const product =
   getProductById(id);
 
  if(!product){
   return;
  }
 
- product.inList=
+ product.inList =
   !product.inList;
 
  if(!product.inList){
 
-  product.listQuantity=1;
-
-  product.purchased=false;
+  product.listQuantity = 1;
+  product.purchased = false;
 
  }
 
  save();
-
  render();
 
 }
@@ -1115,23 +1119,26 @@ function toggleFavorites(){
 
 function addToList(id){
 
- const product=
+ if(isShoppingFinished()){
+
+  finishShopping();
+
+ }
+
+ const product =
   getProductById(id);
 
  if(!product){
   return;
  }
 
- product.inList=true;
+ product.inList = true;
 
  if(!product.listQuantity){
-
-  product.listQuantity=1;
-
+  product.listQuantity = 1;
  }
 
  save();
-
  render();
 
 }
@@ -1444,6 +1451,22 @@ function finishShopping(){
 
 }
 
+function isShoppingFinished(){
+
+ const total =
+  db.products.filter(
+   p => p.inList
+  ).length;
+
+ const done =
+  db.products.filter(
+   p => p.inList && p.purchased
+  ).length;
+
+ return total > 0 && done === total;
+
+}
+
 function render(){
 
 document.body.className=
@@ -1472,12 +1495,6 @@ p.purchased
 const shoppingFinished =
  total > 0 &&
  done === total;
-
-console.log(
- "total=", total,
- "done=", done,
- "shoppingFinished=", shoppingFinished
-);
 
 if(
  db.mode === 'store' &&
@@ -1508,7 +1525,10 @@ if(
  `
  <div class="card">
    <h2>🎯 Tous les produits ont été récupérés</h2>
-   <p>Vous pouvez maintenant terminer vos courses.</p>
+
+   <p>
+     Vous pouvez maintenant terminer vos courses.
+   </p>
  </div>
  `;
 
@@ -1789,7 +1809,7 @@ for(const p of items){
 
 const badgeSuggest =
 shouldSuggest(p)
-? '<span class="badge badge-warning">🔔 À racheter</span>'
+? '<span class="badge badge-warning">🔔</span>'
 : '';
 
 
