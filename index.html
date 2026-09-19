@@ -783,6 +783,8 @@ function toggleList(id){
 
   finishShopping();
 
+  return;
+
  }
 
  const product =
@@ -1133,6 +1135,7 @@ function addToList(id){
  }
 
  product.inList = true;
+ product.purchased = false;
 
  if(!product.listQuantity){
   product.listQuantity = 1;
@@ -1493,6 +1496,14 @@ const shoppingFinished =
  total > 0 &&
  done === total;
 
+storeBtn.innerHTML =
+ '🛒 Courses ' +
+ (
+   cartCount > 0
+   ? '<span class="badge-count">'+cartCount+'</span>'
+   : ''
+ );
+
 if(
  db.mode === 'store' &&
  shoppingFinished
@@ -1531,14 +1542,6 @@ if(
 
  return;
 }
-
-storeBtn.innerHTML =
- '🛒 Courses ' +
- (
-   cartCount > 0
-   ? '<span class="badge-count">'+cartCount+'</span>'
-   : ''
- );
 
 catalogBtn.className=
 db.mode==='catalog'
