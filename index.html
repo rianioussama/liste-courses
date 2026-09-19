@@ -476,7 +476,7 @@ button{
 <script>
 
 const APP_NOTIFICATION = {
-  version: '1.0.4',
+  version: '1.0.5',
   title: '🆕 Nouvelle version',
   message: 'Ajout de nouvelles fonctionnalités'
 };
@@ -1671,7 +1671,11 @@ search.addEventListener(
 catalogBtn.onclick=
  ()=>setMode('catalog');
 
-resetBtn.onclick = resetApplication;
+const resetBtn =
+  document.getElementById('resetBtn');
+
+resetBtn.onclick =
+  resetApplication;
 
 storeBtn.onclick=
  ()=>setMode('store');
