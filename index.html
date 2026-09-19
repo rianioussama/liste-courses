@@ -343,15 +343,6 @@ button{
 
 }
 
-.dropdown-menu{
- position:absolute;
- background:white;
- border-radius:10px;
- box-shadow:0 4px 12px rgba(0,0,0,.15);
- padding:6px;
- z-index:999;
-}
-
 .dropdown-menu button{
  display:block;
  width:100%;
@@ -411,15 +402,6 @@ button{
   font-size:.75rem;
 
   font-weight:bold;
-}
-
-@media (hover:hover){
-
-  .product-row:hover .menu-btn,
-  .category-card:hover .category-menu-btn{
-    opacity:1;
-  }
-
 }
 
 @media (hover:none){
@@ -757,166 +739,6 @@ function sortCategories(){
    -
    (b.order||0)
  );
-
-}
-
-function addCategory(){
-
- const name=
-  prompt(
-   'Nom catégorie'
-  );
-
- if(!name){
-  return;
- }
-
- db.categories.push({
-
-  id:uid(),
-
-  name:name,
-
-  order:
-   db.categories.length+1,
-
-  collapsed:true
-
- });
-
- save();
-
- render();
-
-}
-
-function editCategory(id){
-
- const category=
-  getCategoryById(id);
-
- if(!category){
-  return;
- }
-
- category.name=
-  prompt(
-   'Nom',
-   category.name
-  ) || category.name;
-
- save();
-
- render();
-
-}
-
-function deleteCategory(id){
-
- if(
-  !confirm(
-   'Supprimer cette catégorie et tous ses produits ?'
-  )
- ){
-  return;
- }
-
- db.products=
-  db.products.filter(
-   p=>p.categoryId!==id
-  );
-
- db.categories=
-  db.categories.filter(
-   c=>c.id!==id
-  );
-
- save();
-
- render();
-
-}
-
-function addProduct(categoryId){
-
- const name=
-  prompt(
-   'Nom du produit'
-  );
-
- if(!name){
-  return;
- }
-
- db.products.push({
-
-  id:uid(),
-
-  name:name,
-
-  categoryId:categoryId,
-
-  favorite:false,
-
-  inList:false,
-
-  listQuantity:1,
-
-  purchased:false,
-
-  frequency:0,
-
-  lastPurchase:null,
-
-  purchaseHistory:[]
-
- });
-
- save();
-
- render();
-
-}
-
-function editProduct(id){
-
- const product=
-  getProductById(id);
-
- if(!product){
-  return;
- }
-
- product.name=
-  prompt(
-   'Nom',
-   product.name
-  ) || product.name;
-
- save();
-
- render();
-
-}
-
-function deleteProduct(id){
-
- if(
-  !confirm(
-   'Supprimer ce produit ?'
-  )
- ){
-  return;
- }
-
- db.products=
-  db.products.filter(
-   p=>p.id!==id
-  );
-
- save();
-
- render();
 
 }
 
@@ -1341,107 +1163,6 @@ function expandAll(){
 
 }
 
-let dragId=null;
-
-function initDragAndDrop(){
-
-if(isMobile){
-return;
-}
-
- document
- .querySelectorAll(
-  '.category-card'
- )
- .forEach(card=>{
-
-  card.addEventListener(
-   'dragstart',
-   ()=>{
-
-    dragId=
-     Number(
-      card.dataset.id
-     );
-
-    card.classList.add(
-     'dragging'
-    );
-
-   }
-  );
-
-  card.addEventListener(
-   'dragend',
-   ()=>{
-
-    card.classList.remove(
-     'dragging'
-    );
-
-   }
-  );
-
-  card.addEventListener(
-   'dragover',
-   e=>e.preventDefault()
-  );
-
-  card.addEventListener(
-   'drop',
-   ()=>{
-
-    const targetId=
-     Number(
-      card.dataset.id
-     );
-
-    if(targetId===dragId){
-     return;
-    }
-
-    const sourceIndex=
-     db.categories.findIndex(
-      c=>c.id===dragId
-     );
-
-    const targetIndex=
-     db.categories.findIndex(
-      c=>c.id===targetId
-     );
-
-    const moved=
-     db.categories.splice(
-      sourceIndex,
-      1
-     )[0];
-
-    db.categories.splice(
-      targetIndex,
-      0,
-      moved
-    );
-
-    db.categories.forEach(
-      (category,index)=>{
-
-       category.order=
-        index+1;
-
-      }
-    );
-
-    save();
-
-    render();
-
-   }
-  );
-
- });
-
-}
-
 function toggleFavorites(){
 
  db.showFavorites=
@@ -1481,7 +1202,7 @@ function showProductMenu(event,id){
  event.preventDefault();
  event.stopPropagation();
 
- closeMenus();
+ ();
 
  const menu =
   document.createElement('div');
@@ -1490,8 +1211,8 @@ function showProductMenu(event,id){
   'dropdown-menu product-context';
 
  menu.innerHTML =
-  '<button onclick="closeMenus();editProduct('+id+')">✏️ Modifier</button>'+
-  '<button onclick="closeMenus();deleteProduct('+id+')">🗑️ Supprimer</button>';
+  '<button onclick="();editProduct('+id+')">✏️ Modifier</button>'+
+  '<button onclick="();deleteProduct('+id+')">🗑️ Supprimer</button>';
 
  menu.addEventListener(
   'click',
@@ -1749,7 +1470,7 @@ function showCategoryMenu(event,id){
  event.preventDefault();
 	event.stopPropagation();
 
-	closeMenus();
+	();
 
  document
  .querySelectorAll('.category-context')
@@ -1784,18 +1505,6 @@ menu.style.top =
  'click',
  e => e.stopPropagation()
 );
-}
-
-function closeMenus(){
-
- document
- .querySelectorAll('.product-context')
- .forEach(x=>x.remove());
-
- document
- .querySelectorAll('.category-context')
- .forEach(x=>x.remove());
-
 }
 
 async function loadCatalog(){
@@ -1854,10 +1563,6 @@ actions.innerHTML =
 db.mode === 'catalog'
 ? `
 <div class="row">
-  <button onclick="addCategory()">
-    ➕ Catégorie
-  </button>
-
   <button
     id="favoritesBtn"
     class="${db.showFavorites ? 'active' : ''}"
@@ -1868,6 +1573,7 @@ db.mode === 'catalog'
 </div>
 `
 : '';
+
 const q=
 (
 search.value
@@ -1959,12 +1665,7 @@ categoryIcon(cat.name)+' '+cat.name+
 '<span class="category-count">'+
 items.length+
 '</span></h3>';
-if(
-db.mode==='catalog'
-){
-html +=
-'<button class="category-menu-btn" onclick="event.stopPropagation();showCategoryMenu(event,'+cat.id+')">⋮</button>';
-}
+
 html+='</div>';
 if(!cat.collapsed){
 for(const p of items){
@@ -2018,8 +1719,6 @@ p.inList
 : ''
 )+
 
-'<button class="menu-btn" onclick="showProductMenu(event,'+p.id+')">⋮</button>'+
-
 '</div>'+
 '</div>';
 
@@ -2072,10 +1771,6 @@ app.innerHTML+=html;
 
 }
 
-if(!isMobile){
-  initDragAndDrop();
-}
-
 }
 search.addEventListener(
  'input',
@@ -2118,10 +1813,6 @@ document.addEventListener('click', e => {
 
 });
 
-document.addEventListener(
- 'click',
- closeMenus
-);
 
 if(
  'serviceWorker'
