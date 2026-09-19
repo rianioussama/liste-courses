@@ -665,7 +665,13 @@ function getCategoryById(id){
 
 function setMode(mode){
 
- db.mode=mode;
+ db.mode = mode;
+
+ if(mode === 'store'){
+
+  db.showFavorites = false;
+
+ }
 
  save();
 
@@ -1510,8 +1516,8 @@ if(shoppingFinished){
    <button onclick="togglePurchasedVisibility()">
      ${
       db.showPurchased
-       ? '🙈 Voir les articles récupérés'
-       : `👀 Afficher les articles récupérés (${hiddenPurchased})`
+       ? '🙈 masquer les articles récupérés'
+       : `👀 voir les articles récupérés (${hiddenPurchased})`
      }
    </button>
  </div>
@@ -1612,13 +1618,15 @@ let items=
    return false;
   }
 
-  if(
-   db.showFavorites
-   &&
-   !p.favorite
-  ){
-   return false;
-  }
+	if(
+	 db.mode === 'catalog'
+	 &&
+	 db.showFavorites
+	 &&
+	 !p.favorite
+	){
+	 return false;
+	}
 
   return true;
 
@@ -1678,6 +1686,46 @@ let html =
 	'</span></h3>';
 
 html+='</div>';
+items.sort((a,b)=>{
+
+  // 1. Favoris
+  if(a.favorite && !b.favorite){
+    return -1;
+  }
+
+  if(!a.favorite && b.favorite){
+    return 1;
+  }
+
+  // 2. À racheter
+  const aSuggest = shouldSuggest(a);
+  const bSuggest = shouldSuggest(b);
+
+  if(aSuggest && !bSuggest){
+    return -1;
+  }
+
+  if(!aSuggest && bSuggest){
+    return 1;
+  }
+
+  // 3. Déjà dans la liste
+  if(a.inList && !b.inList){
+    return -1;
+  }
+
+  if(!a.inList && b.inList){
+    return 1;
+  }
+
+  // 4. Tri alphabétique
+  return a.name.localeCompare(
+    b.name,
+    'fr',
+    {sensitivity:'base'}
+  );
+
+});
 if(!cat.collapsed){
 for(const p of items){
 
