@@ -1669,6 +1669,19 @@ let items=
 
  });
 
+const categoryItems =
+ items.filter(
+  p => p.inList
+ );
+
+const totalItems =
+ categoryItems.length;
+
+const remainingItems =
+ categoryItems.filter(
+  p => !p.purchased
+ ).length;
+
 if(db.mode==='store'){
 
  items=
@@ -1682,11 +1695,6 @@ if(db.mode==='store'){
  );
 
 }
-
-const remainingItems =
- items.filter(
-  p => !p.purchased
- ).length;
 
 if(
  db.mode === 'store' &&
@@ -1706,11 +1714,13 @@ let html =
   '">❯</span>' +
   '<h3 class="grow">' +
   categoryIcon(cat.name)+' '+cat.name+
-  '<span class="category-count">' +
-remainingItems +
-' / ' +
-totalItems +
-'</span></h3>';
+	'<span class="category-count">' +
+	(
+	  db.mode === 'store'
+		? remainingItems + ' / ' + totalItems
+		: items.length
+	) +
+	'</span></h3>';
 
 html+='</div>';
 if(!cat.collapsed){
