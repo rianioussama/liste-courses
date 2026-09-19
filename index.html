@@ -189,7 +189,7 @@ button{
 }
 
 .progress{
- height:12px;
+ height:14px;
  background:#ddd;
  border-radius:12px;
  overflow:hidden;
@@ -198,6 +198,7 @@ button{
 .progress div{
  background:#22c55e;
  height:100%;
+ transition:width .4s ease;
 }
 
 .favorite-btn{
@@ -407,13 +408,15 @@ button{
   transform:rotate(90deg);
 }
 
-.progress{
-  margin-top:12px;
-  height:12px;
-  background:#ddd;
-  border-radius:12px;
-  overflow:hidden;
+#stats{
+  margin-bottom:16px;
 }
+
+#progressCard{
+  padding:24px;
+}
+
+
 
 </style>
       
@@ -1601,12 +1604,16 @@ if(total > 0){
 
 stats.innerHTML =
 `
-<div>
+<div style="
+ font-size:1.2rem;
+ font-weight:700;
+">
  ${done} / ${total} articles récupérés
 </div>
+
 <div style="
- margin-top:6px;
- font-size:.9rem;
+ margin-top:8px;
+ font-size:1rem;
  opacity:.75;
 ">
  ${progressMessage}
