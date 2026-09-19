@@ -1707,13 +1707,9 @@ let html =
   '<h3 class="grow">' +
   categoryIcon(cat.name)+' '+cat.name+
   '<span class="category-count">' +
-(
- db.mode === 'store'
- ? remainingItems +
-   ' à prendre' +
-   (remainingItems > 1 ? 's' : '')
- : items.length
-) +
+remainingItems +
+' / ' +
+totalItems +
 '</span></h3>';
 
 html+='</div>';
