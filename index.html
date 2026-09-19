@@ -18,7 +18,7 @@
       href="icon-192.png">
 
 <meta name="theme-color" content="#4f46e5">
-<meta name="app-version" content="1.0.0">
+<meta name="app-version" content="1.0.1">
 
 <title>Liste de Courses</title>
 
@@ -1597,14 +1597,20 @@ catalogBtn.onclick=
 storeBtn.onclick=
  ()=>setMode('store');
 
-darkBtn.onclick=
- ()=>toggleDark();
+darkBtn.onclick = () => {
+  toggleDark();
+  toolsDropdown.classList.remove('show');
+};
 
-collapseAllBtn.onclick=
- ()=>collapseAll();
+collapseAllBtn.onclick = () => {
+  collapseAll();
+  toolsDropdown.classList.remove('show');
+};
 
-expandAllBtn.onclick=
- ()=>expandAll();
+expandAllBtn.onclick = () => {
+  expandAll();
+  toolsDropdown.classList.remove('show');
+};
 
 const toolsBtn =
   document.getElementById('toolsBtn');
