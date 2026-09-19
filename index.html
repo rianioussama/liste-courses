@@ -1473,6 +1473,47 @@ const shoppingFinished =
  total > 0 &&
  done === total;
 
+if(
+ db.mode === 'store' &&
+ shoppingFinished
+){
+
+ progressCard.style.display = 'none';
+
+ actions.innerHTML =
+ `
+ <div class="row">
+   <button
+     style="
+       width:100%;
+       background:#22c55e;
+       color:white;
+       font-weight:700;
+       padding:16px;
+     "
+     onclick="finishShopping()"
+   >
+     🎯 J'ai tout récupéré
+   </button>
+ </div>
+ `;
+
+ app.innerHTML =
+ `
+ <div class="card">
+   <h2 style="margin:0">
+     ✅ Tous les produits ont été récupérés
+   </h2>
+
+   <p style="margin-top:12px">
+     Vous pouvez maintenant terminer vos courses.
+   </p>
+ </div>
+ `;
+
+ return;
+}
+
 storeBtn.innerHTML =
  '🛒 Courses ' +
  (
@@ -1515,28 +1556,6 @@ if(db.mode === 'catalog'){
   db.products.filter(
    p => p.inList && p.purchased
   ).length;
-
-if(shoppingFinished){
-
- actions.innerHTML =
- `
- <div class="row">
-   <button
-     style="
-       width:100%;
-       background:#22c55e;
-       color:white;
-       font-weight:700;
-       padding:16px;
-     "
-     onclick="finishShopping()"
-   >
-     🎯 J'ai tout récupéré
-   </button>
- </div>
- `;
-
-}else{
 
  actions.innerHTML =
  `
