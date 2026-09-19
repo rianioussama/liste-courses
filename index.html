@@ -161,6 +161,20 @@ button{
  opacity:.5;
 }
 
+.item-hiding{
+  opacity:0;
+  transform:translateX(20px);
+  max-height:0;
+  margin:0;
+  padding:0;
+  overflow:hidden;
+  transition:
+    opacity .4s ease,
+    transform .4s ease,
+    max-height .4s ease,
+    padding .4s ease;
+}
+
 .active{
   background:#22c55e !important;
   color:white;
@@ -480,6 +494,8 @@ const APP_NOTIFICATION = {
 const defaults={
 
  mode:'catalog',
+ 
+ showPurchased:false,
 
  dark:false,
 
@@ -785,10 +801,10 @@ function getListQuantity(product){
 
 }
 
+
 function togglePurchased(id){
 
- const product=
-  getProductById(id);
+ const product = getProductById(id);
 
  if(!product){
   return;
@@ -796,31 +812,45 @@ function togglePurchased(id){
 
  if(!product.purchased){
 
-  const now=
-   new Date().toISOString();
+  const now = new Date().toISOString();
 
   product.frequency++;
-
-  product.lastPurchase=
-   now;
+  product.lastPurchase = now;
 
   product.purchaseHistory.push({
-
-   date:now,
-
-   quantity:
-    product.listQuantity
-
+   date: now,
+   quantity: product.listQuantity
   });
 
+  product.purchased = true;
+
+  save();
+
+  const row =
+   document.querySelector(
+    '[data-product-id="'+id+'"]'
+   );
+
+  if(row){
+
+   row.classList.add('item-hiding');
+
+   setTimeout(()=>{
+    render();
+   },400);
+
+  }else{
+   render();
+  }
+
+ }else{
+
+  product.purchased = false;
+
+  save();
+  render();
+
  }
-
- product.purchased=
-  !product.purchased;
-
- save();
-
- render();
 
 }
 
@@ -1495,12 +1525,14 @@ let items=
   return true;
 
  });
+
 if(db.mode==='store'){
-items=
-items.filter(
-p=>p.inList
-);
+ items=
+ items.filter(
+  p=>p.inList && !p.purchased
+ );
 }
+
 if(items.length===0){
  continue;
 }
@@ -1575,8 +1607,7 @@ p.inList
 if(db.mode==='store'){
 
  html+=
-
-  '<div class="item">'+
+ '<div class="item" data-product-id="'+p.id+'">'+
 
   '<input type="checkbox" '+
 
