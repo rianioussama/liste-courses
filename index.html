@@ -193,14 +193,6 @@ button{
  min-width:32px;
 }
 
-.category-toggle{
- min-width:40px;
-}
-
-.tools-menu{
-  position:relative;
-}
-
 .dropdown{
   display:none;
 
@@ -269,7 +261,6 @@ button{
   }
 
   .qty-btn,
-  .menu-btn,
   .favorite-btn{
     width:40px;
     height:40px;
@@ -321,11 +312,6 @@ button{
  color:#facc15;
 }
 
-.menu-btn{
- width:42px;
- min-width:42px;
-}
-
 .category-header{
   transition:0.2s;
 }
@@ -343,12 +329,6 @@ button{
 
 }
 
-.dropdown-menu button{
- display:block;
- width:100%;
- margin:4px 0;
-}
-
 .category-icon{
  display:inline-flex;
  align-items:center;
@@ -359,14 +339,6 @@ button{
  background:#eef2ff;
  margin-right:10px;
  font-size:20px;
-}
-
-.category-menu-btn{
- width:44px;
- height:44px;
- border-radius:12px;
- font-size:22px;
- font-weight:bold;
 }
 
 .category-count{
@@ -402,15 +374,6 @@ button{
   font-size:.75rem;
 
   font-weight:bold;
-}
-
-@media (hover:none){
-
-  .menu-btn,
-  .category-menu-btn{
-    opacity:1;
-  }
-
 }
 
 #favoritesBtn.active{
@@ -450,7 +413,7 @@ button{
   <div class="header-nav">
 
     <button id="catalogBtn">
-      Catalogue
+      📝 Liste
     </button>
 
     <button id="storeBtn">
@@ -640,17 +603,9 @@ function save(){
 
 }
 
-function generateId(){
-
- return Date.now()
-        +
-        Math.random();
-
-}
-
 function uid(){
 
- return generateId();
+ return Date.now() + Math.random();
 
 }
 
@@ -833,23 +788,6 @@ function getListQuantity(product){
 
 }
 
-function resetQuantity(id){
-
- const product=
-  getProductById(id);
-
- if(!product){
-  return;
- }
-
- product.listQuantity=1;
-
- save();
-
- render();
-
-}
-
 function togglePurchased(id){
 
  const product=
@@ -994,57 +932,6 @@ function shouldSuggest(
  }
 
  return elapsed>=average;
-
-}
-
-function getSuggestionLabel(
- product
-){
-
- return shouldSuggest(product)
-
-  ? '🔔 À racheter'
-
-  : '';
-
-}
-
-function purchaseHistoryText(product){
-
- if(
-  product.purchaseHistory.length===0
- ){
-  return 'Aucun achat';
- }
-
- const lastItems=
-
-  product.purchaseHistory
-   .slice(-3)
-   .reverse();
-
- return lastItems
-
-  .map(item=>{
-
-   const d=
-    new Date(
-      item.date
-    );
-
-   return (
-     d.toLocaleDateString(
-      'fr-FR'
-     )
-     +
-     ' x'
-     +
-     item.quantity
-   );
-
-  })
-
-  .join(' • ');
 
 }
 
@@ -1195,40 +1082,6 @@ function addToList(id){
 
  render();
 
-}
-
-function showProductMenu(event,id){
-
- event.preventDefault();
- event.stopPropagation();
-
- ();
-
- const menu =
-  document.createElement('div');
-
- menu.className =
-  'dropdown-menu product-context';
-
- menu.innerHTML =
-  '<button onclick="();editProduct('+id+')">✏️ Modifier</button>'+
-  '<button onclick="();deleteProduct('+id+')">🗑️ Supprimer</button>';
-
- menu.addEventListener(
-  'click',
-  e => e.stopPropagation()
- );
-
- document.body.appendChild(menu);
-
- const rect =
- event.target.getBoundingClientRect();
-
-menu.style.left =
- (rect.left - 120) + 'px';
-
-menu.style.top =
- (rect.bottom + 5) + 'px';
 }
 
 function categoryIcon(name){
@@ -1465,48 +1318,6 @@ if(
  return '📦';
 }
 
-function showCategoryMenu(event,id){
-
- event.preventDefault();
-	event.stopPropagation();
-
-	();
-
- document
- .querySelectorAll('.category-context')
- .forEach(x=>x.remove());
-
- const menu =
- document.createElement('div');
-
- menu.className =
- 'dropdown-menu category-context';
-
- menu.innerHTML =
-
- '<button onclick="addProduct('+id+')">➕ Ajouter un produit</button>' +
-
- '<button onclick="editCategory('+id+')">✏️ Modifier</button>' +
-
- '<button onclick="deleteCategory('+id+')">🗑️ Supprimer</button>';
-
- document.body.appendChild(menu);
-
- const rect =
- event.target.getBoundingClientRect();
-
-menu.style.left =
- (rect.left - 120) + 'px';
-
-menu.style.top =
- (rect.bottom + 5) + 'px';
- 
- menu.addEventListener(
- 'click',
- e => e.stopPropagation()
-);
-}
-
 async function loadCatalog(){
 
  try{
@@ -1558,6 +1369,11 @@ storeBtn.className=
 db.mode==='store'
 ? 'active'
 : '';
+
+actions.style.display =
+  db.mode === 'catalog'
+  ? 'block'
+  : 'none';
 
 actions.innerHTML =
 db.mode === 'catalog'
@@ -1675,8 +1491,7 @@ shouldSuggest(p)
 ? '<span class="badge badge-warning">🔔 À racheter</span>'
 : '';
 
-const avg=
-averageRepurchaseDays(p);
+
 if(db.mode==='catalog'){
 
 html +=
