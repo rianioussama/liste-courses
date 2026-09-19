@@ -1544,8 +1544,8 @@ if(shoppingFinished){
    <button onclick="togglePurchasedVisibility()">
      ${
       db.showPurchased
-       ? '🙈 masquer les articles récupérés'
-       : `👀 voir les articles récupérés (${hiddenPurchased})`
+       ? '🙈 masquer les produits récupérés'
+       : `👀 voir les produits récupérés (${hiddenPurchased})`
      }
    </button>
  </div>
@@ -1573,19 +1573,19 @@ if(total > 0){
  if(done === total){
 
   progressMessage =
-   '✅ Tous les articles ont été récupérés';
+   '✅ Tous les produits ont été récupérés';
 
  }else if(remaining === 1){
 
   progressMessage =
-   '⏳ Plus que 1 article à prendre';
+   '⏳ Plus que 1 produit à prendre';
 
  }else{
 
   progressMessage =
    '⏳ Encore ' +
    remaining +
-   ' articles à prendre';
+   ' produits à prendre';
 
  }
 
@@ -1597,7 +1597,7 @@ stats.innerHTML =
  font-size:1.2rem;
  font-weight:700;
 ">
- ${done} / ${total} articles récupérés
+ ${done} / ${total} produits récupérés
 </div>
 
 <div style="
@@ -1720,8 +1720,8 @@ let html =
       )
     : items.length +
       (items.length > 1
-        ? ' articles'
-        : ' article')
+        ? ' produits'
+        : ' produit')
 	) +
 	'</span></h3>';
 
