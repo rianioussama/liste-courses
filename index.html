@@ -491,6 +491,11 @@ const APP_NOTIFICATION = {
   message: 'Ajout de nouvelles fonctionnalités'
 };
 
+const remainingItems =
+ items.filter(
+  p => !p.purchased
+ ).length;
+
 const defaults={
 
  mode:'catalog',
@@ -1421,6 +1426,29 @@ function togglePurchasedVisibility(){
 
 }
 
+function finishShopping(){
+
+ db.products.forEach(product => {
+
+  if(product.inList){
+
+   product.inList = false;
+   product.purchased = false;
+   product.listQuantity = 1;
+
+  }
+
+ });
+
+ db.showPurchased = false;
+
+ setMode('catalog');
+
+ save();
+ render();
+
+}
+
 function render(){
 
 document.body.className=
@@ -1477,17 +1505,42 @@ if(db.mode === 'catalog'){
   ).length;
 
  actions.innerHTML=
+if(shoppingFinished){
+
+ actions.innerHTML =
+ `
+ <div class="row">
+   <button
+     style="
+       width:100%;
+       background:#22c55e;
+       color:white;
+       font-weight:700;
+       padding:16px;
+     "
+     onclick="finishShopping()"
+   >
+     ✅ Terminer les courses
+   </button>
+ </div>
+ `;
+
+}else{
+
+ actions.innerHTML =
  `
  <div class="row">
    <button onclick="togglePurchasedVisibility()">
      ${
       db.showPurchased
-      ? '🙈 Masquer les articles récupérés'
-      : `✅ Afficher les articles récupérés (${hiddenPurchased})`
+       ? '🙈 Masquer les articles récupérés'
+       : `✅ Afficher les articles récupérés (${hiddenPurchased})`
      }
    </button>
  </div>
  `;
+
+}
 
 }
 
@@ -1509,11 +1562,54 @@ p.inList
 &&
 p.purchased
 ).length;
-stats.textContent=
-done+
-' / '+
-total+
-' articles récupérés';
+
+const shoppingFinished =
+ total > 0 &&
+ done === total;
+
+const remaining =
+ total - done;
+
+let progressMessage = '';
+
+if(total > 0){
+
+ if(done === total){
+
+  progressMessage =
+   '✅ Tous les articles ont été récupérés';
+
+ }else if(remaining === 1){
+
+  progressMessage =
+   '🎯 Plus que 1 article à récupérer';
+
+ }else{
+
+  progressMessage =
+   '🎯 Plus que ' +
+   remaining +
+   ' articles à récupérer';
+
+ }
+
+}
+
+stats.innerHTML =
+`
+<div>
+ ${done} / ${total} articles récupérés
+</div>
+<div style="
+ margin-top:6px;
+ font-size:.9rem;
+ opacity:.75;
+">
+ ${progressMessage}
+</div>
+`;
+
+
 bar.style.width=
 (
 total
@@ -1586,8 +1682,8 @@ let html =
   '<h3 class="grow">' +
   categoryIcon(cat.name)+' '+cat.name+
   '<span class="category-count">' +
-  items.length +
-  '</span></h3>';
+	items.length +
+	'</span></h3>';
 
 html+='</div>';
 if(!cat.collapsed){
