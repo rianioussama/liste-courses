@@ -1211,10 +1211,12 @@ app.innerHTML+=html;
 }
 
 }
-search.addEventListener(
- 'input',
- render
-);
+document
+  .getElementById('search')
+  .addEventListener(
+    'input',
+    render
+  );
 
 catalogBtn.onclick=
  ()=>setMode('catalog');
