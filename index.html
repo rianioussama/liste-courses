@@ -1675,7 +1675,7 @@ if(db.mode === 'catalog'){
       ${
        db.showSuggestionsView
         ? '🙈 Réduire'
-        : '👀 Voir tout (${suggestedProducts.length})'
+        : `👀 Voir tout (${suggestedProducts.length})`
       }
      </button>
 
@@ -1706,7 +1706,20 @@ if(db.mode === 'catalog'){
 	 `)
 	 .join('')
 	}
-
+		 ${
+	 !db.showSuggestionsView &&
+	 suggestedProducts.length > 3
+	 ? `
+	   <div class="meta" style="
+		 margin-top:8px;
+		 text-align:center;
+		 font-weight:600;
+	   ">
+		 + ${suggestedProducts.length - 3} autres suggestions
+	   </div>
+	 `
+	 : ''
+	}
    </div>
   `;
  }
@@ -1735,7 +1748,7 @@ if(db.mode === 'catalog'){
       ${
        db.showFavoritesView
         ? '🙈 Réduire'
-        : '👀 Voir tout (${favoriteProducts.length})'
+        : `👀 Voir tout (${favoriteProducts.length})`
       }
      </button>
 
@@ -1765,6 +1778,20 @@ if(db.mode === 'catalog'){
 	  </div>
 	 `)
 	 .join('')
+	}
+	${
+	 !db.showFavoritesView &&
+	 favoriteProducts.length > 3
+	 ? `
+	   <div class="meta" style="
+		 margin-top:8px;
+		 text-align:center;
+		 font-weight:600;
+	   ">
+		 + ${favoriteProducts.length - 3} autres favoris
+	   </div>
+	 `
+	 : ''
 	}
 
    </div>
