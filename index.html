@@ -421,10 +421,6 @@ button{
       🛒 Magasin
     </button>
 	
-	<button id="notifyBtn">
-	  🔔
-	</button>
-	
     <button id="toolsBtn">
       ⚙️
     </button>
@@ -474,6 +470,12 @@ button{
 </div>
 
 <script>
+
+const APP_NOTIFICATION = {
+  version: '1.0.2',
+  title: '🆕 Nouvelle version',
+  message: 'Ajout de nouvelles fonctionnalités'
+};
 
 const defaults={
 
@@ -1021,18 +1023,6 @@ function toggleCategory(id){
 
 }
 
-function expandAll(){
-
- db.categories.forEach(
-  c=>c.collapsed=false
- );
-
- save();
-
- render();
-
-}
-
 function toggleFavorites(){
 
  db.showFavorites=
@@ -1358,46 +1348,31 @@ function toggleDark(){
   render();
 }
 
-notifyBtn.onclick = async () => {
+function showAppNotification(){
 
-  const permission =
-    await Notification.requestPermission();
-
-  if(permission === 'granted'){
-
-    new Notification(
-      'Liste de Courses',
-      {
-        body:'Les notifications sont activées ✅'
-      }
+  const seenVersion =
+    localStorage.getItem(
+      'notification-version'
     );
 
-  }
-
-};
-
-function sendNotification(text){
-
-  if(Notification.permission !== 'granted'){
+  if(
+    seenVersion === APP_NOTIFICATION.version
+  ){
     return;
   }
 
-  new Notification(
-    'Liste de Courses',
-    {
-      body:text
-    }
+  alert(
+    APP_NOTIFICATION.title +
+    '\n\n' +
+    APP_NOTIFICATION.message
+  );
+
+  localStorage.setItem(
+    'notification-version',
+    APP_NOTIFICATION.version
   );
 
 }
-
-notifyBtn.onclick = () => {
-
-  sendNotification(
-    'N’oublie pas les courses 🛒'
-  );
-
-};
 
 function render(){
 
@@ -1700,6 +1675,8 @@ if(
  }
 
  render();
+
+ showAppNotification();
 
 })();
 
