@@ -18,7 +18,7 @@
       href="icon-192.png">
 
 <meta name="theme-color" content="#4f46e5">
-<meta name="app-version" content="1.0.1">
+<meta name="app-version" content="1.0.0">
 
 <title>Liste de Courses</title>
 
@@ -636,16 +636,6 @@ function setMode(mode){
 
 }
 
-function toggleDark(){
-
- db.dark=!db.dark;
-
- save();
-
- render();
-
-}
-
 function daysAgo(date){
 
  if(!date){
@@ -1027,18 +1017,6 @@ function toggleCategory(id){
 
 }
 
-function collapseAll(){
-
- db.categories.forEach(
-  c=>c.collapsed=true
- );
-
- save();
-
- render();
-
-}
-
 function expandAll(){
 
  db.categories.forEach(
@@ -1342,6 +1320,40 @@ async function loadCatalog(){
 
 }
 
+function closeToolsMenu(){
+  document
+    .getElementById('toolsDropdown')
+    .classList.remove('show');
+}
+
+function collapseAll(){
+  db.categories.forEach(
+    c => c.collapsed = true
+  );
+
+  save();
+  closeToolsMenu();
+  render();
+}
+
+function expandAll(){
+  db.categories.forEach(
+    c => c.collapsed = false
+  );
+
+  save();
+  closeToolsMenu();
+  render();
+}
+
+function toggleDark(){
+  db.dark = !db.dark;
+
+  save();
+  closeToolsMenu();
+  render();
+}
+
 function render(){
 
 document.body.className=
@@ -1597,20 +1609,9 @@ catalogBtn.onclick=
 storeBtn.onclick=
  ()=>setMode('store');
 
-darkBtn.onclick = () => {
-  toggleDark();
-  toolsDropdown.classList.remove('show');
-};
-
-collapseAllBtn.onclick = () => {
-  collapseAll();
-  toolsDropdown.classList.remove('show');
-};
-
-expandAllBtn.onclick = () => {
-  expandAll();
-  toolsDropdown.classList.remove('show');
-};
+darkBtn.onclick = toggleDark;
+collapseAllBtn.onclick = collapseAll;
+expandAllBtn.onclick = expandAll;
 
 const toolsBtn =
   document.getElementById('toolsBtn');
