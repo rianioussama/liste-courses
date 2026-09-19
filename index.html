@@ -18,7 +18,7 @@
       href="icon-192.png">
 
 <meta name="theme-color" content="#4f46e5">
-<meta name="app-version" content="1.0.3">
+<meta name="app-version" content="1.0.0">
 
 <title>Liste de Courses</title>
 
@@ -420,7 +420,11 @@ button{
     <button id="storeBtn">
       🛒 Magasin
     </button>
-
+	
+	<button id="notifyBtn">
+	  🔔
+	</button>
+	
     <button id="toolsBtn">
       ⚙️
     </button>
@@ -1353,6 +1357,47 @@ function toggleDark(){
   closeToolsMenu();
   render();
 }
+
+notifyBtn.onclick = async () => {
+
+  const permission =
+    await Notification.requestPermission();
+
+  if(permission === 'granted'){
+
+    new Notification(
+      'Liste de Courses',
+      {
+        body:'Les notifications sont activées ✅'
+      }
+    );
+
+  }
+
+};
+
+function sendNotification(text){
+
+  if(Notification.permission !== 'granted'){
+    return;
+  }
+
+  new Notification(
+    'Liste de Courses',
+    {
+      body:text
+    }
+  );
+
+}
+
+notifyBtn.onclick = () => {
+
+  sendNotification(
+    'N’oublie pas les courses 🛒'
+  );
+
+};
 
 function render(){
 
