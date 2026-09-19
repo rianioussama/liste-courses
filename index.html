@@ -1467,40 +1467,33 @@ if(db.mode === 'catalog'){
  </div>
  `;
 
-}else if(db.mode === 'store'){
+}else{
 
  actions.style.display='block';
 
-
-const hiddenPurchased =
- db.products.filter(
-  p => p.inList && p.purchased
- ).length;
-
- actions.style.display='block';
+ const hiddenPurchased =
+  db.products.filter(
+   p => p.inList && p.purchased
+  ).length;
 
  actions.innerHTML=
  `
  <div class="row">
-   <button
-     onclick="togglePurchasedVisibility()"
-   >
+   <button onclick="togglePurchasedVisibility()">
      ${
       db.showPurchased
       ? '🙈 Masquer les articles récupérés'
-      : '✅ Afficher les articles récupérés ('+hiddenPurchased+')'
+      : `✅ Afficher les articles récupérés (${hiddenPurchased})`
      }
    </button>
  </div>
  `;
+
 }
 
-const q=
-(
-search.value
-||
-''
-).toLowerCase();
+const q =
+ (search.value || '').toLowerCase();
+
 app.innerHTML='';
 if(db.mode==='store'){
 progressCard.style.display=
