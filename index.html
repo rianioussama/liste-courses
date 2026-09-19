@@ -1689,6 +1689,7 @@ if(db.mode==='store'){
 
 if(
  db.mode === 'store' &&
+ !db.showPurchased &&
  remainingItems === 0
 ){
  continue;
@@ -1711,9 +1712,16 @@ let html =
 	'</span>' +
 	'<span class="category-count">' +
 	(
-	  db.mode === 'store'
-		? remainingItems + ' / ' + totalItems
-		: items.length
+	db.mode === 'store'
+    ? (
+        remainingItems === 0
+          ? '✅ ' + totalItems + ' / ' + totalItems
+          : remainingItems + ' / ' + totalItems
+      )
+    : items.length +
+      (items.length > 1
+        ? ' articles'
+        : ' article')
 	) +
 	'</span></h3>';
 
