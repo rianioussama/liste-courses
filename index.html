@@ -544,8 +544,6 @@ const defaults={
 
  dark:false,
 
- showFavorites:false,
-
  categories:[],
 
  products:[]
@@ -580,14 +578,16 @@ const isMobile =
   '(pointer:coarse)'
  ).matches;
 
-if(db.showFavorites===undefined){
-
- db.showFavorites=false;
-
-}
-
 if(db.showPurchased === undefined){
 db.showPurchased = false;
+}
+
+if(db.showSuggestionsView === undefined){
+ db.showSuggestionsView = false;
+}
+
+if(db.showFavoritesView === undefined){
+ db.showFavoritesView = false;
 }
 
 db.categories =
@@ -700,12 +700,6 @@ function getCategoryById(id){
 function setMode(mode){
 
  db.mode = mode;
-
- if(mode === 'store'){
-
-  db.showFavorites = false;
-
- }
 
  save();
 
@@ -1106,16 +1100,6 @@ function toggleCategory(id){
 
 }
 
-function toggleFavorites(){
-
- db.showFavorites=
-  !db.showFavorites;
-
- save();
-
- render();
-
-}
 
 function addToList(id){
 
@@ -1127,6 +1111,8 @@ function addToList(id){
  }
 
  product.inList = true;
+ 
+ product.purchased = false;
 
  if(!product.listQuantity){
   product.listQuantity = 1;
@@ -1135,6 +1121,64 @@ function addToList(id){
  save();
  render();
 
+}
+
+function addAllSuggested(){
+
+ db.products
+  .filter(
+   p =>
+    !p.inList &&
+    shouldSuggest(p)
+  )
+  .forEach(p=>{
+   p.inList = true;
+
+   if(!p.listQuantity){
+    p.listQuantity = 1;
+   }
+  });
+
+ save();
+ render();
+}
+
+function addAllFavorites(){
+
+ db.products
+  .filter(
+   p =>
+    !p.inList &&
+    p.favorite
+  )
+  .forEach(p=>{
+   p.inList = true;
+
+   if(!p.listQuantity){
+    p.listQuantity = 1;
+   }
+  });
+
+ save();
+ render();
+}
+
+function toggleSuggestions(){
+
+ db.showSuggestionsView =
+  !db.showSuggestionsView;
+
+ save();
+ render();
+}
+
+function toggleFavoritesView(){
+
+ db.showFavoritesView =
+  !db.showFavoritesView;
+
+ save();
+ render();
 }
 
 
@@ -1540,7 +1584,7 @@ if(
    <h2>🎯 Tous les produits ont été récupérés</h2>
 
    <p>
-     Vous pouvez maintenant terminer vos courses.
+     Vous pouvez maintenant terminer vos courses pour revenir au catalogue.
    </p>
  </div>
  `;
@@ -1560,20 +1604,7 @@ storeBtn.classList.toggle(
 
 if(db.mode === 'catalog'){
 
- actions.style.display='block';
-
- actions.innerHTML=
- `
- <div class="row">
-   <button
-     id="favoritesBtn"
-     class="${db.showFavorites ? 'active' : ''}"
-     onclick="toggleFavorites()"
-   >
-     ⭐ Produits favoris
-   </button>
- </div>
- `;
+ actions.style.display='none';
 
 }else{
 
@@ -1603,6 +1634,145 @@ const q =
  (search.value || '').toLowerCase();
 
 app.innerHTML='';
+
+const suggestedProducts =
+ db.products.filter(
+  p =>
+   !p.inList &&
+   shouldSuggest(p)
+ );
+
+const favoriteProducts =
+ db.products.filter(
+  p =>
+   !p.inList &&
+   p.favorite
+ );
+
+if(db.mode === 'catalog'){
+
+ if(suggestedProducts.length){
+
+  app.innerHTML += `
+   <div class="card">
+
+    <h3>
+     🔔 Suggestions de rachat
+     (${suggestedProducts.length})
+    </h3>
+
+    <div class="row">
+
+     <button
+      onclick="addAllSuggested()"
+     >
+      ➕ Ajouter tout
+     </button>
+
+     <button
+      onclick="toggleSuggestions()"
+     >
+      ${
+       db.showSuggestionsView
+        ? '🙈 Réduire'
+        : '👀 Voir tout (${suggestedProducts.length})'
+      }
+     </button>
+
+    </div>
+
+    ${
+	 (
+	  db.showSuggestionsView
+	   ? suggestedProducts
+	   : suggestedProducts.slice(0,3)
+	 )
+	 .map(p=>`
+	  <div class="item">
+		<div class="grow">
+		  <strong>${p.name}</strong>
+
+		  <div class="meta">
+			${daysAgo(p.lastPurchase)}
+		  </div>
+		</div>
+
+		<button
+		  onclick="addToList(${p.id})"
+		>
+		  🛒
+		</button>
+	  </div>
+	 `)
+	 .join('')
+	}
+
+   </div>
+  `;
+ }
+
+ if(favoriteProducts.length){
+
+  app.innerHTML += `
+   <div class="card">
+
+    <h3>
+     ⭐ Favoris
+     (${favoriteProducts.length})
+    </h3>
+
+    <div class="row">
+
+     <button
+      onclick="addAllFavorites()"
+     >
+      ➕ Ajouter tout
+     </button>
+
+     <button
+      onclick="toggleFavoritesView()"
+     >
+      ${
+       db.showFavoritesView
+        ? '🙈 Réduire'
+        : '👀 Voir tout (${favoriteProducts.length})'
+      }
+     </button>
+
+    </div>
+
+    ${
+	 (
+	  db.showFavoritesView
+	   ? favoriteProducts
+	   : favoriteProducts.slice(0,3)
+	 )
+	 .map(p=>`
+	  <div class="item">
+		<div class="grow">
+		  <strong>${p.name}</strong>
+
+		  <div class="meta">
+			${daysAgo(p.lastPurchase)}
+		  </div>
+		</div>
+
+		<button
+		  onclick="addToList(${p.id})"
+		>
+		  🛒
+		</button>
+	  </div>
+	 `)
+	 .join('')
+	}
+
+   </div>
+  `;
+ }
+
+}
+
 if(db.mode==='store'){
 progressCard.style.display=
 'block';
@@ -1690,16 +1860,6 @@ let items=
    return false;
   }
 
-	if(
-	 db.mode === 'catalog'
-	 &&
-	 db.showFavorites
-	 &&
-	 !p.favorite
-	){
-	 return false;
-	}
-
   return true;
 
  });
@@ -1771,15 +1931,6 @@ let html =
 
 html+='</div>';
 items.sort((a,b)=>{
-
-  // 1. Favoris
-  if(a.favorite && !b.favorite){
-    return -1;
-  }
-
-  if(!a.favorite && b.favorite){
-    return 1;
-  }
 
   // 2. À racheter
   const aSuggest = shouldSuggest(a);
