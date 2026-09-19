@@ -416,7 +416,35 @@ button{
   padding:24px;
 }
 
+.category-header h3{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin:0;
+  width:100%;
+}
 
+.category-header h3 .category-title{
+  flex:1;
+  min-width:0;
+  white-space:normal;
+}
+
+@media(max-width:768px){
+
+  .category-header h3{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:6px;
+  }
+
+  .category-count{
+    margin-left:0;
+  }
+
+}
 
 </style>
       
@@ -1675,8 +1703,12 @@ let html =
   '<span class="category-arrow ' +
   (cat.collapsed ? '' : 'open') +
   '">❯</span>' +
-  '<h3 class="grow">' +
-  categoryIcon(cat.name)+' '+cat.name+
+  '<h3>' +
+	'<span class="category-title">' +
+	categoryIcon(cat.name) +
+	' ' +
+	cat.name +
+	'</span>' +
 	'<span class="category-count">' +
 	(
 	  db.mode === 'store'
