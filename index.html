@@ -183,6 +183,12 @@ button{
     rgba(34,197,94,.3);
 }
 
+.disabled-btn{
+  opacity:.45;
+  filter:grayscale(100%);
+  pointer-events:none;
+}
+
 .meta{
  font-size:.8rem;
  opacity:.75;
@@ -779,14 +785,6 @@ function toggleFavorite(id){
 
 function toggleList(id){
 
- if(isShoppingFinished()){
-
-  finishShopping();
-
-  return;
-
- }
-
  const product =
   getProductById(id);
 
@@ -1121,12 +1119,6 @@ function toggleFavorites(){
 
 function addToList(id){
 
- if(isShoppingFinished()){
-
-  finishShopping();
-
- }
-
  const product =
   getProductById(id);
 
@@ -1135,7 +1127,6 @@ function addToList(id){
  }
 
  product.inList = true;
- product.purchased = false;
 
  if(!product.listQuantity){
   product.listQuantity = 1;
@@ -1145,6 +1136,7 @@ function addToList(id){
  render();
 
 }
+
 
 function categoryIcon(name){
 
@@ -1447,8 +1439,6 @@ function finishShopping(){
 
  db.showPurchased = false;
 
- save();
-
  setMode('catalog');
 
 }
@@ -1497,14 +1487,19 @@ p.purchased
 const shoppingFinished =
  total > 0 &&
  done === total;
-
-storeBtn.innerHTML =
- '🛒 Courses ' +
- (
-   cartCount > 0
-   ? '<span class="badge-count">'+cartCount+'</span>'
-   : ''
- );
+ 
+ if(
+ db.mode === 'store' &&
+ shoppingFinished
+){
+  catalogBtn.classList.add(
+    'disabled-btn'
+  );
+}else{
+  catalogBtn.classList.remove(
+    'disabled-btn'
+  );
+}
 
 if(
  db.mode === 'store' &&
@@ -1544,6 +1539,14 @@ if(
 
  return;
 }
+
+storeBtn.innerHTML =
+ '🛒 Courses ' +
+ (
+   cartCount > 0
+   ? '<span class="badge-count">'+cartCount+'</span>'
+   : ''
+ );
 
 catalogBtn.className=
 db.mode==='catalog'
