@@ -1683,7 +1683,10 @@ if(db.mode==='store'){
 
 }
 
-const remainingItems = items.length;
+const remainingItems =
+ items.filter(
+  p => !p.purchased
+ ).length;
 
 if(
  db.mode === 'store' &&
