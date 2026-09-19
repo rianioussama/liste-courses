@@ -1444,7 +1444,12 @@ actions.style.display =
   db.mode === 'catalog'
   ? 'block'
   : 'none';
-  
+
+const hiddenPurchased =
+ db.products.filter(
+  p => p.inList && p.purchased
+ ).length;
+
  if(db.mode === 'store'){
 
  actions.style.display='block';
@@ -1515,10 +1520,7 @@ done*100/total
 0
 )+'%';
 
-const hiddenPurchased =
- db.products.filter(
-  p => p.inList && p.purchased
- ).length;
+
 }else{
 progressCard.style.display=
 'none';
