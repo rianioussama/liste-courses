@@ -1501,6 +1501,14 @@ const shoppingFinished =
   );
 }
 
+storeBtn.innerHTML =
+ '🛒 Courses ' +
+ (
+   cartCount > 0
+   ? '<span class="badge-count">'+cartCount+'</span>'
+   : ''
+ );
+
 if(
  db.mode === 'store' &&
  shoppingFinished
@@ -1540,22 +1548,15 @@ if(
  return;
 }
 
-storeBtn.innerHTML =
- '🛒 Courses ' +
- (
-   cartCount > 0
-   ? '<span class="badge-count">'+cartCount+'</span>'
-   : ''
- );
+catalogBtn.classList.toggle(
+ 'active',
+ db.mode === 'catalog'
+);
 
-catalogBtn.className=
-db.mode==='catalog'
-? 'active'
-: '';
-storeBtn.className=
-db.mode==='store'
-? 'active'
-: '';
+storeBtn.classList.toggle(
+ 'active',
+ db.mode === 'store'
+);
 
 if(db.mode === 'catalog'){
 
