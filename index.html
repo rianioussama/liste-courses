@@ -428,7 +428,11 @@ button{
   </div>
 
   <div id="toolsDropdown" class="dropdown">
-
+	
+	<button id="resetBtn">
+   🗑️ Réinitialiser
+   </button>
+	
     <button id="collapseAllBtn">
       ➖ Tout plier
     </button>
@@ -1348,6 +1352,31 @@ function toggleDark(){
   render();
 }
 
+function resetApplication(){
+
+  const confirmReset = confirm(
+    'Réinitialiser la liste de courses ?'
+  );
+
+  if(!confirmReset){
+    return;
+  }
+
+  db.products.forEach(product => {
+
+    product.inList = false;
+    product.purchased = false;
+    product.listQuantity = 1;
+
+  });
+
+  save();
+
+  closeToolsMenu();
+
+  render();
+}
+
 function showAppNotification(){
 
   const seenVersion =
@@ -1495,12 +1524,25 @@ let items=
   return true;
 
  });
+
 if(db.mode==='store'){
-items=
-items.filter(
-p=>p.inList
-);
+  items = items
+    .filter(p => p.inList)
+    .sort((a,b) => {
+      // Non achetés en premier
+      if(a.purchased !== b.purchased){
+        return a.purchased ? 1 : -1;
+      }
+
+      // Puis tri alphabétique
+      return a.name.localeCompare(
+        b.name,
+        'fr',
+        {sensitivity:'base'}
+      );
+    });
 }
+
 if(items.length===0){
  continue;
 }
@@ -1628,6 +1670,8 @@ search.addEventListener(
 
 catalogBtn.onclick=
  ()=>setMode('catalog');
+
+resetBtn.onclick = resetApplication;
 
 storeBtn.onclick=
  ()=>setMode('store');
