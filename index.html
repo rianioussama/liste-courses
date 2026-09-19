@@ -439,15 +439,15 @@ button{
   <div class="header-nav">
 
     <button id="catalogBtn">
-      📝 Liste
+      📝 Catalogue
     </button>
 
     <button id="storeBtn">
-      🛒 Magasin
+      🛒 Courses
     </button>
 	
     <button id="toolsBtn">
-      ⚙️
+      ⚙️ 
     </button>
 
   </div>
@@ -1112,7 +1112,7 @@ function categoryIcon(name){
   n.includes('légume') ||
   n.includes('legume')
  ){
-  return '🥬';
+  return '🍎🥬';
  }
 
  // Viandes
@@ -1123,7 +1123,7 @@ function categoryIcon(name){
   n.includes('porc') ||
   n.includes('poulet')
  ){
-  return '🥩';
+  return '🥩🐟';
  }
 
  // Poissons
@@ -1143,7 +1143,7 @@ function categoryIcon(name){
   n.includes('yaourt') ||
   n.includes('beurre')
  ){
-  return '🥛';
+  return '🥛🥚';
  }
 
  // Boulangerie
@@ -1152,7 +1152,7 @@ function categoryIcon(name){
   n.includes('boulangerie') ||
   n.includes('baguette')
  ){
-  return '🥖';
+  return '🥖🥐';
  }
 
 // Petit-déjeuner
@@ -1164,7 +1164,7 @@ if(
  n.includes('céréale') ||
  n.includes('cereale')
 ){
- return '🥣';
+ return '🥣☕';
 }
 
  // Café / Thé
@@ -1196,7 +1196,7 @@ if(
   n.includes('pates') ||
   n.includes('semoule')
  ){
-  return '🍝';
+  return '🍝🍚';
  }
 
  // Épicerie sucrée
@@ -1226,7 +1226,7 @@ if(
   n.includes('biscuit') ||
   n.includes('cookie')
  ){
-  return '🍪';
+  return '🍪🥜';
  }
 
  // Bonbons
@@ -1330,7 +1330,7 @@ if(
   n.includes('bébé') ||
   n.includes('bebe')
  ){
-  return '🍼';
+  return '👶🍼';
  }
 
  return '📦';
@@ -1485,7 +1485,7 @@ const shoppingFinished =
  done === total;
 
 storeBtn.innerHTML =
- '🛒 Magasin ' +
+ '🛒 Courses ' +
  (
    cartCount > 0
    ? '<span class="badge-count">'+cartCount+'</span>'
@@ -1513,7 +1513,7 @@ if(db.mode === 'catalog'){
      class="${db.showFavorites ? 'active' : ''}"
      onclick="toggleFavorites()"
    >
-     ⭐ Favoris
+     ⭐ Produits favoris
    </button>
  </div>
  `;
@@ -1542,7 +1542,7 @@ if(shoppingFinished){
      "
      onclick="finishShopping()"
    >
-     ✅ Terminer les courses
+     🎯 J'ai tout récupéré
    </button>
  </div>
  `;
@@ -1555,8 +1555,8 @@ if(shoppingFinished){
    <button onclick="togglePurchasedVisibility()">
      ${
       db.showPurchased
-       ? '🙈 Masquer les articles récupérés'
-       : `✅ Afficher les articles récupérés (${hiddenPurchased})`
+       ? '🙈 Voir les articles récupérés'
+       : `👀 Afficher les articles récupérés (${hiddenPurchased})`
      }
    </button>
  </div>
@@ -1589,14 +1589,14 @@ if(total > 0){
  }else if(remaining === 1){
 
   progressMessage =
-   '🎯 Plus que 1 article à récupérer';
+   '⏳ Plus que 1 article à prendre';
 
  }else{
 
   progressMessage =
-   '🎯 Plus que ' +
+   '⏳ Encore ' +
    remaining +
-   ' articles à récupérer';
+   ' articles à prendre';
 
  }
 
@@ -1751,7 +1751,7 @@ badgeSuggest+
 '<div class="product-meta">'+
 (
 p.lastPurchase
-? 'Dernier achat : '+daysAgo(p.lastPurchase)
+? '🕒 '+daysAgo(p.lastPurchase)
 : 'Jamais acheté'
 )+
 '</div>'+
