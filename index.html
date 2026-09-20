@@ -160,20 +160,6 @@ button{
  opacity:.5;
 }
 
-.item-hiding{
-  opacity:0;
-  transform:translateX(20px);
-  max-height:0;
-  margin:0;
-  padding:0;
-  overflow:hidden;
-  transition:
-    opacity .4s ease,
-    transform .4s ease,
-    max-height .4s ease,
-    padding .4s ease;
-}
-
 .active{
   background:#22c55e !important;
   color:white;
@@ -682,11 +668,6 @@ if(!db){
 
 }
 
-const isMobile =
- window.matchMedia(
-  '(pointer:coarse)'
- ).matches;
-
 if(db.showPurchased === undefined){
 db.showPurchased = false;
 }
@@ -993,49 +974,6 @@ function decreaseQuantity(id){
 function getListQuantity(product){
 
  return product.listQuantity || 1;
-
-}
-
-
-function togglePurchased(id){
-
- const product = getProductById(id);
-
- if(!product){
-  return;
- }
-
- if(!product.purchased){
-
-  product.purchased = true;
-
-  save();
-
-  const row =
-   document.querySelector(
-    '[data-product-id="'+id+'"]'
-   );
-
-  if(row){
-
-    row.classList.add('item-hiding');
-
-    setTimeout(()=>{
-      render();
-    },400);
-
-  }else{
-    render();
-  }
-
-}else{
-
-  product.purchased = false;
-
-  save();
-  render();
-
- }
 
 }
 
@@ -1772,6 +1710,109 @@ Object.values(db.weeklyMenu)
 
  save();
  render();
+
+}
+
+function finishShopping(){
+
+  if(!isShoppingFinished()){
+    alert(
+      "Tous les produits doivent être récupérés avant l'enregistrement."
+    );
+    return;
+  }
+
+  const amountInput =
+    document.getElementById(
+      'shoppingAmount'
+    );
+
+  const amount =
+    parseFloat(
+      amountInput?.value || 0
+    );
+
+  if(
+    !Number.isFinite(amount)
+    ||
+    amount <= 0
+  ){
+    amountInput.classList.add(
+      'input-error'
+    );
+
+    amountInput.focus();
+
+    return;
+  }
+
+  db.shoppingHistory.unshift({
+
+    date:
+      new Date().toISOString(),
+
+    amount
+
+  });
+
+  db.shoppingHistory =
+    db.shoppingHistory.slice(
+      0,
+      20
+    );
+
+  const now =
+    new Date().toISOString();
+
+  db.products.forEach(product => {
+
+    if(
+      product.inList &&
+      product.purchased
+    ){
+
+      product.frequency++;
+
+      product.lastPurchase = now;
+
+      product.purchaseHistory.push({
+
+        date: now,
+
+        quantity:
+          product.listQuantity
+
+      });
+
+    }
+
+  });
+
+  db.products.forEach(product => {
+
+    if(product.inList){
+
+      product.inList = false;
+
+      product.purchased = false;
+
+      product.listQuantity = 1;
+
+    }
+
+  });
+
+  db.showPurchased = false;
+
+  db.showBudgetView = true;
+
+  db.mode = 'store';
+
+  db.waitingForAmount = false;
+
+  save();
+
+  render();
 
 }
 	
