@@ -1895,7 +1895,8 @@ storeBtn.innerHTML =
 if(
  db.mode === 'store' &&
  shoppingFinished &&
- !db.showBudgetView
+ !db.showBudgetView &&
+ !db.showMenuView
 ){
 actions.style.display = 'block';
  progressCard.style.display = 'none';
@@ -2909,6 +2910,7 @@ weeklyMenuBtn.onclick = () => {
 
  db.showMenuView = true;
  db.showBudgetView = false;
+	db.mode = 'catalog';
 
  save();
  closeToolsMenu();
