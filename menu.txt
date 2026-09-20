@@ -1,0 +1,69 @@
+Tagine poulet légumes|Cuisses de poulet,Tomates,Oignons,Carottes,Courgettes,Pommes de terre,Coriandre,Huile d’olive,Cumin,Curcuma
+
+Tagine poulet pruneaux|Cuisses de poulet,Oignons,Pruneaux,Raisins secs,Cannelle,Huile d’olive
+
+Tagine viande légumes|Bœuf,Tomates,Oignons,Carottes,Courgettes,Pommes de terre,Coriandre,Cumin,Curcuma
+
+Tagine agneau légumes|Agneau,Tomates,Oignons,Carottes,Courgettes,Pommes de terre,Coriandre,Cumin,Curcuma
+
+Couscous poulet légumes|Cuisses de poulet,Semoule,Carottes,Courgettes,Navets,Pois chiches,Coriandre
+
+Couscous merguez|Merguez,Semoule,Carottes,Courgettes,Navets,Pois chiches
+
+Riz poulet légumes sautés|Blancs de poulet,Riz basmati,Carottes,Courgettes,Oignons,Poivrons,Sauce soja
+
+Riz viande légumes|Bœuf,Riz basmati,Carottes,Courgettes,Oignons,Poivrons,Sauce soja
+
+Spaghetti bolognaise|Viande hachée,Spaghetti,Sauce tomate,Oignons,Ail,Parmesan
+
+Spaghetti tomate mozzarella|Spaghetti,Sauce tomate,Mozzarella,Basilic
+
+Penne poulet crème|Blancs de poulet,Penne,Crème fraîche,Oignons,Champignons
+
+Tagliatelles saumon|Saumon,Tagliatelles,Crème fraîche,Citron
+
+Burger classique|Steaks hachés,Pain burger,Tomates,Salade verte,Oignons,Emmental,Ketchup,Mayonnaise
+
+Burger poulet|Blancs de poulet,Pain burger,Tomates,Salade verte,Oignons,Emmental
+
+Wrap poulet crudités|Wraps,Blancs de poulet,Tomates,Concombres,Salade verte,Sauce piquante
+
+Tacos poulet|Tortillas,Blancs de poulet,Tomates,Salade verte,Crème fraîche
+
+Pizza jambon mozzarella|Pâte à pizza,Sauce tomate,Mozzarella
+
+Pizza légumes|Pâte à pizza,Sauce tomate,Mozzarella,Courgettes,Poivrons,Champignons
+
+Poisson riz légumes|Cabillaud,Riz basmati,Carottes,Haricots verts,Citron
+
+Saumon légumes vapeur|Saumon,Brocoli,Carottes,Citron
+
+Omelette fromage salade|Œufs,Emmental,Salade verte
+
+Omelette pommes de terre|Œufs,Pommes de terre,Oignons
+
+Salade composée|Salade verte,Tomates,Concombres,Feta,Olives noires
+
+Salade avocat feta|Avocats,Feta,Tomates,Concombres
+
+Lentilles saucées|Lentilles vertes,Carottes,Oignons,Ail
+
+Pois chiches tomate|Pois chiches,Sauce tomate,Oignons,Ail,Cumin
+
+Poulet rôti pommes de terre|Cuisses de poulet,Pommes de terre,Thym,Romarin
+
+Merguez riz|Merguez,Riz basmati,Oignons
+
+Boulettes sauce tomate|Viande hachée,Sauce tomate,Oignons,Ail,Spaghetti
+
+Calamars à la tomate|Calamars,Sauce tomate,Ail,Oignons
+
+Crevettes sautées riz|Crevettes,Riz thaï,Poivrons,Oignons,Sauce soja
+
+Chakchouka|Œufs,Tomates,Oignons,Poivrons,Cumin,Paprika
+
+Soupe légumes|Carottes,Poireaux,Courgettes,Oignons,Pommes de terre
+
+Gratin courgettes|Courgettes,Crème fraîche,Emmental
+
+Gratin chou-fleur|Chou-fleur,Crème fraîche,Emmental
