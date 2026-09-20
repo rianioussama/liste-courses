@@ -1512,7 +1512,7 @@ function togglePurchasedVisibility(){
 
 function finishShopping(){
 
-const amountInput =
+ const amountInput =
   document.getElementById(
    'shoppingAmount'
   );
@@ -1523,25 +1523,31 @@ const amountInput =
   );
 
  if(
- Number.isFinite(amount)
- &&
- amount > 0
-){
-
-  db.shoppingHistory.unshift({
-
-   date:
-    new Date().toISOString(),
-
-   amount
-
-  });
-
-  db.shoppingHistory =
-   db.shoppingHistory.slice(0,20);
-
+  !Number.isFinite(amount)
+  ||
+  amount <= 0
+ ){
+  alert(
+   'Veuillez saisir le montant des courses.'
+  );
+  return;
  }
-	
+
+ db.shoppingHistory.unshift({
+
+  date:
+   new Date().toISOString(),
+
+  amount
+
+ });
+
+ db.shoppingHistory =
+  db.shoppingHistory.slice(
+   0,
+   20
+  );
+
  db.products.forEach(product => {
 
   if(product.inList){
@@ -1555,6 +1561,9 @@ const amountInput =
  });
 
  db.showPurchased = false;
+ db.showBudgetView = false;
+
+ save();
 
  setMode('catalog');
 
@@ -1630,7 +1639,8 @@ const shoppingFinished =
  
  if(
  db.mode === 'store' &&
- shoppingFinished
+ shoppingFinished &&
+ !db.showBudgetView
 ){
   catalogBtn.classList.add(
     'disabled-btn'
@@ -1658,7 +1668,8 @@ const expandBtn =
 
 if(
  db.mode === 'store' &&
- shoppingFinished
+ shoppingFinished &&
+ !db.showBudgetView
 ){
   resetBtn.classList.add('disabled-btn');
   collapseBtn.classList.add('disabled-btn');
@@ -1688,26 +1699,33 @@ if(
 `
 <div style="display:flex;flex-direction:column;gap:12px;">
 
-  <input
-    id="shoppingAmount"
-    type="number"
-    step="0.01"
-    min="0"
-    placeholder="Montant des courses (€)"
-  >
+<input
+  id="shoppingAmount"
+  type="number"
+  step="0.01"
+  min="0"
+  placeholder="Montant des courses (€)"
+  oninput="
+   document.getElementById('finishBtn').disabled =
+   !this.value ||
+   parseFloat(this.value) <= 0;
+  "
+>
 
-  <button
-    style="
-      width:100%;
-      background:#22c55e;
-      color:white;
-      font-weight:700;
-      padding:16px;
-    "
-    onclick="finishShopping()"
-  >
-    ✅ Terminer les courses
-  </button>
+<button
+  id="finishBtn"
+  disabled
+  onclick="finishShopping()"
+  style="
+    width:100%;
+    background:#22c55e;
+    color:white;
+    font-weight:700;
+    padding:16px;
+  "
+>
+ ✅ Terminer les courses
+</button>
 
 </div>
 `;
