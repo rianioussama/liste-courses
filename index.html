@@ -1815,6 +1815,25 @@ function finishShopping(){
   render();
 
 }
+
+function resetWeeklyMenu(){
+
+  db.weeklyMenu = {
+
+    lundi:{midi:'',soir:''},
+    mardi:{midi:'',soir:''},
+    mercredi:{midi:'',soir:''},
+    jeudi:{midi:'',soir:''},
+    vendredi:{midi:'',soir:''},
+    samedi:{midi:'',soir:''},
+    dimanche:{midi:'',soir:''}
+
+  };
+
+  save();
+  render();
+
+}
 	
 function render(){
 
@@ -2049,9 +2068,25 @@ Object.values(
  <div class="card">
 
   <h2>
-   🍽️ Menu semaine
+   🍽️ Menu de la semaine
   </h2>
 
+<button
+  onclick="resetWeeklyMenu()"
+  style="
+    width:100%;
+    background:#ef4444;
+    color:white;
+    font-weight:700;
+    padding:12px;
+    margin:12px 0 20px 0;
+    border:none;
+    border-radius:12px;
+  "
+>
+ 🔄 Réinitialiser le menu
+</button>
+	
   ${
    days.map(day => {
 
