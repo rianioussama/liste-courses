@@ -713,6 +713,7 @@ if(
 
 if(db.showMenuView === undefined){
  db.showMenuView = false;
+	db.waitingForAmount = false;
 }
 
 if(!Array.isArray(db.meals)){
@@ -1845,7 +1846,15 @@ p.purchased
 const shoppingFinished =
  total > 0 &&
  done === total;
- 
+
+if(
+ shoppingFinished &&
+ !db.waitingForAmount
+){
+  db.waitingForAmount = true;
+  save();
+}
+	
 if(db.waitingForAmount){
   catalogBtn.classList.add('disabled-btn');
 }else{
@@ -1895,7 +1904,6 @@ if(
 ){
 actions.style.display = 'block';
  progressCard.style.display = 'none';
-db.waitingForAmount = true;
  actions.innerHTML =
 `
 <div style="display:flex;flex-direction:column;gap:12px;">
@@ -2905,7 +2913,6 @@ weeklyMenuBtn.onclick = () => {
 
  db.showMenuView = true;
  db.showBudgetView = false;
-	db.mode = 'catalog';
 
  save();
  closeToolsMenu();
