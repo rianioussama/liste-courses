@@ -1509,10 +1509,6 @@ function isShoppingFinished(){
 
 function resetSelection(){
 
-  // Empêche la réinitialisation lorsque
-  // toutes les courses sont terminées
-  // mais que l'utilisateur n'a pas encore
-  // cliqué sur "Terminer les courses"
   if(
     db.mode === 'store' &&
     isShoppingFinished()
