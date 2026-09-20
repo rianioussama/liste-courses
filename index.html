@@ -1635,22 +1635,32 @@ if(
  progressCard.style.display = 'none';
 
  actions.innerHTML =
- `
- <div class="row">
-   <button
-     style="
-       width:100%;
-       background:#22c55e;
-       color:white;
-       font-weight:700;
-       padding:16px;
-     "
-     onclick="finishShopping()"
-   >
-     ✅ Terminer les courses
-   </button>
- </div>
- `;
+`
+<div style="display:flex;flex-direction:column;gap:12px;">
+
+  <input
+    id="shoppingAmount"
+    type="number"
+    step="0.01"
+    min="0"
+    placeholder="Montant des courses (€)"
+  >
+
+  <button
+    style="
+      width:100%;
+      background:#22c55e;
+      color:white;
+      font-weight:700;
+      padding:16px;
+    "
+    onclick="finishShopping()"
+  >
+    ✅ Terminer les courses
+  </button>
+
+</div>
+`;
 
  app.innerHTML =
  `
