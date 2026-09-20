@@ -1,4 +1,4 @@
-const CACHE_NAME = "courses-v1.1.0";
+const CACHE_NAME = "courses-v1.0.0";
 
 const urlsToCache = [
   "./",
@@ -15,9 +15,7 @@ self.addEventListener("install", event => {
 
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache =>
-        cache.addAll(urlsToCache)
-      )
+      .then(cache => cache.addAll(urlsToCache))
   );
 
 });
@@ -34,7 +32,7 @@ self.addEventListener("activate", event => {
 
           keys.map(key => {
 
-            if(key !== CACHE_NAME){
+            if (key !== CACHE_NAME) {
               return caches.delete(key);
             }
 
@@ -56,10 +54,34 @@ self.addEventListener("fetch", event => {
 
   event.respondWith(
 
-    caches.match(event.request)
-      .then(response =>
-        response || fetch(event.request)
-      )
+    fetch(event.request)
+
+      .then(response => {
+
+        const responseClone =
+          response.clone();
+
+        caches.open(CACHE_NAME)
+          .then(cache => {
+
+            cache.put(
+              event.request,
+              responseClone
+            );
+
+          });
+
+        return response;
+
+      })
+
+      .catch(() => {
+
+        return caches.match(
+          event.request
+        );
+
+      })
 
   );
 
