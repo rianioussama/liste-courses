@@ -2194,17 +2194,23 @@ Object.values(
  <div class="card">
 
   <button
-   onclick="generateShoppingFromMenu()"
-   style="
+  onclick="generateShoppingFromMenu()"
+  ${db.waitingForAmount ? 'disabled' : ''}
+  style="
     width:100%;
-    background:#22c55e;
+    background:${db.waitingForAmount ? '#9ca3af' : '#22c55e'};
     color:white;
     font-weight:700;
     padding:16px;
-   "
-  >
-   🛒 Générer la liste de courses
-  </button>
+    cursor:${db.waitingForAmount ? 'not-allowed' : 'pointer'};
+  "
+>
+  ${
+    db.waitingForAmount
+      ? '💾 Enregistrez d’abord le montant des courses'
+      : '🛒 Générer la liste de courses'
+  }
+</button>
 
  </div>
  `;
