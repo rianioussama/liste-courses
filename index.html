@@ -504,6 +504,11 @@ button{
 
   <div id="toolsDropdown" class="dropdown">
 
+<button id="weeklyMenuBtn">
+
+🍽️ Menu semaine
+</button>
+	  
 	<button id="budgetBtn">
   📊 Budget
 </button>
@@ -568,21 +573,26 @@ const APP_NOTIFICATION = {
 };
 
 const defaults={
-
  mode:'catalog',
- 
  showPurchased:false,
-
  dark:false,
-
-showBudgetView:false,
+ showBudgetView:false,
+ showMenuView:false,
 
  categories:[],
-
  products:[],
+ shoppingHistory:[],
 
-shoppingHistory:[]
-
+ meals:[],
+ weeklyMenu:{
+  lundi:'',
+  mardi:'',
+  mercredi:'',
+  jeudi:'',
+  vendredi:'',
+  samedi:'',
+  dimanche:''
+ }
 };
 
 let db;
@@ -1441,6 +1451,43 @@ async function loadCatalog(){
 
 }
 
+async function loadMeals(){
+
+ try{
+
+  const response =
+   await fetch('menu.txt');
+
+  const text =
+   await response.text();
+
+  db.meals =
+   text
+    .split('\n')
+    .filter(Boolean)
+    .map(line => {
+
+      const parts =
+       line.split('|');
+
+      return {
+       name: parts[0].trim(),
+       ingredients:
+        parts[1]
+         .split(',')
+         .map(i => i.trim())
+      };
+
+    });
+
+ }catch(error){
+
+  console.error(error);
+
+ }
+
+}
+
 function closeToolsMenu(){
   document
     .getElementById('toolsDropdown')
@@ -1619,6 +1666,58 @@ function resetSelection(){
   render();
 }
 
+function generateShoppingFromMenu(){
+
+ const selectedMeals =
+  Object.values(
+   db.weeklyMenu
+  ).filter(Boolean);
+
+ const ingredients =
+  new Set();
+
+ selectedMeals.forEach(mealName => {
+
+  const meal =
+   db.meals.find(
+    m => m.name === mealName
+   );
+
+  if(!meal){
+   return;
+  }
+
+  meal.ingredients.forEach(i =>
+   ingredients.add(i)
+  );
+
+ });
+
+ ingredients.forEach(ingredient => {
+
+  const product =
+   db.products.find(
+    p =>
+     p.name.toLowerCase()
+     === ingredient.toLowerCase()
+   );
+
+  if(product){
+
+   product.inList = true;
+
+  }
+
+ });
+
+ db.showMenuView = false;
+ db.mode = 'store';
+
+ save();
+ render();
+
+}
+	
 function render(){
 
 document.body.className=
@@ -1794,6 +1893,160 @@ const q =
 
 app.innerHTML='';
 
+if(db.showMenuView){
+
+ const days = [
+  'lundi',
+  'mardi',
+  'mercredi',
+  'jeudi',
+  'vendredi',
+  'samedi',
+  'dimanche'
+ ];
+
+ const ingredients =
+  new Set();
+
+ Object.values(
+  db.weeklyMenu
+ ).forEach(mealName => {
+
+  const meal =
+   db.meals.find(
+    m => m.name === mealName
+   );
+
+  if(!meal){
+   return;
+  }
+
+  meal.ingredients.forEach(i =>
+   ingredients.add(i)
+  );
+
+ });
+
+ const existingProducts =
+  [...ingredients].filter(i =>
+   db.products.some(
+    p =>
+     p.name.toLowerCase()
+      === i.toLowerCase()
+   )
+  ).length;
+
+ const missingProducts =
+  ingredients.size -
+  existingProducts;
+
+ app.innerHTML =
+ `
+ <div class="card">
+
+  <h2>
+   🍽️ Menu semaine
+  </h2>
+
+  ${
+   days.map(day => {
+
+    const label =
+     day.charAt(0).toUpperCase()
+     +
+     day.slice(1);
+
+    return `
+     <div style="margin-bottom:12px">
+
+      <strong>
+       ${label}
+      </strong>
+
+      <select
+       onchange="
+        db.weeklyMenu['${day}']=this.value;
+        save();
+        render();
+       "
+       style="
+        width:100%;
+        margin-top:6px;
+       "
+      >
+
+       <option value="">
+        Aucun repas
+       </option>
+
+       ${
+        db.meals.map(meal => `
+         <option
+          value="${meal.name}"
+          ${
+           db.weeklyMenu[day]===meal.name
+            ? 'selected'
+            : ''
+          }
+         >
+          ${meal.name}
+         </option>
+        `).join('')
+       }
+
+      </select>
+
+     </div>
+    `;
+
+   }).join('')
+  }
+
+ </div>
+
+ <div class="card">
+
+  <h2>
+   🧾 ${ingredients.size}
+   produits nécessaires
+  </h2>
+
+  <div class="item">
+   ✅ ${existingProducts}
+   déjà présents dans le catalogue
+  </div>
+
+  <div class="item">
+   ➕ ${missingProducts}
+   nouveaux produits
+  </div>
+
+ </div>
+
+ <div class="card">
+
+  <button
+   onclick="generateShoppingFromMenu()"
+   style="
+    width:100%;
+    background:#22c55e;
+    color:white;
+    font-weight:700;
+    padding:16px;
+   "
+  >
+   🛒 Générer la liste de courses
+  </button>
+
+ </div>
+ `;
+
+ progressCard.style.display='none';
+ actions.style.display='none';
+
+ return;
+}
+	
 if(db.showBudgetView){
 
 
@@ -2487,6 +2740,17 @@ catalogBtn.onclick = () => {
 
 };
 
+weeklyMenuBtn.onclick = () => {
+
+ db.showMenuView = true;
+ db.showBudgetView = false;
+
+ save();
+ closeToolsMenu();
+ render();
+
+};
+
 storeBtn.onclick = () => {
 
  db.showBudgetView = false;
@@ -2554,7 +2818,7 @@ if(
 }
 
 (async () => {
-
+await loadMeals();
  if(
   db.categories.length === 0 &&
   db.products.length === 0
