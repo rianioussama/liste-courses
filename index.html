@@ -498,7 +498,11 @@ button{
   </div>
 
   <div id="toolsDropdown" class="dropdown">
-	
+
+	<button id="budgetBtn">
+  📊 Budget
+</button>
+	  
 	<button id="resetSelectionBtn">
 	🔄 Réinitialiser la sélection
 	</button>
@@ -568,7 +572,9 @@ const defaults={
 
  categories:[],
 
- products:[]
+ products:[],
+
+shoppingHistory:[]
 
 };
 
@@ -612,6 +618,15 @@ if(db.showFavoritesView === undefined){
  db.showFavoritesView = false;
 }
 
+if(
+ !Array.isArray(
+  db.shoppingHistory
+ )
+){
+ db.shoppingHistory = [];
+}
+
+	
 db.categories =
  Array.isArray(db.categories)
  ? db.categories
@@ -1492,6 +1507,36 @@ function togglePurchasedVisibility(){
 
 function finishShopping(){
 
+const amountInput =
+  document.getElementById(
+   'shoppingAmount'
+  );
+
+ const amount =
+  parseFloat(
+   amountInput?.value || 0
+  );
+
+ if(
+ Number.isFinite(amount)
+ &&
+ amount > 0
+){
+
+  db.shoppingHistory.unshift({
+
+   date:
+    new Date().toISOString(),
+
+   amount
+
+  });
+
+  db.shoppingHistory =
+   db.shoppingHistory.slice(0,20);
+
+ }
+	
  db.products.forEach(product => {
 
   if(product.inList){
@@ -1719,6 +1764,102 @@ const q =
 
 app.innerHTML='';
 
+if(db.mode === 'budget'){
+
+ const last4 =
+  db.shoppingHistory.slice(0,4);
+
+ const average =
+  last4.length
+  ?
+  (
+   last4.reduce(
+    (sum,item)=>
+     sum + item.amount,
+    0
+   )
+   /
+   last4.length
+  )
+  : 0;
+
+ app.innerHTML =
+
+ `
+ <div class="card">
+
+   <h2>
+     📊 Historique des courses
+   </h2>
+
+   ${
+    last4.length
+
+    ?
+
+    last4.map(item =>
+
+     `
+     <div class="item">
+
+       <div class="grow">
+
+         ${new Date(item.date)
+           .toLocaleDateString(
+             'fr-FR'
+           )}
+
+       </div>
+
+       <strong>
+
+         ${item.amount.toFixed(2)} €
+
+       </strong>
+
+     </div>
+     `
+
+    ).join('')
+
+    :
+
+    '<div>Aucune course enregistrée</div>'
+   }
+
+ </div>
+
+ <div class="card">
+
+   <h3>
+
+     📈 Moyenne des 4 dernières
+
+   </h3>
+
+   <div style="
+      font-size:2rem;
+      font-weight:bold;
+      color:#22c55e;
+   ">
+
+     ${average.toFixed(2)} €
+
+   </div>
+
+ </div>
+ `;
+
+ progressCard.style.display =
+  'none';
+
+ actions.style.display =
+  'none';
+
+ return;
+
+}
+	
 const suggestedProducts =
  db.products.filter(
   p =>
@@ -2203,6 +2344,18 @@ darkBtn.onclick = toggleDark;
 collapseAllBtn.onclick = collapseAll;
 expandAllBtn.onclick = expandAll;
 
+budgetBtn.onclick = () => {
+
+  db.mode = 'budget';
+
+  save();
+
+  closeToolsMenu();
+
+  render();
+
+};
+	
 resetSelectionBtn.onclick = resetSelection;
 
 const toolsBtn =
