@@ -712,8 +712,11 @@ if(
 }
 
 if(db.showMenuView === undefined){
- db.showMenuView = false;
-	db.waitingForAmount = false;
+  db.showMenuView = false;
+}
+
+if(db.waitingForAmount === undefined){
+  db.waitingForAmount = false;
 }
 
 if(!Array.isArray(db.meals)){
@@ -1003,18 +1006,6 @@ function togglePurchased(id){
  }
 
  if(!product.purchased){
-
-  const now = new Date().toISOString();
-
-  product.frequency++;
-  product.lastPurchase = now;
-
-  product.purchaseHistory.push({
-   date: now,
-   quantity: product.listQuantity
-  });
-
-  product.purchased = true;
 
   save();
 
@@ -1691,7 +1682,26 @@ function finishShopping(){
    0,
    20
   );
+	
+	const now = new Date().toISOString();
 
+db.products.forEach(product => {
+
+  if(product.inList && product.purchased){
+
+    product.frequency++;
+
+    product.lastPurchase = now;
+
+    product.purchaseHistory.push({
+      date: now,
+      quantity: product.listQuantity
+    });
+
+  }
+
+});
+	
  db.products.forEach(product => {
 
   if(product.inList){
@@ -1749,6 +1759,8 @@ function resetSelection(){
 
   db.showPurchased = false;
 	db.showBudgetView = false;
+	db.showMenuView = false;
+	db.waitingForAmount = false;
   db.mode = 'catalog';
 
   save();
@@ -1758,6 +1770,18 @@ function resetSelection(){
 
 function generateShoppingFromMenu(){
 
+if(db.waitingForAmount){
+
+alert(
+
+"Veuillez d'abord enregistrer le montant des courses en cours."
+
+);
+
+return;
+
+}
+	
  const selectedMeals = [];
 
 Object.values(db.weeklyMenu)
