@@ -570,6 +570,8 @@ const defaults={
 
  dark:false,
 
+showBudgetView:false,
+
  categories:[],
 
  products:[],
@@ -626,6 +628,9 @@ if(
  db.shoppingHistory = [];
 }
 
+	if(db.showBudgetView === undefined){
+ db.showBudgetView = false;
+}
 	
 db.categories =
  Array.isArray(db.categories)
@@ -1764,7 +1769,7 @@ const q =
 
 app.innerHTML='';
 
-if(db.mode === 'budget'){
+if(db.showBudgetView){
 
  const last4 =
   db.shoppingHistory.slice(0,4);
@@ -2334,11 +2339,25 @@ search.addEventListener(
  render
 );
 
-catalogBtn.onclick=
- ()=>setMode('catalog');
+catalogBtn.onclick = () => {
 
-storeBtn.onclick=
- ()=>setMode('store');
+ db.showBudgetView = false;
+
+ save();
+
+ setMode('catalog');
+
+};
+
+storeBtn.onclick = () => {
+
+ db.showBudgetView = false;
+
+ save();
+
+ setMode('store');
+
+};
 
 darkBtn.onclick = toggleDark;
 collapseAllBtn.onclick = collapseAll;
@@ -2346,7 +2365,8 @@ expandAllBtn.onclick = expandAll;
 
 budgetBtn.onclick = () => {
 
-  db.mode = 'budget';
+  db.showBudgetView =
+    !db.showBudgetView;
 
   save();
 
