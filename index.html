@@ -1796,89 +1796,167 @@ app.innerHTML='';
 
 if(db.showBudgetView){
 
- const last4 =
-  db.shoppingHistory.slice(0,4);
+const last5 =
+ db.shoppingHistory.slice(0,5);
 
- const average =
-  last4.length
-  ?
-  (
-   last4.reduce(
-    (sum,item)=>
-     sum + item.amount,
-    0
-   )
-   /
-   last4.length
+const monthlyTotals = {};
+
+db.shoppingHistory.forEach(item => {
+
+ const date = new Date(item.date);
+
+ const key =
+  date.getFullYear() +
+  '-' +
+  String(date.getMonth() + 1)
+   .padStart(2,'0');
+
+ monthlyTotals[key] =
+  (monthlyTotals[key] || 0)
+  +
+  item.amount;
+
+});
+
+const last3Months =
+ Object.entries(monthlyTotals)
+  .sort((a,b)=>
+   b[0].localeCompare(a[0])
   )
-  : 0;
+  .slice(0,3);
 
- app.innerHTML =
+const averageMonthly =
+ last3Months.length
+ ?
+ (
+  last3Months.reduce(
+   (sum,[,amount]) =>
+    sum + amount,
+   0
+  )
+  /
+  last3Months.length
+ )
+ : 0;
 
- `
- <div class="card">
+app.innerHTML =
+`
+<div class="card">
 
-   <h2>
-     📊 Historique des courses
-   </h2>
+  <h2>
+    📊 Historique des 5 dernières courses
+  </h2>
 
-   ${
-    last4.length
+  ${
+    last5.length
 
     ?
 
-    last4.map(item =>
+    last5.map(item =>
 
-     `
-     <div class="item">
+      `
+      <div class="item">
 
-       <div class="grow">
+        <div class="grow">
 
-         ${new Date(item.date)
-           .toLocaleDateString(
-             'fr-FR'
-           )}
+          ${new Date(item.date)
+             .toLocaleDateString('fr-FR')}
 
-       </div>
+        </div>
 
-       <strong>
+        <strong>
 
-         ${item.amount.toFixed(2)} €
+          ${item.amount.toFixed(2)} €
 
-       </strong>
+        </strong>
 
-     </div>
-     `
+      </div>
+      `
 
     ).join('')
 
     :
 
     '<div>Aucune course enregistrée</div>'
-   }
+  }
 
- </div>
+</div>
 
- <div class="card">
+<div class="card">
 
-   <h3>
+  <h2>
+    💰 Dépenses des 3 derniers mois
+  </h2>
 
-     📈 Moyenne des 4 dernières
+  ${
+    last3Months.length
 
-   </h3>
+    ?
 
-   <div style="
-      font-size:2rem;
-      font-weight:bold;
-      color:#22c55e;
-   ">
+    last3Months.map(([month,amount]) => {
 
-     ${average.toFixed(2)} €
+      const [year,m] =
+       month.split('-');
 
-   </div>
+      const monthName =
+       new Date(
+        year,
+        m-1
+       ).toLocaleDateString(
+        'fr-FR',
+        {
+         month:'long',
+         year:'numeric'
+        }
+       );
 
- </div>
- `;
+      return `
+        <div class="item">
+
+          <div class="grow">
+
+            ${monthName}
+
+          </div>
+
+          <strong>
+
+            ${amount.toFixed(2)} €
+
+          </strong>
+
+        </div>
+      `;
+
+    }).join('')
+
+    :
+
+    '<div>Aucune donnée</div>'
+  }
+
+</div>
+
+<div class="card">
+
+  <h3>
+
+    📈 Moyenne mensuelle
+
+  </h3>
+
+  <div style="
+    font-size:2rem;
+    font-weight:bold;
+    color:#22c55e;
+  ">
+
+    ${averageMonthly.toFixed(2)} €
+
+  </div>
+
+</div>
+`;
 
  progressCard.style.display =
   'none';
