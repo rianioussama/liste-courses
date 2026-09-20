@@ -559,7 +559,7 @@ button{
 
 <script>
 
-const APP_VERSION = '1.0.7';
+const APP_VERSION = '1.0.8';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -1715,17 +1715,12 @@ actions.style.display = 'block';
   min="0"
   placeholder="Montant des courses (€)"
 oninput="
- document.getElementById('finishBtn').disabled =
- !this.value ||
- parseFloat(this.value) <= 0;
-
  this.classList.remove('input-error');
 "
 >
 
 <button
   id="finishBtn"
-  disabled
   onclick="finishShopping()"
   style="
     width:100%;
