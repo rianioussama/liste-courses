@@ -559,7 +559,7 @@ button{
 
 <script>
 
-const APP_VERSION = '1.0.5';
+const APP_VERSION = '1.0.6';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -1610,6 +1610,7 @@ function resetSelection(){
   });
 
   db.showPurchased = false;
+	db.showBudgetView = false;
   db.mode = 'catalog';
 
   save();
@@ -1646,10 +1647,9 @@ const shoppingFinished =
  total > 0 &&
  done === total;
  
- if(
+if(
  db.mode === 'store' &&
- shoppingFinished &&
- !db.showBudgetView
+ shoppingFinished
 ){
   catalogBtn.classList.add(
     'disabled-btn'
@@ -1677,8 +1677,7 @@ const expandBtn =
 
 if(
  db.mode === 'store' &&
- shoppingFinished &&
- !db.showBudgetView
+ shoppingFinished
 ){
   resetBtn.classList.add('disabled-btn');
   collapseBtn.classList.add('disabled-btn');
