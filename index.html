@@ -1837,9 +1837,6 @@ const averageMonthly =
  )
  : 0;
 
-const difference =
- currentMonthTotal - averageMonthly;
-
 const now = new Date();
 
 const currentMonthPurchases =
@@ -1860,6 +1857,9 @@ const currentMonthTotal =
   (sum,item) => sum + item.amount,
   0
  );
+
+const difference =
+ currentMonthTotal - averageMonthly;
 
 app.innerHTML =
 `
