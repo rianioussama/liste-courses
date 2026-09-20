@@ -462,6 +462,11 @@ button{
   cursor:default;
   user-select:none;
 }
+
+.input-error{
+  border:2px solid #ef4444 !important;
+  box-shadow:0 0 0 3px rgba(239,68,68,.15);
+}
 	
 </style>
       
@@ -554,7 +559,7 @@ button{
 
 <script>
 
-const APP_VERSION = '1.0.3';
+const APP_VERSION = '1.0.4';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -1523,15 +1528,19 @@ function finishShopping(){
   );
 
  if(
-  !Number.isFinite(amount)
-  ||
-  amount <= 0
- ){
-  alert(
-   'Veuillez saisir le montant des courses.'
-  );
-  return;
- }
+ !Number.isFinite(amount)
+ ||
+ amount <= 0
+){
+
+ amountInput.classList.add(
+  'input-error'
+ );
+
+ amountInput.focus();
+
+ return;
+}
 
  db.shoppingHistory.unshift({
 
@@ -1705,11 +1714,13 @@ if(
   step="0.01"
   min="0"
   placeholder="Montant des courses (€)"
-  oninput="
-   document.getElementById('finishBtn').disabled =
-   !this.value ||
-   parseFloat(this.value) <= 0;
-  "
+oninput="
+ document.getElementById('finishBtn').disabled =
+ !this.value ||
+ parseFloat(this.value) <= 0;
+
+ this.classList.remove('input-error');
+"
 >
 
 <button
@@ -2383,8 +2394,7 @@ expandAllBtn.onclick = expandAll;
 
 budgetBtn.onclick = () => {
 
-  db.showBudgetView =
-    !db.showBudgetView;
+  db.showBudgetView = true;
 
   save();
 
