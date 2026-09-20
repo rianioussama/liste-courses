@@ -1643,90 +1643,21 @@ function togglePurchasedVisibility(){
 
 }
 
-function finishShopping(){
+function togglePurchased(id){
 
- const amountInput =
-  document.getElementById(
-   'shoppingAmount'
-  );
+  const product = getProductById(id);
 
- const amount =
-  parseFloat(
-   amountInput?.value || 0
-  );
-
- if(
- !Number.isFinite(amount)
- ||
- amount <= 0
-){
-
- amountInput.classList.add(
-  'input-error'
- );
-
- amountInput.focus();
-
- return;
-}
-
- db.shoppingHistory.unshift({
-
-  date:
-   new Date().toISOString(),
-
-  amount
-
- });
-
- db.shoppingHistory =
-  db.shoppingHistory.slice(
-   0,
-   20
-  );
-	
-	const now = new Date().toISOString();
-
-db.products.forEach(product => {
-
-  if(product.inList && product.purchased){
-
-    product.frequency++;
-
-    product.lastPurchase = now;
-
-    product.purchaseHistory.push({
-      date: now,
-      quantity: product.listQuantity
-    });
-
+  if(!product){
+    return;
   }
 
-});
-	
- db.products.forEach(product => {
+  product.purchased = !product.purchased;
 
-  if(product.inList){
-
-   product.inList = false;
-   product.purchased = false;
-   product.listQuantity = 1;
-
-  }
-
- });
-
-db.showPurchased = false;
-db.showBudgetView = true;
-db.mode = 'store';
-
-db.waitingForAmount = false;
-	
-save();
-
-render();
+  save();
+  render();
 
 }
+
 
 function isShoppingFinished(){
 
