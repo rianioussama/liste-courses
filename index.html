@@ -1572,22 +1572,32 @@ const shoppingFinished =
   );
 }
 
-	const resetBtn =
+const resetBtn =
  document.getElementById(
   'resetSelectionBtn'
+ );
+
+const collapseBtn =
+ document.getElementById(
+  'collapseAllBtn'
+ );
+
+const expandBtn =
+ document.getElementById(
+  'expandAllBtn'
  );
 
 if(
  db.mode === 'store' &&
  shoppingFinished
 ){
-  resetBtn.classList.add(
-   'disabled-btn'
-  );
+  resetBtn.classList.add('disabled-btn');
+  collapseBtn.classList.add('disabled-btn');
+  expandBtn.classList.add('disabled-btn');
 }else{
-  resetBtn.classList.remove(
-   'disabled-btn'
-  );
+  resetBtn.classList.remove('disabled-btn');
+  collapseBtn.classList.remove('disabled-btn');
+  expandBtn.classList.remove('disabled-btn');
 }
 
 storeBtn.innerHTML =
