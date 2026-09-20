@@ -551,8 +551,10 @@ button{
 
 <script>
 
+const APP_VERSION = '1.0.0';
+	
 const APP_NOTIFICATION = {
-  version: '1.0.0',
+  version: 'APP_VERSION',
   title: '🆕 Nouvelle version',
   message: 'Correction des anomalies et ajout de nouvelles fonctionnalités'
 };
@@ -2203,7 +2205,7 @@ document.getElementById(
   'versionInfo'
 ).textContent =
   'Version ' +
-  APP_NOTIFICATION.version;
+  APP_VERSION;
 	
 toolsBtn.onclick = () => {
   toolsDropdown.classList.toggle('show');
