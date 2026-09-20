@@ -606,7 +606,7 @@ body.dark .menu-select{
 
 <script>
 
-const APP_VERSION = '1.0.16';
+const APP_VERSION = '1.0.17';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -617,6 +617,7 @@ const APP_NOTIFICATION = {
 const defaults={
  mode:'catalog',
  showPurchased:false,
+waitingForAmount:false,
  dark:false,
  showBudgetView:false,
  showMenuView:false,
@@ -1705,6 +1706,8 @@ function finishShopping(){
 db.showPurchased = false;
 db.showBudgetView = true;
 db.mode = 'store';
+
+db.waitingForAmount = false;
 	
 save();
 
@@ -1843,10 +1846,7 @@ const shoppingFinished =
  total > 0 &&
  done === total;
  
-if(
- shoppingFinished &&
- !db.showBudgetView
-){
+if(db.waitingForAmount){
   catalogBtn.classList.add('disabled-btn');
 }else{
   catalogBtn.classList.remove('disabled-btn');
@@ -1895,7 +1895,7 @@ if(
 ){
 actions.style.display = 'block';
  progressCard.style.display = 'none';
-
+db.waitingForAmount = true;
  actions.innerHTML =
 `
 <div style="display:flex;flex-direction:column;gap:12px;">
