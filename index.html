@@ -666,6 +666,26 @@ if(!db.weeklyMenu){
   dimanche:''
  };
 }
+
+if(db.showMenuView === undefined){
+ db.showMenuView = false;
+}
+
+if(!Array.isArray(db.meals)){
+ db.meals = [];
+}
+
+if(!db.weeklyMenu){
+ db.weeklyMenu = {
+  lundi:'',
+  mardi:'',
+  mercredi:'',
+  jeudi:'',
+  vendredi:'',
+  samedi:'',
+  dimanche:''
+ };
+}
 	
 db.categories =
  Array.isArray(db.categories)
