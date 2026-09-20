@@ -557,6 +557,10 @@ body.dark .menu-select{
       🌙 Mode sombre
     </button>
 
+	<button id="copyrightBtn">
+ 	 © Copyright
+	</button>
+	  
 	<div
 	  id="versionInfo"
 	  class="version-info">
@@ -2937,6 +2941,23 @@ search.addEventListener(
  render
 );
 
+copyrightBtn.onclick = () => {
+
+  alert(
+`🛒 Liste de Courses
+
+Version ${APP_VERSION}
+
+© 2026 Oussama
+
+Application personnelle de gestion des courses,
+menus hebdomadaires et suivi du budget.`
+  );
+
+  closeToolsMenu();
+
+};
+	
 catalogBtn.onclick = () => {
 
  db.showBudgetView = false;
