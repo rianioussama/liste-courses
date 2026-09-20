@@ -467,6 +467,48 @@ button{
   border:2px solid #ef4444 !important;
   box-shadow:0 0 0 3px rgba(239,68,68,.15);
 }
+
+.menu-day{
+ background:#f8fafc;
+ border:1px solid #e5e7eb;
+ border-radius:16px;
+ padding:16px;
+ margin-bottom:14px;
+}
+
+.menu-title{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ margin-bottom:12px;
+ font-weight:700;
+ font-size:1.1rem;
+ color:#4338ca;
+}
+
+.menu-slot{
+ margin-top:8px;
+}
+
+.menu-select{
+ width:100%;
+ padding:12px;
+ border:1px solid #d1d5db;
+ border-radius:12px;
+ background:white;
+ margin-top:6px;
+}
+
+body.dark .menu-day{
+ background:#1f2937;
+ border-color:#374151;
+}
+
+body.dark .menu-select{
+ background:#111827;
+ color:white;
+ border-color:#4b5563;
+}
 	
 </style>
       
@@ -666,29 +708,6 @@ if(
 
 	if(db.showBudgetView === undefined){
  db.showBudgetView = false;
-}
-
-if(db.showMenuView === undefined){
- db.showMenuView = false;
-}
-
-if(!Array.isArray(db.meals)){
- db.meals = [];
-}
-
-if(
- !db.weeklyMenu ||
- typeof db.weeklyMenu.lundi === 'string'
-){
- db.weeklyMenu = {
-  lundi:{midi:'',soir:''},
-  mardi:{midi:'',soir:''},
-  mercredi:{midi:'',soir:''},
-  jeudi:{midi:'',soir:''},
-  vendredi:{midi:'',soir:''},
-  samedi:{midi:'',soir:''},
-  dimanche:{midi:'',soir:''}
- };
 }
 
 if(db.showMenuView === undefined){
@@ -2010,16 +2029,6 @@ Object.values(
 
 });
 
-  if(!meal){
-   return;
-  }
-
-  meal.ingredients.forEach(i =>
-   ingredients.add(i)
-  );
-
- });
-
  const existingProducts =
   [...ingredients].filter(i =>
    db.products.some(
@@ -2050,118 +2059,129 @@ Object.values(
      day.slice(1);
 
     return `
-     <div
- style="
-  margin-bottom:20px;
-  padding:12px;
-  border:1px solid #e5e7eb;
-  border-radius:12px;
- "
->
+<div class="menu-day">
 
- <h3 style="margin:0 0 12px 0">
-  📅 ${label}
- </h3>
+ <div class="menu-title">
 
- <div class="meta">
-  ☀️ Midi
+  <span>
+   📅 ${label}
+  </span>
+
+  <span style="
+    margin-left:auto;
+    font-size:0.9rem;
+  ">
+   ${
+    db.weeklyMenu[day].midi &&
+    db.weeklyMenu[day].soir
+    ? '✅'
+    : '⏳'
+   }
+  </span>
+
  </div>
 
- <select
-  onchange="
-   db.weeklyMenu['${day}'].midi=this.value;
-   save();
-   render();
-  "
-  style="
-   width:100%;
-   margin:6px 0 12px 0;
-  "
- >
+ <div class="menu-slot">
 
-  <option value="">
-   Aucun repas
-  </option>
+  <div class="meta">
+   ☀️ Midi
+  </div>
 
-  ${
-   db.meals.map(meal => `
-    <option
-     value="${meal.name}"
-     ${
-      db.weeklyMenu[day].midi===meal.name
-      ? 'selected'
-      : ''
-     }
-    >
-     ${meal.name}
-    </option>
-   `).join('')
-  }
+  <select
+   class="menu-select"
+   onchange="
+    db.weeklyMenu['${day}'].midi=this.value;
+    save();
+    render();
+   "
+  >
 
- </select>
+   <option value="">
+    Aucun repas
+   </option>
 
- <div class="meta">
-  🌙 Soir
+   ${
+    db.meals.map(meal => `
+     <option
+      value="${meal.name}"
+      ${
+       db.weeklyMenu[day].midi===meal.name
+       ? 'selected'
+       : ''
+      }
+     >
+      ${meal.name}
+     </option>
+    `).join('')
+   }
+
+  </select>
+
+  <div class="meta">
+
+   ${
+    db.weeklyMenu[day].midi
+    ? '✅ ' + db.weeklyMenu[day].midi
+    : 'Aucun repas sélectionné'
+   }
+
+  </div>
+
  </div>
 
- <select
-  onchange="
-   db.weeklyMenu['${day}'].soir=this.value;
-   save();
-   render();
-  "
-  style="
-   width:100%;
-   margin-top:6px;
-  "
- >
+ <div class="menu-slot">
 
-  <option value="">
-   Aucun repas
-  </option>
+  <div
+   class="meta"
+   style="margin-top:12px"
+  >
+   🌙 Soir
+  </div>
 
-  ${
-   db.meals.map(meal => `
-    <option
-     value="${meal.name}"
-     ${
-      db.weeklyMenu[day].soir===meal.name
-      ? 'selected'
-      : ''
-     }
-    >
-     ${meal.name}
-    </option>
-   `).join('')
-  }
+  <select
+   class="menu-select"
+   onchange="
+    db.weeklyMenu['${day}'].soir=this.value;
+    save();
+    render();
+   "
+  >
 
- </select>
+   <option value="">
+    Aucun repas
+   </option>
+
+   ${
+    db.meals.map(meal => `
+     <option
+      value="${meal.name}"
+      ${
+       db.weeklyMenu[day].soir===meal.name
+       ? 'selected'
+       : ''
+      }
+     >
+      ${meal.name}
+     </option>
+    `).join('')
+   }
+
+  </select>
+
+  <div class="meta">
+
+   ${
+    db.weeklyMenu[day].soir
+    ? '✅ ' + db.weeklyMenu[day].soir
+    : 'Aucun repas sélectionné'
+   }
+
+  </div>
+
+ </div>
 
 </div>
-
-       <option value="">
-        Aucun repas
-       </option>
-
-       ${
-        db.meals.map(meal => `
-         <option
-          value="${meal.name}"
-          ${
-           db.weeklyMenu[day]===meal.name
-            ? 'selected'
-            : ''
-          }
-         >
-          ${meal.name}
-         </option>
-        `).join('')
-       }
-
-      </select>
-
-     </div>
-    `;
+`;
 
    }).join('')
   }
