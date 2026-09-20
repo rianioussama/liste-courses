@@ -1509,12 +1509,21 @@ function isShoppingFinished(){
 
 function resetSelection(){
 
-  db.products.forEach(product => {
+  // Empêche la réinitialisation lorsque
+  // toutes les courses sont terminées
+  // mais que l'utilisateur n'a pas encore
+  // cliqué sur "Terminer les courses"
+  if(
+    db.mode === 'store' &&
+    isShoppingFinished()
+  ){
+    return;
+  }
 
+  db.products.forEach(product => {
     product.inList = false;
     product.purchased = false;
     product.listQuantity = 1;
-
   });
 
   db.showPurchased = false;
@@ -1564,6 +1573,24 @@ const shoppingFinished =
 }else{
   catalogBtn.classList.remove(
     'disabled-btn'
+  );
+}
+
+	const resetBtn =
+ document.getElementById(
+  'resetSelectionBtn'
+ );
+
+if(
+ db.mode === 'store' &&
+ shoppingFinished
+){
+  resetBtn.classList.add(
+   'disabled-btn'
+  );
+}else{
+  resetBtn.classList.remove(
+   'disabled-btn'
   );
 }
 
