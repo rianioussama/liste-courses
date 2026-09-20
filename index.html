@@ -1007,6 +1007,8 @@ function togglePurchased(id){
 
  if(!product.purchased){
 
+  product.purchased = true;
+
   save();
 
   const row =
@@ -1016,17 +1018,17 @@ function togglePurchased(id){
 
   if(row){
 
-   row.classList.add('item-hiding');
+    row.classList.add('item-hiding');
 
-   setTimeout(()=>{
-    render();
-   },400);
+    setTimeout(()=>{
+      render();
+    },400);
 
   }else{
-   render();
+    render();
   }
 
- }else{
+}else{
 
   product.purchased = false;
 
