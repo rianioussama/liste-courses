@@ -487,7 +487,11 @@ button{
   </div>
 
   <div id="toolsDropdown" class="dropdown">
-
+	
+	<button id="resetSelectionBtn">
+	🔄 Réinitialiser la sélection
+	</button>
+	
     <button id="collapseAllBtn">
       ➖ Tout plier
     </button>
@@ -1503,6 +1507,32 @@ function isShoppingFinished(){
 
 }
 
+function resetSelection(){
+
+  if(
+    !confirm(
+      'Voulez-vous vraiment réinitialiser toute la sélection ?'
+    )
+  ){
+    return;
+  }
+
+  db.products.forEach(product => {
+
+    product.inList = false;
+    product.purchased = false;
+    product.listQuantity = 1;
+
+  });
+
+  db.showPurchased = false;
+  db.mode = 'catalog';
+
+  save();
+  closeToolsMenu();
+  render();
+}
+
 function render(){
 
 document.body.className=
@@ -2118,6 +2148,8 @@ storeBtn.onclick=
 darkBtn.onclick = toggleDark;
 collapseAllBtn.onclick = collapseAll;
 expandAllBtn.onclick = expandAll;
+
+resetSelectionBtn.onclick = resetSelection;
 
 const toolsBtn =
   document.getElementById('toolsBtn');
