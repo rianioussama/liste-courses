@@ -1569,12 +1569,13 @@ function finishShopping(){
 
  });
 
- db.showPurchased = false;
- db.showBudgetView = false;
+db.showPurchased = false;
+db.showBudgetView = true;
+db.mode = 'store';
 
- save();
+save();
 
- setMode('catalog');
+render();
 
 }
 
@@ -1730,7 +1731,7 @@ oninput="
     padding:16px;
   "
 >
- ✅ Terminer les courses
+ 💾 Enregistrer le montant
 </button>
 
 </div>
@@ -1742,7 +1743,7 @@ oninput="
    <h2>🎯 Tous les produits ont été récupérés</h2>
 
    <p>
-     Vous pouvez maintenant terminer vos courses pour revenir au catalogue.
+    Saisissez maintenant le montant total afin de l'enregistrer dans votre historique de dépenses.
    </p>
  </div>
  `;
