@@ -606,7 +606,7 @@ body.dark .menu-select{
 
 <script>
 
-const APP_VERSION = '1.0.15';
+const APP_VERSION = '1.0.16';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -1844,18 +1844,13 @@ const shoppingFinished =
  done === total;
  
 if(
- db.mode === 'store' &&
- shoppingFinished
+ shoppingFinished &&
+ !db.showBudgetView
 ){
-  catalogBtn.classList.add(
-    'disabled-btn'
-  );
+  catalogBtn.classList.add('disabled-btn');
 }else{
-  catalogBtn.classList.remove(
-    'disabled-btn'
-  );
+  catalogBtn.classList.remove('disabled-btn');
 }
-
 const resetBtn =
  document.getElementById(
   'resetSelectionBtn'
