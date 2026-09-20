@@ -1796,8 +1796,6 @@ app.innerHTML='';
 
 if(db.showBudgetView){
 
-const last5 =
- db.shoppingHistory.slice(0,5);
 
 const monthlyTotals = {};
 
@@ -1839,125 +1837,162 @@ const averageMonthly =
  )
  : 0;
 
+const difference =
+ currentMonthTotal - averageMonthly;
+
+const now = new Date();
+
+const currentMonthPurchases =
+ db.shoppingHistory.filter(item => {
+
+   const date = new Date(item.date);
+
+   return (
+     date.getMonth() === now.getMonth()
+     &&
+     date.getFullYear() === now.getFullYear()
+   );
+
+ });
+
+const currentMonthTotal =
+ currentMonthPurchases.reduce(
+  (sum,item) => sum + item.amount,
+  0
+ );
+
 app.innerHTML =
 `
 <div class="card">
 
-  <h2>
-    📊 Historique des 5 dernières courses
-  </h2>
+ <h2>
+  🛒 Courses de ${
+   now.toLocaleDateString(
+    'fr-FR',
+    {
+      month:'long',
+      year:'numeric'
+    }
+   )
+  }
+ </h2>
 
-  ${
-    last5.length
+ ${
+  currentMonthPurchases.length
 
-    ?
+  ?
 
-    last5.map(item =>
+  currentMonthPurchases.map(item => `
+   <div class="item">
 
-      `
+     <div class="grow">
+       ${new Date(item.date)
+          .toLocaleDateString('fr-FR')}
+     </div>
+
+     <strong>
+       ${item.amount.toFixed(2)} €
+     </strong>
+
+   </div>
+  `).join('')
+
+  :
+
+  '<div>Aucune course enregistrée ce mois-ci</div>'
+ }
+
+ <hr style="margin:12px 0;">
+
+ <div style="
+   font-size:1.4rem;
+   font-weight:bold;
+   color:#22c55e;
+ ">
+   💰 Total du mois :
+   ${currentMonthTotal.toFixed(2)} €
+ </div>
+
+</div>
+
+<div class="card">
+
+ <h2>
+  💰 Dépenses des 3 derniers mois
+ </h2>
+
+ ${
+  last3Months.map(([month,amount]) => {
+
+    const [year,m] = month.split('-');
+
+    const libelle =
+     new Date(
+      year,
+      m - 1
+     ).toLocaleDateString(
+      'fr-FR',
+      {
+       month:'long',
+       year:'numeric'
+      }
+     );
+
+    return `
       <div class="item">
 
         <div class="grow">
-
-          ${new Date(item.date)
-             .toLocaleDateString('fr-FR')}
-
+          ${libelle}
         </div>
 
         <strong>
-
-          ${item.amount.toFixed(2)} €
-
+          ${amount.toFixed(2)} €
         </strong>
 
       </div>
-      `
+    `;
 
-    ).join('')
-
-    :
-
-    '<div>Aucune course enregistrée</div>'
-  }
+  }).join('')
+ }
 
 </div>
 
 <div class="card">
 
-  <h2>
-    💰 Dépenses des 3 derniers mois
-  </h2>
+ <h2>
+  📈 Moyenne mensuelle
+ </h2>
 
-  ${
-    last3Months.length
+ <div style="
+   font-size:2rem;
+   font-weight:bold;
+   color:#22c55e;
+ ">
+   ${averageMonthly.toFixed(2)} €
+ </div>
 
-    ?
+ <div class="meta">
+   Calculée sur les ${last3Months.length} derniers mois
+ </div>
 
-    last3Months.map(([month,amount]) => {
-
-      const [year,m] =
-       month.split('-');
-
-      const monthName =
-       new Date(
-        year,
-        m-1
-       ).toLocaleDateString(
-        'fr-FR',
-        {
-         month:'long',
-         year:'numeric'
-        }
-       );
-
-      return `
-        <div class="item">
-
-          <div class="grow">
-
-            ${monthName}
-
-          </div>
-
-          <strong>
-
-            ${amount.toFixed(2)} €
-
-          </strong>
-
-        </div>
-      `;
-
-    }).join('')
-
-    :
-
-    '<div>Aucune donnée</div>'
-  }
-
-</div>
-
-<div class="card">
-
-  <h3>
-
-    📈 Moyenne mensuelle
-
-  </h3>
-
-  <div style="
-    font-size:2rem;
-    font-weight:bold;
-    color:#22c55e;
-  ">
-
-    ${averageMonthly.toFixed(2)} €
-
-  </div>
+ <div style="
+   margin-top:12px;
+   font-weight:600;
+ ">
+   ${
+     difference >= 0
+      ? '⚠️ Ce mois-ci : +' +
+        difference.toFixed(2) +
+        ' € par rapport à la moyenne'
+      : '✅ Ce mois-ci : ' +
+        difference.toFixed(2) +
+        ' € par rapport à la moyenne'
+   }
+ </div>
 
 </div>
 `;
-
+	
  progressCard.style.display =
   'none';
 
