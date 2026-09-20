@@ -1509,14 +1509,6 @@ function isShoppingFinished(){
 
 function resetSelection(){
 
-  if(
-    !confirm(
-      'Voulez-vous vraiment réinitialiser toute la sélection ?'
-    )
-  ){
-    return;
-  }
-
   db.products.forEach(product => {
 
     product.inList = false;
