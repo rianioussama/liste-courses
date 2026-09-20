@@ -516,8 +516,9 @@ button{
       🌙 Mode sombre
     </button>
 
-	<div class="version-info">
-	Version 1.0.0
+	<div
+	  id="versionInfo"
+	  class="version-info">
 	</div>
 	  
   </div>
@@ -2198,6 +2199,12 @@ const toolsBtn =
 const toolsDropdown =
   document.getElementById('toolsDropdown');
 
+document.getElementById(
+  'versionInfo'
+).textContent =
+  'Version ' +
+  APP_NOTIFICATION.version;
+	
 toolsBtn.onclick = () => {
   toolsDropdown.classList.toggle('show');
 };
