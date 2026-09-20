@@ -584,15 +584,36 @@ const defaults={
  shoppingHistory:[],
 
  meals:[],
- weeklyMenu:{
-  lundi:'',
-  mardi:'',
-  mercredi:'',
-  jeudi:'',
-  vendredi:'',
-  samedi:'',
-  dimanche:''
- }
+weeklyMenu:{
+  lundi:{
+    midi:'',
+    soir:''
+  },
+  mardi:{
+    midi:'',
+    soir:''
+  },
+  mercredi:{
+    midi:'',
+    soir:''
+  },
+  jeudi:{
+    midi:'',
+    soir:''
+  },
+  vendredi:{
+    midi:'',
+    soir:''
+  },
+  samedi:{
+    midi:'',
+    soir:''
+  },
+  dimanche:{
+    midi:'',
+    soir:''
+  }
+}
 };
 
 let db;
@@ -655,15 +676,18 @@ if(!Array.isArray(db.meals)){
  db.meals = [];
 }
 
-if(!db.weeklyMenu){
+if(
+ !db.weeklyMenu ||
+ typeof db.weeklyMenu.lundi === 'string'
+){
  db.weeklyMenu = {
-  lundi:'',
-  mardi:'',
-  mercredi:'',
-  jeudi:'',
-  vendredi:'',
-  samedi:'',
-  dimanche:''
+  lundi:{midi:'',soir:''},
+  mardi:{midi:'',soir:''},
+  mercredi:{midi:'',soir:''},
+  jeudi:{midi:'',soir:''},
+  vendredi:{midi:'',soir:''},
+  samedi:{midi:'',soir:''},
+  dimanche:{midi:'',soir:''}
  };
 }
 
@@ -675,15 +699,18 @@ if(!Array.isArray(db.meals)){
  db.meals = [];
 }
 
-if(!db.weeklyMenu){
+if(
+ !db.weeklyMenu ||
+ typeof db.weeklyMenu.lundi === 'string'
+){
  db.weeklyMenu = {
-  lundi:'',
-  mardi:'',
-  mercredi:'',
-  jeudi:'',
-  vendredi:'',
-  samedi:'',
-  dimanche:''
+  lundi:{midi:'',soir:''},
+  mardi:{midi:'',soir:''},
+  mercredi:{midi:'',soir:''},
+  jeudi:{midi:'',soir:''},
+  vendredi:{midi:'',soir:''},
+  samedi:{midi:'',soir:''},
+  dimanche:{midi:'',soir:''}
  };
 }
 	
@@ -1708,10 +1735,20 @@ function resetSelection(){
 
 function generateShoppingFromMenu(){
 
- const selectedMeals =
-  Object.values(
-   db.weeklyMenu
-  ).filter(Boolean);
+ const selectedMeals = [];
+
+Object.values(db.weeklyMenu)
+ .forEach(day => {
+
+   if(day.midi){
+    selectedMeals.push(day.midi);
+   }
+
+   if(day.soir){
+    selectedMeals.push(day.soir);
+   }
+
+ });
 
  const ingredients =
   new Set();
@@ -1948,14 +1985,30 @@ if(db.showMenuView){
  const ingredients =
   new Set();
 
- Object.values(
-  db.weeklyMenu
- ).forEach(mealName => {
+Object.values(
+ db.weeklyMenu
+).forEach(day => {
 
-  const meal =
-   db.meals.find(
-    m => m.name === mealName
+ [day.midi, day.soir]
+ .filter(Boolean)
+ .forEach(mealName => {
+
+   const meal =
+    db.meals.find(
+     m => m.name === mealName
+    );
+
+   if(!meal){
+    return;
+   }
+
+   meal.ingredients.forEach(i =>
+    ingredients.add(i)
    );
+
+ });
+
+});
 
   if(!meal){
    return;
@@ -1997,27 +2050,94 @@ if(db.showMenuView){
      day.slice(1);
 
     return `
-     <div style="margin-bottom:12px">
+     <div
+ style="
+  margin-bottom:20px;
+  padding:12px;
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+ "
+>
 
-      <h3 style="margin:0">
-		 🍽️ ${label}
-		</h3>
-		
-		<div class="meta">
-		 🌙 Dîner
-		</div>
+ <h3 style="margin:0 0 12px 0">
+  📅 ${label}
+ </h3>
 
-      <select
-       onchange="
-        db.weeklyMenu['${day}']=this.value;
-        save();
-        render();
-       "
-       style="
-        width:100%;
-        margin-top:6px;
-       "
-      >
+ <div class="meta">
+  ☀️ Midi
+ </div>
+
+ <select
+  onchange="
+   db.weeklyMenu['${day}'].midi=this.value;
+   save();
+   render();
+  "
+  style="
+   width:100%;
+   margin:6px 0 12px 0;
+  "
+ >
+
+  <option value="">
+   Aucun repas
+  </option>
+
+  ${
+   db.meals.map(meal => `
+    <option
+     value="${meal.name}"
+     ${
+      db.weeklyMenu[day].midi===meal.name
+      ? 'selected'
+      : ''
+     }
+    >
+     ${meal.name}
+    </option>
+   `).join('')
+  }
+
+ </select>
+
+ <div class="meta">
+  🌙 Soir
+ </div>
+
+ <select
+  onchange="
+   db.weeklyMenu['${day}'].soir=this.value;
+   save();
+   render();
+  "
+  style="
+   width:100%;
+   margin-top:6px;
+  "
+ >
+
+  <option value="">
+   Aucun repas
+  </option>
+
+  ${
+   db.meals.map(meal => `
+    <option
+     value="${meal.name}"
+     ${
+      db.weeklyMenu[day].soir===meal.name
+      ? 'selected'
+      : ''
+     }
+    >
+     ${meal.name}
+    </option>
+   `).join('')
+  }
+
+ </select>
+
+</div>
 
        <option value="">
         Aucun repas
