@@ -646,6 +646,26 @@ if(
 	if(db.showBudgetView === undefined){
  db.showBudgetView = false;
 }
+
+if(db.showMenuView === undefined){
+ db.showMenuView = false;
+}
+
+if(!Array.isArray(db.meals)){
+ db.meals = [];
+}
+
+if(!db.weeklyMenu){
+ db.weeklyMenu = {
+  lundi:'',
+  mardi:'',
+  mercredi:'',
+  jeudi:'',
+  vendredi:'',
+  samedi:'',
+  dimanche:''
+ };
+}
 	
 db.categories =
  Array.isArray(db.categories)
@@ -2733,7 +2753,8 @@ search.addEventListener(
 catalogBtn.onclick = () => {
 
  db.showBudgetView = false;
-
+db.showMenuView = false;
+	
  save();
 
  setMode('catalog');
@@ -2754,6 +2775,7 @@ weeklyMenuBtn.onclick = () => {
 storeBtn.onclick = () => {
 
  db.showBudgetView = false;
+ db.showMenuView = false;
 
  save();
 
@@ -2766,7 +2788,7 @@ collapseAllBtn.onclick = collapseAll;
 expandAllBtn.onclick = expandAll;
 
 budgetBtn.onclick = () => {
-
+db.showMenuView = false;
   db.showBudgetView = true;
 
   save();
