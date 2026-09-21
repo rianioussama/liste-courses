@@ -1,6 +1,6 @@
 {
-  "name": "Liste de Courses",
-  "short_name": "Courses",
+  "name": "SmartCourses - Courses, Menus & Budget",
+  "short_name": "SmartCourses"
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f4f6fb",
