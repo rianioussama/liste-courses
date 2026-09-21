@@ -1,6 +1,7 @@
 {
   "name": "SmartCourses - Courses, Menus & Budget",
-  "short_name": "SmartCourses"
+  "short_name": "SmartCourses",
+  "description": "Application intelligente de gestion des courses, des menus hebdomadaires et du budget familial.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f4f6fb",
