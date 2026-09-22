@@ -266,10 +266,10 @@ button{
 .dropdown{
   display:none;
 
-  position:fixed;
+  position:absolute;
 
-  top:140px;
-  right:20px;
+  top:calc(100% + 8px);
+  right:0;
 
   background:var(--card);
 
@@ -426,8 +426,7 @@ button{
 }
 
 #toolsBtn{
-  flex:1;
-  min-width:60px;
+  width:100%;
 }
 
 .badge-count{
@@ -569,6 +568,11 @@ body.dark .menu-select{
   margin-top:4px;
   font-weight:500;
 }
+
+#toolsWrapper{
+  position:relative;
+  flex:1;
+}
 	
 </style>
       
@@ -613,42 +617,36 @@ body.dark .menu-select{
     <span class="nav-label">Budget</span>
   </button>
 
+ <div id="toolsWrapper">
+
   <button id="toolsBtn" title="Outils">
     <span class="nav-icon">⚙️</span>
     <span class="nav-label">Outils</span>
   </button>
 
-</div>
-
-
-<div
-  id="contextActions"
-  class="context-actions"
->
-</div>
-
   <div id="toolsDropdown" class="dropdown">
 
-  <button id="editCatalogBtn">
-    ✏️ Éditer catalogue
-  </button>
+    <button id="editCatalogBtn">
+      ✏️ Éditer catalogue
+    </button>
 
-  <button id="editMealsBtn">
-    🍽️ Éditer repas
-  </button>
+    <button id="editMealsBtn">
+      🍽️ Éditer repas
+    </button>
 
-  <button id="darkBtn">
-    🌙 Mode sombre
-  </button>
+    <button id="darkBtn">
+      🌙 Mode sombre
+    </button>
 
-  <button id="copyrightBtn">
-    ℹ️ À propos
-  </button>
+    <button id="copyrightBtn">
+      ℹ️ À propos
+    </button>
 
-  <div
-    id="versionInfo"
-    class="version-info"
-  ></div>
+    <div id="versionInfo"
+         class="version-info">
+    </div>
+
+  </div>
 
 </div>
 
