@@ -640,6 +640,10 @@ body.dark .menu-select{
 
   <div id="toolsDropdown" class="dropdown">
 
+<button id="familyConfigBtn">
+  👨‍👩‍👧‍👦 Configuration du foyer
+</button>
+	  
     <button id="editCatalogBtn">
       ✏️ Éditer catalogue
     </button>
@@ -1127,7 +1131,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '1.2.6';
+const APP_VERSION = '1.2.7';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -1136,7 +1140,10 @@ const APP_NOTIFICATION = {
 };
 
 const defaults={
- mode:'catalog',
+showFamilyConfig:false,
+familyStep:1,
+pendingName:'',
+	mode:'catalog',
  showPurchased:false,
 waitingForAmount:false,
  dark:false,
@@ -1220,6 +1227,18 @@ if(db.showSuggestionsView === undefined){
 
 if(db.showFavoritesView === undefined){
  db.showFavoritesView = false;
+}
+
+	if(db.showFamilyConfig === undefined){
+ db.showFamilyConfig = false;
+}
+
+if(db.familyStep === undefined){
+ db.familyStep = 1;
+}
+
+if(db.pendingName === undefined){
+ db.pendingName = '';
 }
 
 if(
@@ -2526,6 +2545,118 @@ async function(){
 
   render();
 };
+
+window.continueFamilySetup =
+function(){
+
+ const input =
+  document.getElementById(
+   "familyName"
+  );
+
+ const error =
+  document.getElementById(
+   "familyNameError"
+  );
+
+ const name =
+  input?.value?.trim();
+
+ if(!name){
+
+  input.classList.add(
+   "input-error"
+  );
+
+  error.style.display =
+   "block";
+
+  return;
+ }
+
+ input.classList.remove(
+  "input-error"
+ );
+
+ error.style.display =
+  "none";
+
+ db.pendingName = name;
+
+ db.familyStep = 2;
+
+ save();
+
+ render();
+
+};
+
+window.createFamilyFromUI =
+async function(){
+
+ await createFamily(
+  db.pendingName
+ );
+
+ db.showFamilyConfig = false;
+
+ db.familyStep = 1;
+
+ save();
+
+ render();
+
+};
+
+window.showJoinFamily =
+function(){
+
+ db.familyStep = 3;
+
+ save();
+
+ render();
+
+};
+
+window.joinFamilyFromUI =
+async function(){
+
+ const input =
+  document.getElementById(
+   "familyCode"
+  );
+
+ const code =
+  input?.value?.trim();
+
+ if(!code){
+
+  input.classList.add(
+   "input-error"
+  );
+
+  return;
+ }
+
+ input.classList.remove(
+  "input-error"
+ );
+
+ await joinFamily(
+  code,
+  db.pendingName
+ );
+
+ db.showFamilyConfig = false;
+
+ db.familyStep = 1;
+
+ save();
+
+ render();
+
+};
 	
 function render(){
 
@@ -2810,6 +2941,162 @@ const q =
 
 app.innerHTML='';
 
+if(db.showFamilyConfig){
+
+ if(db.familyStep === 1){
+
+  app.innerHTML = `
+
+  <div class="card">
+
+    <h2>
+      👨‍👩‍👧‍👦 Configuration du foyer
+    </h2>
+
+    <p>
+      Prénom *
+    </p>
+
+    <input
+      id="familyName"
+      placeholder="Votre prénom"
+      oninput="
+        this.classList.remove('input-error');
+
+        document.getElementById(
+         'familyNameError'
+        ).style.display='none';
+      "
+    >
+
+    <div
+      id="familyNameError"
+      style="
+        display:none;
+        color:#ef4444;
+        margin-top:6px;
+        font-size:.85rem;
+        font-weight:600;
+      "
+    >
+      Le prénom est obligatoire
+    </div>
+
+    <br>
+
+    <button
+      onclick="continueFamilySetup()"
+      style="
+        width:100%;
+        background:#4f46e5;
+        color:white;
+        font-weight:700;
+      "
+    >
+      Continuer
+    </button>
+
+  </div>
+
+  `;
+
+ }
+
+ else if(db.familyStep === 2){
+
+  app.innerHTML = `
+
+  <div class="card">
+
+    <h2>
+      Bonjour ${db.pendingName} 👋
+    </h2>
+
+    <p>
+      Que souhaitez-vous faire ?
+    </p>
+
+    <button
+      onclick="createFamilyFromUI()"
+      style="
+        width:100%;
+        background:#22c55e;
+        color:white;
+        margin-bottom:12px;
+        font-weight:700;
+      "
+    >
+      🏠 Créer un foyer
+    </button>
+
+    <button
+      onclick="showJoinFamily()"
+      style="
+        width:100%;
+        background:#4f46e5;
+        color:white;
+        font-weight:700;
+      "
+    >
+      👨‍👩‍👧‍👦 Rejoindre un foyer
+    </button>
+
+  </div>
+
+  `;
+
+ }
+
+ else if(db.familyStep === 3){
+
+  app.innerHTML = `
+
+  <div class="card">
+
+    <h2>
+      👨‍👩‍👧‍👦 Rejoindre un foyer
+    </h2>
+
+    <p>
+      Code du foyer
+    </p>
+
+    <input
+      id="familyCode"
+      placeholder="AB12CD"
+      style="text-transform:uppercase"
+      oninput="
+        this.classList.remove('input-error');
+      "
+    >
+
+    <br><br>
+
+    <button
+      onclick="joinFamilyFromUI()"
+      style="
+        width:100%;
+        background:#4f46e5;
+        color:white;
+        font-weight:700;
+      "
+    >
+      Rejoindre
+    </button>
+
+  </div>
+
+  `;
+
+ }
+
+ actions.style.display='none';
+ progressCard.style.display='none';
+
+ return;
+
+}
+	
 if(!window.familyId){
 
 app.innerHTML = `
@@ -3877,6 +4164,19 @@ budgetBtnHeader.onclick = () => {
 	
 darkBtn.onclick = toggleDark;
 
+	familyConfigBtn.onclick = () => {
+
+  db.showFamilyConfig = true;
+
+  db.familyStep = 1;
+
+  save();
+
+  closeToolsMenu();
+
+  render();
+
+};
 
 editCatalogBtn.onclick = () => {
 
