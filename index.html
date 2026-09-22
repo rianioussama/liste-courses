@@ -590,6 +590,18 @@ body.dark .menu-select{
 	  <div class="app-subtitle">
   Menus • Courses • Budget
 </div>
+	<div
+  id="familyInfo"
+  style="
+    color:white;
+    font-size:.8rem;
+    margin-top:4px;
+    opacity:.9;
+    font-weight:600;
+  "
+>
+  🏠 Aucun foyer
+</div>
   </div>
 
   <div class="search-container">
@@ -790,6 +802,33 @@ console.log(
 
 }
 
+window.setDisplayName =
+async function(name){
+
+  name = name.trim();
+
+  if(!name){
+    return;
+  }
+
+  await setDoc(
+    doc(
+      firestore,
+      "users",
+      window.currentUser.uid
+    ),
+    {
+      displayName:name
+    },
+    {
+      merge:true
+    }
+  );
+
+  window.displayName = name;
+
+};
+	
 function generateFamilyCode(){
 
   return Math.random()
@@ -799,7 +838,10 @@ function generateFamilyCode(){
 
 }
 
-window.createFamily = async function(){
+window.createFamily =
+async function(name){
+
+  await setDisplayName(name);
 
   const code =
     generateFamilyCode();
@@ -812,30 +854,24 @@ window.createFamily = async function(){
     ),
     {
       code,
+
+      owner:{
+        uid:window.currentUser.uid,
+        name:name
+      },
+
+      members:{
+        [window.currentUser.uid]:{
+          name:name,
+          joinedAt:
+            new Date().toISOString()
+        }
+      },
+
       createdAt:
         new Date().toISOString(),
 
-      db: {
-        mode:'catalog',
-        showPurchased:false,
-        waitingForAmount:false,
-        dark:false,
-        showBudgetView:false,
-        showMenuView:false,
-        categories:[],
-        products:[],
-        shoppingHistory:[],
-        meals:[],
-        weeklyMenu:{
-		  lundi:{midi:'',soir:'',collapsed:false},
-		  mardi:{midi:'',soir:'',collapsed:false},
-		  mercredi:{midi:'',soir:'',collapsed:false},
-		  jeudi:{midi:'',soir:'',collapsed:false},
-		  vendredi:{midi:'',soir:'',collapsed:false},
-		  samedi:{midi:'',soir:'',collapsed:false},
-		  dimanche:{midi:'',soir:'',collapsed:false}
-		}
-      }
+      db:db
     }
   );
 
@@ -853,26 +889,27 @@ window.createFamily = async function(){
     }
   );
 
-window.familyId = code;
+  window.familyId = code;
 
   alert(
-    "Code foyer : " + code
+`🏠 Foyer créé
+
+Code : ${code}
+
+Partagez ce code avec votre famille.`
   );
 
-  console.log(
-    "Foyer créé :",
-    code
-  );
+};
 
-}
 
 window.joinFamily =
-async function(code){
+async function(code,name){
 
   code =
-    code
-      .trim()
-      .toUpperCase();
+    code.trim()
+        .toUpperCase();
+
+  await setDisplayName(name);
 
   const familyRef =
     doc(
@@ -882,9 +919,7 @@ async function(code){
     );
 
   const familySnap =
-    await getDoc(
-      familyRef
-    );
+    await getDoc(familyRef);
 
   if(!familySnap.exists()){
 
@@ -895,6 +930,33 @@ async function(code){
     return;
   }
 
+  const family =
+    familySnap.data();
+
+  const members =
+    family.members || {};
+
+  members[
+    window.currentUser.uid
+  ] = {
+
+    name:name,
+
+    joinedAt:
+      new Date().toISOString()
+
+  };
+
+  await setDoc(
+    familyRef,
+    {
+      members
+    },
+    {
+      merge:true
+    }
+  );
+
   await setDoc(
     doc(
       firestore,
@@ -909,13 +971,24 @@ async function(code){
     }
   );
 
-window.familyId = code;
-	
+  window.familyId = code;
+
+  await loadFamilyData();
+
+  window.realtimeStarted =
+    false;
+
+  window.startRealtimeSync();
+
+  render();
+
   alert(
-    "Foyer rejoint"
+`✅ Bienvenue ${name}
+
+Vous avez rejoint le foyer ${code}`
   );
 
-}
+};
 
 window.loadFamilyData =
 async function(){
@@ -1041,7 +1114,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '1.2.4';
+const APP_VERSION = '1.2.5';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -2389,6 +2462,20 @@ db.dark
 ? 'dark'
 : '';
 
+const familyInfo =
+  document.getElementById(
+    'familyInfo'
+  );
+
+if(familyInfo){
+
+  familyInfo.textContent =
+    window.familyId
+      ? '🏠 Foyer : ' + window.familyId
+      : '🏠 Aucun foyer';
+
+}
+	
 contextActions.innerHTML = '';
 contextActions.style.display = 'none';
 	
