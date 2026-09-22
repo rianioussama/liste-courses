@@ -729,6 +729,9 @@ try {
   window.firebaseUser =
     credential.user;
 
+window.currentUser =
+  credential.user;
+	
 const userRef =
   doc(
     firestore,
@@ -780,8 +783,7 @@ function generateFamilyCode(){
 
 }
 
-window.createFamily =
-async function(){
+window.createFamily = async function(){
 
   const code =
     generateFamilyCode();
@@ -795,8 +797,21 @@ async function(){
     {
       code,
       createdAt:
-       new Date().toISOString(),
-      db:{}
+        new Date().toISOString(),
+
+      db: {
+        mode:'catalog',
+        showPurchased:false,
+        waitingForAmount:false,
+        dark:false,
+        showBudgetView:false,
+        showMenuView:false,
+        categories:[],
+        products:[],
+        shoppingHistory:[],
+        meals:[],
+        weeklyMenu:{}
+      }
     }
   );
 
@@ -804,7 +819,7 @@ async function(){
     doc(
       firestore,
       "users",
-      credential.user.uid
+      window.currentUser.uid
     ),
     {
       familyId:code
@@ -815,7 +830,11 @@ async function(){
   );
 
   alert(
-    "Code foyer : " +
+    "Code foyer : " + code
+  );
+
+  console.log(
+    "Foyer créé :",
     code
   );
 
@@ -825,7 +844,7 @@ async function(){
 	
 <script>
 
-const APP_VERSION = '1.1.17';
+const APP_VERSION = '1.1.18';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
