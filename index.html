@@ -981,6 +981,29 @@ function(){
   );
 
 };
+
+window.saveFamilyDb =
+async function(data){
+
+  if(!window.familyId){
+    return;
+  }
+
+  await setDoc(
+    doc(
+      firestore,
+      "families",
+      window.familyId
+    ),
+    {
+      db:data
+    },
+    {
+      merge:true
+    }
+  );
+
+};
 	
 </script>
 	
