@@ -907,7 +907,48 @@ window.familyId = code;
 
 }
 
+window.loadFamilyData =
+async function(){
 
+  if(!window.familyId){
+
+    console.log(
+      "Pas de foyer"
+    );
+
+    return;
+  }
+
+  const familySnap =
+    await getDoc(
+      doc(
+        firestore,
+        "families",
+        window.familyId
+      )
+    );
+
+  if(!familySnap.exists()){
+
+    console.log(
+      "Foyer introuvable"
+    );
+
+    return;
+  }
+
+  window.sharedDb =
+    familySnap.data().db;
+
+  console.log(
+    "Données foyer chargées"
+  );
+
+  console.log(
+    window.sharedDb
+  );
+
+}
 	
 </script>
 	
