@@ -1231,12 +1231,18 @@ db.products.forEach(product=>{
 
 });
 
-function save(){
+async function save(){
 
  localStorage.setItem(
   'shopping-v1',
   JSON.stringify(db)
  );
+
+ if(window.familyId){
+
+   await saveFamilyDb(db);
+
+ }
 
 }
 
@@ -3655,6 +3661,20 @@ await loadMeals();
   await loadCatalog();
  }
 
+if(window.familyId){
+
+  await loadFamilyData();
+
+  if(window.sharedDb){
+
+    db = window.sharedDb;
+
+  }
+
+}
+
+startRealtimeSync();
+	
  render();
 
  showAppNotification();
