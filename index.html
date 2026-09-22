@@ -685,6 +685,63 @@ body.dark .menu-select{
 
 </div>
 
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+import {
+  getAuth,
+  signInAnonymously
+}
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+import {
+  getFirestore
+}
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC1pO-f0uxEGtgzgKPlEagdpZijvnCbSr0",
+  authDomain: "smartcourses-cc831.firebaseapp.com",
+  projectId: "smartcourses-cc831",
+  storageBucket: "smartcourses-cc831.firebasestorage.app",
+  messagingSenderId: "151572766736",
+  appId: "1:151572766736:web:3ece6663ed2e88d1756a95"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const firestore = getFirestore(app);
+
+window.firestore = firestore;
+
+try {
+
+  const credential =
+    await signInAnonymously(auth);
+
+  window.firebaseUser =
+    credential.user;
+
+  console.log(
+    "Firebase connecté :",
+    credential.user.uid
+  );
+
+} catch(error){
+
+  console.error(
+    "Erreur Firebase :",
+    error
+  );
+
+}
+
+</script>
+	
 <script>
 
 const APP_VERSION = '1.1.14';
