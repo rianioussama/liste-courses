@@ -579,25 +579,18 @@ body.dark .menu-select{
 
 <header>
   <div class="header-top">
-    <h1>🏠 SmartCourses</h1>
-	<div
-  id="familyInfo"
-  style="
-    color:white;
-    font-size:.8rem;
-    margin-top:4px;
-    opacity:.9;
-    font-weight:600;
-  "
->
-  👨‍👩‍👧‍👦 Aucun foyer
-</div>
-	  <div
+    <h1>SmartCourses</h1>
+	 <div
  id="membersInfo"
  style="
+   display:inline-block;
+   margin-top:4px;
+   padding:2px 8px;
+   background:rgba(255,255,255,.15);
+   border-radius:999px;
    color:white;
-   font-size:.75rem;
-   opacity:.8;
+   font-size:.72rem;
+   font-weight:600;
  "
 ></div>
   </div>
@@ -2643,10 +2636,21 @@ const familyInfo =
 
 if(familyInfo){
 
-familyInfo.textContent =
-  window.familyId
-    ? '👨‍👩‍👧‍👦 ' + window.familyName
-    : '👨‍👩‍👧‍👦 Aucun foyer';
+if(window.familyId){
+
+  familyInfo.style.display = 'block';
+
+  familyInfo.textContent =
+    '🏡 ' +
+    window.familyName;
+
+}else{
+
+  familyInfo.textContent = '';
+
+  familyInfo.style.display = 'none';
+
+}
 
 	const membersInfo =
   document.getElementById(
@@ -2655,17 +2659,31 @@ familyInfo.textContent =
 
 if(
   membersInfo &&
-  window.familyMembers
+  window.familyMembers &&
+  window.familyId
 ){
 
-  membersInfo.textContent =
-    Object.values(
+  const memberCount =
+    Object.keys(
       window.familyMembers
-    )
-    .map(
-      member => member.name
-    )
-    .join(" • ");
+    ).length;
+
+  membersInfo.textContent =
+    '👥 ' +
+    memberCount +
+    (memberCount > 1
+      ? ' membres'
+      : ' membre');
+
+  membersInfo.style.display =
+    'inline-block';
+
+}else{
+
+  membersInfo.textContent = '';
+
+  membersInfo.style.display =
+    'none';
 
 }
 }
@@ -2927,8 +2945,17 @@ app.innerHTML = `
 </h2>
 
 <p>
-<b>Code du foyer :</b>
+🔑 <b>Code d'invitation</b>
+<br>
 ${window.familyId}
+</p>
+
+<p>
+👥 ${
+  Object.keys(
+    window.familyMembers || {}
+  ).length
+} membre(s)
 </p>
 
 <p>
@@ -2962,7 +2989,7 @@ Object.values(
   font-weight:700;
  "
 >
-📋 Copier le code
+🔑 Copier le code d'invitation
 </button>
 
 </div>
@@ -3041,7 +3068,7 @@ return;
         font-weight:700;
       "
     >
-      🏠 Créer un foyer
+      ✨ Créer mon foyer
     </button>
 
     <button
@@ -3053,7 +3080,7 @@ return;
         font-weight:700;
       "
     >
-      👨‍👩‍👧‍👦 Rejoindre un foyer
+      🔗 Rejoindre un foyer
     </button>
 
   </div>
@@ -4159,7 +4186,10 @@ familyConfigBtn.onclick = () => {
 
     db.familyStep = 99;
 
-  }else{
+  }else if(
+    !db.pendingName &&
+    db.familyStep < 2
+  ){
 
     db.familyStep = 1;
 
