@@ -94,6 +94,47 @@ header{
   gap:10px;
 }
 
+.context-actions{
+
+  display:none;
+
+  justify-content:center;
+
+  gap:10px;
+
+  margin-top:10px;
+
+}
+
+.context-actions button{
+
+  width:44px;
+  height:44px;
+
+  border-radius:50%;
+
+  background:white;
+
+  font-size:18px;
+
+  font-weight:bold;
+}
+
+.header-nav button{
+
+  flex:1;
+
+  padding:14px;
+
+  border-radius:14px;
+
+  background:white;
+
+  font-size:22px;
+
+  font-weight:600;
+}
+	
 button,
 input{
  padding:10px;
@@ -105,18 +146,6 @@ button{
   cursor:pointer;
   border:none;
   transition:.2s;
-}
-
-.header-nav button{
-  flex:1;
-
-  padding:14px;
-
-  border-radius:14px;
-
-  background:white;
-
-  font-weight:600;
 }
 
 .main{
@@ -368,21 +397,16 @@ button{
 }
 
 .badge-count{
-  margin-left:6px;
-
-  background:white;
-
-  color:#22c55e;
-
-  padding:2px 8px;
-
-  border-radius:999px;
-
-  font-size:.75rem;
-
-  font-weight:bold;
+  position:absolute;
+  top:4px;
+  right:4px;
+  margin-left:0;
 }
 
+#storeBtn{
+  position:relative;
+}
+	
 #favoritesBtn.active{
   background:#facc15;
   color:#111827;
@@ -524,59 +548,60 @@ body.dark .menu-select{
     >
   </div>
 
-  <div class="header-nav">
+<div class="header-nav">
 
-    <button id="catalogBtn">
-      📝 Catalogue
-    </button>
+  <button id="catalogBtn" title="Catalogue">
+    📝
+  </button>
 
-    <button id="storeBtn">
-      🛒 Courses
-    </button>
-	
-    <button id="toolsBtn">
-      ⚙️ 
-    </button>
+  <button id="storeBtn" title="Courses">
+    🛒
+  </button>
 
-  </div>
+  <button id="menuBtn" title="Menu">
+    🍽️
+  </button>
+
+  <button id="budgetBtnHeader" title="Budget">
+    📊
+  </button>
+
+  <button id="toolsBtn" title="Outils">
+    ⚙️
+  </button>
+
+</div>
+
+<div
+  id="contextActions"
+  class="context-actions"
+>
+</div>
 
   <div id="toolsDropdown" class="dropdown">
 
-<button id="weeklyMenuBtn">
+  <button id="editCatalogBtn">
+    ✏️ Éditer catalogue
+  </button>
 
-🍽️ Menu semaine
-</button>
-	  
-	<button id="budgetBtn">
-  📊 Budget
-</button>
-	  
-	<button id="resetSelectionBtn">
-	🔄 Réinitialiser la sélection
-	</button>
-	
-    <button id="collapseAllBtn">
-      ➖ Tout plier
-    </button>
+  <button id="editMealsBtn">
+    🍽️ Éditer repas
+  </button>
 
-    <button id="expandAllBtn">
-      ➕ Tout déplier
-    </button>
+  <button id="darkBtn">
+    🌙 Mode sombre
+  </button>
 
-    <button id="darkBtn">
-      🌙 Mode sombre
-    </button>
+  <button id="copyrightBtn">
+    ℹ️ À propos
+  </button>
 
-	<button id="copyrightBtn">
- 	 © Copyright
-	</button>
-	  
-	<div
-	  id="versionInfo"
-	  class="version-info">
-	</div>
-	  
-  </div>
+  <div
+    id="versionInfo"
+    class="version-info"
+  ></div>
+
+</div>
 
 </header>
 
@@ -1851,11 +1876,19 @@ function resetWeeklyMenu(){
 	
 function render(){
 
+const contextActions =
+ document.getElementById(
+  'contextActions'
+ );
+	
 document.body.className=
 db.dark
 ? 'dark'
 : '';
 
+contextActions.innerHTML = '';
+contextActions.style.display = 'none';
+	
 const cartCount =
  db.products.filter(
   p => p.inList
@@ -1885,47 +1918,53 @@ if(
   db.waitingForAmount = true;
   save();
 }
+
+if(
+ !db.showMenuView &&
+ !db.showBudgetView &&
+ !db.waitingForAmount
+){
+
+ contextActions.style.display =
+  'flex';
+
+ contextActions.innerHTML = `
+
+<button
+ onclick="resetSelection()"
+ title="Réinitialiser"
+>
+↺
+</button>
+
+<button
+ onclick="collapseAll()"
+ title="Tout plier"
+>
+➖
+</button>
+
+<button
+ onclick="expandAll()"
+ title="Tout déplier"
+>
+➕
+</button>
+
+`;
+
+}
 	
 if(db.waitingForAmount){
   catalogBtn.classList.add('disabled-btn');
 }else{
   catalogBtn.classList.remove('disabled-btn');
 }
-const resetBtn =
- document.getElementById(
-  'resetSelectionBtn'
- );
-
-const collapseBtn =
- document.getElementById(
-  'collapseAllBtn'
- );
-
-const expandBtn =
- document.getElementById(
-  'expandAllBtn'
- );
-
-if(
- db.mode === 'store' &&
- shoppingFinished
-){
-  resetBtn.classList.add('disabled-btn');
-  collapseBtn.classList.add('disabled-btn');
-  expandBtn.classList.add('disabled-btn');
-}else{
-  resetBtn.classList.remove('disabled-btn');
-  collapseBtn.classList.remove('disabled-btn');
-  expandBtn.classList.remove('disabled-btn');
-}
 
 storeBtn.innerHTML =
- '🛒 Courses ' +
- (
-   cartCount > 0
-   ? '<span class="badge-count">'+cartCount+'</span>'
-   : ''
- );
+ cartCount > 0
+ ? '🛒<span class="badge-count">'+cartCount+'</span>'
+ : '🛒';
 
 if(
  db.mode === 'store' &&
@@ -1991,6 +2030,16 @@ storeBtn.classList.toggle(
  db.mode === 'store'
 );
 
+menuBtn.classList.toggle(
+ 'active',
+ db.showMenuView
+);
+
+budgetBtnHeader.classList.toggle(
+ 'active',
+ db.showBudgetView
+);
+	
 if(db.mode === 'catalog'){
 
  actions.style.display='none';
@@ -2094,11 +2143,10 @@ Object.values(
     font-weight:700;
     padding:12px;
     margin:12px 0 20px 0;
-    border:none;
     border-radius:12px;
   "
 >
- 🔄 Réinitialiser le menu
+ 🗑️ Réinitialiser le menu
 </button>
 	
   ${
@@ -2960,8 +3008,7 @@ Version ${APP_VERSION}
 
 © 2026 Oussama R.
 
-SmartCourses est une application intelligente
-de gestion du foyer permettant :
+SmartCourses est une application intelligente de gestion du foyer permettant :
 
 • la création de listes de courses
 • la gestion des favoris
@@ -2971,8 +3018,7 @@ de gestion du foyer permettant :
 • le suivi du budget alimentaire
 • l'historique des dépenses
 
-Pensée pour simplifier l'organisation familiale
-au quotidien.`
+Pensée pour simplifier l'organisation familiale au quotidien.`
   );
 
   closeToolsMenu();
@@ -2990,17 +3036,6 @@ db.showMenuView = false;
 
 };
 
-weeklyMenuBtn.onclick = () => {
-
- db.showMenuView = true;
- db.showBudgetView = false;
-
- save();
- closeToolsMenu();
- render();
-
-};
-
 storeBtn.onclick = () => {
 
  db.showBudgetView = false;
@@ -3012,23 +3047,31 @@ storeBtn.onclick = () => {
 
 };
 
-darkBtn.onclick = toggleDark;
-collapseAllBtn.onclick = collapseAll;
-expandAllBtn.onclick = expandAll;
+menuBtn.onclick = () => {
 
-budgetBtn.onclick = () => {
-db.showMenuView = false;
+  db.mode = '';
+
+  db.showMenuView = true;
+  db.showBudgetView = false;
+
+  save();
+  render();
+
+};
+
+budgetBtnHeader.onclick = () => {
+
+  db.mode = '';
+
+  db.showMenuView = false;
   db.showBudgetView = true;
 
   save();
-
-  closeToolsMenu();
-
   render();
 
 };
 	
-resetSelectionBtn.onclick = resetSelection;
+darkBtn.onclick = toggleDark;
 
 const toolsBtn =
   document.getElementById('toolsBtn');
