@@ -948,8 +948,14 @@ db.showFamilyConfig = true;
 
 db.familyStep = 99;
 
-await save();
+db.showMenuView = false;
+db.showBudgetView = false;
+db.waitingForAmount = false;
 
+db.mode = 'catalog';
+
+await save();
+	
 render();
 };
 
@@ -974,12 +980,16 @@ async function(code,name){
 
   if(!familySnap.exists()){
 
-    alert(
-      "Code invalide"
-    );
+  const input =
+    document.getElementById("familyCode");
 
-    return;
+  if(input){
+    input.classList.add("input-error");
+    input.focus();
   }
+
+  return;
+}
 
   const family =
     familySnap.data();
@@ -1034,8 +1044,14 @@ db.showFamilyConfig = true;
 
 db.familyStep = 99;
 
-await save();
+db.showMenuView = false;
+db.showBudgetView = false;
+db.waitingForAmount = false;
 
+db.mode = 'catalog';
+
+await save();
+	
 render();
 
 };
@@ -1137,7 +1153,19 @@ window.sharedDb =
 	  )
 	){
 	
-	  db = structuredClone(window.sharedDb);
+	  const uiState = {
+  showFamilyConfig: db.showFamilyConfig,
+  familyStep: db.familyStep,
+  mode: db.mode,
+  showMenuView: db.showMenuView,
+  showBudgetView: db.showBudgetView,
+  waitingForAmount: db.waitingForAmount,
+  pendingName: db.pendingName
+};
+
+db = structuredClone(window.sharedDb);
+
+Object.assign(db, uiState);
 			
 	db.categories.forEach(category => {
 
@@ -1199,7 +1227,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '1.3.2';
+const APP_VERSION = '1.3.3';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -2761,7 +2789,9 @@ async function(){
 function closeFamilyView(){
  
 db.showFamilyConfig = false;
- 
+
+save();
+	
 }
 
 function familyProgress(step){
@@ -3222,6 +3252,7 @@ return;
 
    <input
   id="familyName"
+  value="${db.pendingName || ''}"
   placeholder="Votre prénom"
   style="
     width:100%;
@@ -4547,10 +4578,19 @@ if(
     )
   ){
 
-    db =
-      structuredClone(
-        window.sharedDb
-      );
+ const uiState = {
+  showFamilyConfig: db.showFamilyConfig,
+  familyStep: db.familyStep,
+  mode: db.mode,
+  showMenuView: db.showMenuView,
+  showBudgetView: db.showBudgetView,
+  waitingForAmount: db.waitingForAmount,
+  pendingName: db.pendingName
+};
+
+db = structuredClone(window.sharedDb);
+
+Object.assign(db, uiState);
 
 	  db.categories.forEach(category => {
 
