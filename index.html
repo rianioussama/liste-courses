@@ -1143,7 +1143,8 @@ const APP_NOTIFICATION = {
 };
 
 const defaults={
-showFamilyConfig:false,
+pendingFamilyName:'',
+	showFamilyConfig:false,
 familyStep:1,
 pendingName:'',
 	mode:'catalog',
@@ -1228,6 +1229,10 @@ if(db.showSuggestionsView === undefined){
  db.showSuggestionsView = false;
 }
 
+if(db.pendingFamilyName === undefined){
+ db.pendingFamilyName = '';
+}
+	
 if(db.showFavoritesView === undefined){
  db.showFavoritesView = false;
 }
@@ -2896,32 +2901,28 @@ if(db.showFamilyConfig){
       Prénom *
     </p>
 
-    <input
-      id="familyName"
-      placeholder="Votre prénom"
-      oninput="
-        this.classList.remove('input-error');
+   <input
+  id="familyName"
+  placeholder="Votre prénom"
+  style="
+    width:100%;
+    margin-top:8px;
+    margin-bottom:12px;
+  "
+>
 
-        document.getElementById(
-         'familyNameError'
-        ).style.display='none';
-      "
-    >
-
-    <div
-      id="familyNameError"
-      style="
-        display:none;
-        color:#ef4444;
-        margin-top:6px;
-        font-size:.85rem;
-        font-weight:600;
-      "
-    >
-      Le prénom est obligatoire
-    </div>
-
-    <br>
+<div
+  id="familyNameError"
+  style="
+    display:none;
+    color:#ef4444;
+    margin-bottom:12px;
+    font-size:.85rem;
+    font-weight:600;
+  "
+>
+  Le prénom est obligatoire
+</div>
 
     <button
       onclick="continueFamilySetup()"
@@ -2955,6 +2956,15 @@ if(db.showFamilyConfig){
       Que souhaitez-vous faire ?
     </p>
 
+	<input
+ id="newFamilyName"
+ placeholder="Nom du foyer"
+ style="
+  width:100%;
+  margin-bottom:12px;
+ "
+>
+	
     <button
       onclick="createFamilyFromUI()"
       style="
@@ -3008,8 +3018,6 @@ if(db.showFamilyConfig){
         this.classList.remove('input-error');
       "
     >
-
-    <br><br>
 
     <button
       onclick="joinFamilyFromUI()"
@@ -3986,6 +3994,7 @@ Pensée pour simplifier l'organisation familiale au quotidien.`
 	
 catalogBtn.onclick = () => {
 
+	db.showFamilyConfig = false;
  db.showBudgetView = false;
 db.showMenuView = false;
 	
@@ -3996,7 +4005,7 @@ db.showMenuView = false;
 };
 
 storeBtn.onclick = () => {
-
+db.showFamilyConfig = false;
  db.showBudgetView = false;
  db.showMenuView = false;
 
@@ -4011,7 +4020,7 @@ menuBtn.onclick = () => {
   if(!db.waitingForAmount){
   db.mode = '';
 }
-
+db.showFamilyConfig = false;
   db.showMenuView = true;
   db.showBudgetView = false;
 
@@ -4025,7 +4034,7 @@ budgetBtnHeader.onclick = () => {
   if(!db.waitingForAmount){
     db.mode = '';
   }
-
+db.showFamilyConfig = false;
   db.showMenuView = false;
   db.showBudgetView = true;
 
