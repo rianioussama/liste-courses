@@ -687,6 +687,14 @@ body.dark .menu-select{
 
 <script type="module">
 
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc
+}
+from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+	
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 
@@ -726,6 +734,34 @@ try {
   window.firebaseUser =
     credential.user;
 
+const userRef =
+  doc(
+    firestore,
+    "users",
+    credential.user.uid
+  );
+
+const userSnap =
+  await getDoc(userRef);
+
+if(!userSnap.exists()){
+
+  await setDoc(
+    userRef,
+    {
+      uid: credential.user.uid,
+      familyId: null,
+      createdAt:
+        new Date().toISOString()
+    }
+  );
+
+  console.log(
+    "Utilisateur créé"
+  );
+
+}
+	
   console.log(
     "Firebase connecté :",
     credential.user.uid
@@ -740,6 +776,56 @@ try {
 
 }
 
+function generateFamilyCode(){
+
+  return Math.random()
+    .toString(36)
+    .substring(2,8)
+    .toUpperCase();
+
+}
+
+window.createFamily =
+async function(){
+
+  const code =
+    generateFamilyCode();
+
+  await setDoc(
+    doc(
+      firestore,
+      "families",
+      code
+    ),
+    {
+      code,
+      createdAt:
+       new Date().toISOString(),
+      db:{}
+    }
+  );
+
+  await setDoc(
+    doc(
+      firestore,
+      "users",
+      credential.user.uid
+    ),
+    {
+      familyId:code
+    },
+    {
+      merge:true
+    }
+  );
+
+  alert(
+    "Code foyer : " +
+    code
+  );
+
+}
+	
 </script>
 	
 <script>
