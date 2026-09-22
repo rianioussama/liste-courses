@@ -899,7 +899,7 @@ await setDoc(
     createdAt:
       new Date().toISOString(),
 
-    db:db
+    db: getSharedDb()
   }
 );
 	
@@ -1120,7 +1120,27 @@ window.sharedDb =
 	){
 	
 	  db = structuredClone(window.sharedDb);
+			
+	db.categories.forEach(category => {
+
+  if(category.collapsed === undefined){
+
+	    category.collapsed = true;
 	
+	  }
+	
+	});
+
+		Object.keys(db.weeklyMenu).forEach(day => {
+
+  if(db.weeklyMenu[day].collapsed === undefined){
+
+    db.weeklyMenu[day].collapsed = false;
+
+  }
+
+});
+			
 	}
 
       render();
@@ -1161,7 +1181,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '1.3.0';
+const APP_VERSION = '1.3.1';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -1417,11 +1437,57 @@ async function save(){
   JSON.stringify(db)
  );
 
- if(window.familyId){
+}
 
-   await saveFamilyDb(db);
+async function saveShared(){
 
- }
+  if(!window.familyId){
+    return;
+  }
+
+  await saveFamilyDb(
+    getSharedDb()
+  );
+
+}
+
+function getSharedDb(){
+
+  const sharedWeeklyMenu = {};
+
+  Object.keys(db.weeklyMenu).forEach(day => {
+
+    sharedWeeklyMenu[day] = {
+      midi: db.weeklyMenu[day].midi,
+      soir: db.weeklyMenu[day].soir
+    };
+
+  });
+
+  const sharedCategories =
+    db.categories.map(category => ({
+
+      id: category.id,
+
+      name: category.name,
+
+      order: category.order
+
+    }));
+
+  return {
+
+    categories: sharedCategories,
+
+    products: db.products,
+
+    meals: db.meals,
+
+    weeklyMenu: sharedWeeklyMenu,
+
+    shoppingHistory: db.shoppingHistory
+
+  };
 
 }
 
@@ -1509,25 +1575,27 @@ function sortCategories(){
 
 }
 
-function toggleFavorite(id){
+async function toggleFavorite(id){
 
- const product=
+ const product =
   getProductById(id);
 
  if(!product){
   return;
  }
 
- product.favorite=
+ product.favorite =
   !product.favorite;
 
- save();
+ await save();
+
+ await saveShared();
 
  render();
 
 }
 
-function toggleList(id){
+async function toggleList(id){
 
  const product =
   getProductById(id);
@@ -1546,12 +1614,15 @@ function toggleList(id){
 
  }
 
- save();
+ await save();
+
+ await saveShared();
+
  render();
 
 }
 
-function increaseQuantity(id){
+async function increaseQuantity(id){
 
  const product=
   getProductById(id);
@@ -1563,13 +1634,15 @@ function increaseQuantity(id){
  product.listQuantity=
   (product.listQuantity||1)+1;
 
- save();
+await save();
 
- render();
+await saveShared();
+
+render();
 
 }
 
-function decreaseQuantity(id){
+async function decreaseQuantity(id){
 
  const product=
   getProductById(id);
@@ -1586,9 +1659,11 @@ function decreaseQuantity(id){
 
  }
 
- save();
+await save();
 
- render();
+await saveShared();
+
+render();
 
 }
 
@@ -1801,7 +1876,7 @@ function toggleCategory(id){
 }
 
 
-function addToList(id){
+async function addToList(id){
 
  const product =
   getProductById(id);
@@ -1818,12 +1893,15 @@ function addToList(id){
   product.listQuantity = 1;
  }
 
- save();
- render();
+await save();
+
+await saveShared();
+
+render();
 
 }
 
-function addAllSuggested(){
+async function addAllSuggested(){
 
  db.products
   .filter(
@@ -1839,11 +1917,14 @@ function addAllSuggested(){
    }
   });
 
- save();
- render();
+ await save();
+
+await saveShared();
+
+render();
 }
 
-function addAllFavorites(){
+async function addAllFavorites(){
 
  db.products
   .filter(
@@ -1859,8 +1940,11 @@ function addAllFavorites(){
    }
   });
 
- save();
- render();
+ await save();
+
+await saveShared();
+
+render();
 }
 
 function toggleSuggestions(){
@@ -2205,7 +2289,7 @@ function togglePurchasedVisibility(){
 
 }
 
-function togglePurchased(id){
+async function togglePurchased(id){
 
   const product = getProductById(id);
 
@@ -2215,8 +2299,11 @@ function togglePurchased(id){
 
   product.purchased = !product.purchased;
 
-  save();
-  render();
+  await save();
+
+await saveShared();
+
+render();
 
 }
 
@@ -2237,7 +2324,7 @@ function isShoppingFinished(){
 
 }
 
-function resetSelection(){
+async function resetSelection(){
 
   if(
     db.mode === 'store' &&
@@ -2258,12 +2345,15 @@ function resetSelection(){
 	db.waitingForAmount = false;
   db.mode = 'catalog';
 
-  save();
-  closeToolsMenu();
-  render();
+  await save();
+
+await saveShared();
+
+closeToolsMenu();
+render();
 }
 
-function generateShoppingFromMenu(){
+async function generateShoppingFromMenu(){
 
 if(db.waitingForAmount){
 
@@ -2332,12 +2422,15 @@ Object.values(db.weeklyMenu)
  db.showMenuView = false;
  db.mode = 'store';
 
- save();
- render();
+ await save();
+
+await saveShared();
+
+render();
 
 }
 
-function finishShopping(){
+async function finishShopping(){
 
   if(!isShoppingFinished()){
     alert(
@@ -2434,9 +2527,11 @@ db.showFamilyConfig = false;
 
   db.waitingForAmount = false;
 
-  save();
+  await save();
 
-  render();
+await saveShared();
+
+render();
 
 }
 
@@ -3424,10 +3519,11 @@ Object.values(
             <select
               class="menu-select"
               onchange="
-                db.weeklyMenu['${day}'].midi=this.value;
-                save();
-                render();
-              "
+				  db.weeklyMenu['${day}'].midi=this.value;
+				  save();
+				  saveShared();
+				  render();
+				"
             >
 
               <option value="">
@@ -3465,10 +3561,11 @@ Object.values(
             <select
               class="menu-select"
               onchange="
-                db.weeklyMenu['${day}'].soir=this.value;
-                save();
-                render();
-              "
+				  db.weeklyMenu['${day}'].soir=this.value;
+				  save();
+				  saveShared();
+				  render();
+				"
             >
 
               <option value="">
@@ -4445,6 +4542,22 @@ if(
       structuredClone(
         window.sharedDb
       );
+
+	  db.categories.forEach(category => {
+
+  if(category.collapsed === undefined){
+    category.collapsed = true;
+  }
+
+});
+
+Object.keys(db.weeklyMenu).forEach(day => {
+
+  if(db.weeklyMenu[day].collapsed === undefined){
+    db.weeklyMenu[day].collapsed = false;
+  }
+
+});
 
   }else{
 
