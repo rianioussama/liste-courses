@@ -654,33 +654,40 @@ waitingForAmount:false,
  meals:[],
 weeklyMenu:{
   lundi:{
-    midi:'',
-    soir:''
-  },
+  midi:'',
+  soir:'',
+  collapsed:false
+},
   mardi:{
-    midi:'',
-    soir:''
-  },
+   midi:'',
+  soir:'',
+  collapsed:false
+},
   mercredi:{
-    midi:'',
-    soir:''
-  },
+   midi:'',
+  soir:'',
+  collapsed:false
+},
   jeudi:{
-    midi:'',
-    soir:''
-  },
+   midi:'',
+  soir:'',
+  collapsed:false
+},
   vendredi:{
-    midi:'',
-    soir:''
-  },
+   midi:'',
+  soir:'',
+  collapsed:false
+},
   samedi:{
-    midi:'',
-    soir:''
-  },
+   midi:'',
+  soir:'',
+  collapsed:false
+},
   dimanche:{
     midi:'',
-    soir:''
-  }
+  soir:'',
+  collapsed:false
+}
 }
 };
 
@@ -747,17 +754,29 @@ if(
  !db.weeklyMenu ||
  typeof db.weeklyMenu.lundi === 'string'
 ){
+
  db.weeklyMenu = {
-  lundi:{midi:'',soir:''},
-  mardi:{midi:'',soir:''},
-  mercredi:{midi:'',soir:''},
-  jeudi:{midi:'',soir:''},
-  vendredi:{midi:'',soir:''},
-  samedi:{midi:'',soir:''},
-  dimanche:{midi:'',soir:''}
+  lundi:{midi:'',soir:'',collapsed:false},
+  mardi:{midi:'',soir:'',collapsed:false},
+  mercredi:{midi:'',soir:'',collapsed:false},
+  jeudi:{midi:'',soir:'',collapsed:false},
+  vendredi:{midi:'',soir:'',collapsed:false},
+  samedi:{midi:'',soir:'',collapsed:false},
+  dimanche:{midi:'',soir:'',collapsed:false}
  };
+
 }
-	
+
+Object.keys(db.weeklyMenu).forEach(day => {
+
+ if(
+  db.weeklyMenu[day].collapsed === undefined
+ ){
+  db.weeklyMenu[day].collapsed = false;
+ }
+
+});
+
 db.categories =
  Array.isArray(db.categories)
  ? db.categories
@@ -1857,17 +1876,47 @@ function finishShopping(){
 
 function resetWeeklyMenu(){
 
-  db.weeklyMenu = {
+ db.weeklyMenu = {
+  lundi:{midi:'',soir:'',collapsed:false},
+  mardi:{midi:'',soir:'',collapsed:false},
+  mercredi:{midi:'',soir:'',collapsed:false},
+  jeudi:{midi:'',soir:'',collapsed:false},
+  vendredi:{midi:'',soir:'',collapsed:false},
+  samedi:{midi:'',soir:'',collapsed:false},
+  dimanche:{midi:'',soir:'',collapsed:false}
+};
 
-    lundi:{midi:'',soir:''},
-    mardi:{midi:'',soir:''},
-    mercredi:{midi:'',soir:''},
-    jeudi:{midi:'',soir:''},
-    vendredi:{midi:'',soir:''},
-    samedi:{midi:'',soir:''},
-    dimanche:{midi:'',soir:''}
+  save();
+  render();
 
-  };
+}
+
+function toggleMenuDay(day){
+
+  db.weeklyMenu[day].collapsed =
+    !db.weeklyMenu[day].collapsed;
+
+  save();
+  render();
+
+}
+
+function collapseAllMenuDays(){
+
+  Object.keys(db.weeklyMenu).forEach(day => {
+    db.weeklyMenu[day].collapsed = true;
+  });
+
+  save();
+  render();
+
+}
+
+	function expandAllMenuDays(){
+
+  Object.keys(db.weeklyMenu).forEach(day => {
+    db.weeklyMenu[day].collapsed = false;
+  });
 
   save();
   render();
@@ -1920,7 +1969,6 @@ if(
 }
 
 if(
- !db.showMenuView &&
  !db.showBudgetView &&
  !db.waitingForAmount
 ){
@@ -1928,30 +1976,57 @@ if(
  contextActions.style.display =
   'flex';
 
- contextActions.innerHTML = `
+if(db.showMenuView){
 
-<button
- onclick="resetSelection()"
- title="Réinitialiser"
->
-↺
-</button>
+  contextActions.innerHTML = `
+  <button
+   onclick="resetWeeklyMenu()"
+   title="Réinitialiser menu"
+  >
+   ↺
+  </button>
 
-<button
- onclick="collapseAll()"
- title="Tout plier"
->
-➖
-</button>
+  <button
+   onclick="collapseAllMenuDays()"
+   title="Tout replier"
+  >
+   ➖
+  </button>
 
-<button
- onclick="expandAll()"
- title="Tout déplier"
->
-➕
-</button>
+  <button
+   onclick="expandAllMenuDays()"
+   title="Tout déplier"
+  >
+   ➕
+  </button>
+  `;
 
-`;
+}else{
+
+  contextActions.innerHTML = `
+  <button
+   onclick="resetSelection()"
+   title="Réinitialiser"
+  >
+   ↺
+  </button>
+
+  <button
+   onclick="collapseAll()"
+   title="Tout plier"
+  >
+   ➖
+  </button>
+
+  <button
+   onclick="expandAll()"
+   title="Tout déplier"
+  >
+   ➕
+  </button>
+  `;
+
+}
 
 }
 	
@@ -2133,21 +2208,6 @@ Object.values(
   <h2>
    🍽️ Menu de la semaine
   </h2>
-
-<button
-  onclick="resetWeeklyMenu()"
-  style="
-    width:100%;
-    background:#ef4444;
-    color:white;
-    font-weight:700;
-    padding:12px;
-    margin:12px 0 20px 0;
-    border-radius:12px;
-  "
->
- 🗑️ Réinitialiser le menu
-</button>
 	
   ${
    days.map(day => {
@@ -2160,25 +2220,41 @@ Object.values(
     return `
 <div class="menu-day">
 
- <div class="menu-title">
+<div
+ class="menu-title"
+ onclick="toggleMenuDay('${day}')"
+ style="cursor:pointer"
+>
 
-  <span>
-   📅 ${label}
-  </span>
+ <span>
+  ${
+   db.weeklyMenu[day].collapsed
+   ? '▶'
+   : '▼'
+  }
+ </span>
 
-  <span style="
-    margin-left:auto;
-    font-size:0.9rem;
-  ">
+ <span>
+  📅 ${label}
+ </span>
+
+ <span style="
+   margin-left:auto;
+   font-size:0.9rem;
+ ">
    ${
     db.weeklyMenu[day].midi &&
     db.weeklyMenu[day].soir
     ? '✅'
     : '⏳'
    }
-  </span>
+ </span>
 
- </div>
+</div>
+
+${
+ !db.weeklyMenu[day].collapsed
+ ? `
 
  <div class="menu-slot">
 
@@ -2255,11 +2331,15 @@ Object.values(
     `).join('')
    }
 
-  </select>
+ </select>
 
  </div>
 
 </div>
+
+ `
+ : ''
+}
 `;
 
    }).join('')
