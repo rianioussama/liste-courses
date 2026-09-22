@@ -990,10 +990,18 @@ function(){
       window.sharedDb =
         snapshot.data().db;
 
-      db =
-        structuredClone(
-          window.sharedDb
-        );
+	    if(
+	  window.sharedDb &&
+	  (
+	    window.sharedDb.products?.length > 0 ||
+	    window.sharedDb.categories?.length > 0 ||
+	    window.sharedDb.meals?.length > 0
+	  )
+	){
+	
+	  db = structuredClone(window.sharedDb);
+	
+	}
 
       render();
 
@@ -1621,7 +1629,10 @@ function importTxtCatalog(text){
 
  });
 
- save();
+ localStorage.setItem(
+  'shopping-v1',
+  JSON.stringify(db)
+);
 }
 
 function toggleCategory(id){
@@ -3707,22 +3718,36 @@ if(
 
   await waitFirebase();
 
-  if(window.familyId){
+ if(window.familyId){
 
-    await window.loadFamilyData();
+  await window.loadFamilyData();
 
-    if(window.sharedDb){
+  if(
+    window.sharedDb &&
+    (
+      window.sharedDb.products?.length > 0 ||
+      window.sharedDb.categories?.length > 0 ||
+      window.sharedDb.meals?.length > 0
+    )
+  ){
 
-      db =
-        structuredClone(
-          window.sharedDb
-        );
+    db =
+      structuredClone(
+        window.sharedDb
+      );
 
-    }
+  }else{
 
-    window.startRealtimeSync();
+    await loadMeals();
+    await loadCatalog();
+
+    await saveFamilyDb(db);
 
   }
+
+  window.startRealtimeSync();
+
+}
 
   render();
 
