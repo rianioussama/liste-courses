@@ -841,42 +841,47 @@ function generateFamilyCode(){
 }
 
 window.createFamily =
-async function(name){
+async function(
+ name,
+ familyName
+){
 
   await setDisplayName(name);
 
   const code =
     generateFamilyCode();
 
-  await setDoc(
-    doc(
-      firestore,
-      "families",
-      code
-    ),
-    {
-      code,
+await setDoc(
+  doc(
+    firestore,
+    "families",
+    code
+  ),
+  {
+    code,
 
-      owner:{
-        uid:window.currentUser.uid,
-        name:name
-      },
+    familyName: familyName,
 
-      members:{
-        [window.currentUser.uid]:{
-          name:name,
-          joinedAt:
-            new Date().toISOString()
-        }
-      },
+    owner:{
+      uid:window.currentUser.uid,
+      name:name
+    },
 
-      createdAt:
-        new Date().toISOString(),
+    members:{
+      [window.currentUser.uid]:{
+        name:name,
+        joinedAt:
+          new Date().toISOString()
+      }
+    },
 
-      db:db
-    }
-  );
+    createdAt:
+      new Date().toISOString(),
 
+    db:db
+  }
+);
+	
   await setDoc(
     doc(
       firestore,
@@ -1034,6 +1039,9 @@ async function(){
  const familyData =
   familySnap.data();
 
+window.familyName =
+  familyData.familyName || "";
+
 window.sharedDb =
   familyData.db;
 
@@ -1077,8 +1085,11 @@ function(){
         return;
       }
 
-      window.sharedDb =
-        snapshot.data().db;
+window.familyName =
+  snapshot.data().familyName || "";
+
+window.sharedDb =
+  snapshot.data().db;
 
 		window.familyMembers =
   snapshot.data().members || {};
@@ -1134,7 +1145,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '1.2.8';
+const APP_VERSION = '1.2.9';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -2538,8 +2549,30 @@ function(){
 window.createFamilyFromUI =
 async function(){
 
+const familyName =
+ document
+  .getElementById(
+   "newFamilyName"
+  )
+  ?.value
+  ?.trim();
+
+if(!familyName){
+
+ document
+  .getElementById(
+   "newFamilyName"
+  )
+  .classList.add(
+   "input-error"
+  );
+
+ return;
+}
+	
  await createFamily(
-  db.pendingName
+  db.pendingName,
+	familyName
  );
 
  db.showFamilyConfig = false;
@@ -2887,6 +2920,69 @@ app.innerHTML='';
 
 if(db.showFamilyConfig){
 
+if(
+  window.familyId &&
+  db.familyStep === 99
+){
+
+app.innerHTML = `
+
+<div class="card">
+
+<h2>
+👨‍👩‍👧‍👦 ${window.familyName}
+</h2>
+
+<p>
+<b>Code du foyer :</b>
+${window.familyId}
+</p>
+
+<p>
+<b>Membres :</b>
+</p>
+
+<ul>
+
+${
+Object.values(
+ window.familyMembers || {}
+)
+.map(member => `
+<li>${member.name}</li>
+`)
+.join('')
+}
+
+</ul>
+
+<button
+ onclick="
+  navigator.clipboard.writeText(
+   '${window.familyId}'
+  )
+ "
+ style="
+  width:100%;
+  background:#22c55e;
+  color:white;
+  font-weight:700;
+ "
+>
+📋 Copier le code
+</button>
+
+</div>
+
+`;
+
+actions.style.display='none';
+progressCard.style.display='none';
+
+return;
+
+}
+	
  if(db.familyStep === 1){
 
   app.innerHTML = `
@@ -4044,11 +4140,19 @@ db.showFamilyConfig = false;
 	
 darkBtn.onclick = toggleDark;
 
-	familyConfigBtn.onclick = () => {
+familyConfigBtn.onclick = () => {
 
   db.showFamilyConfig = true;
 
-  db.familyStep = 1;
+  if(window.familyId){
+
+    db.familyStep = 99;
+
+  }else{
+
+    db.familyStep = 1;
+
+  }
 
   save();
 
