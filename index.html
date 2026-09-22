@@ -905,18 +905,14 @@ window.realtimeStarted =
 
 window.startRealtimeSync();
 
+db.showFamilyConfig = true;
+
+db.familyStep = 99;
+
+await save();
+
 render();
-	
-  alert(
-`👨‍👩‍👧‍👦 Foyer créé
-
-Code : ${code}
-
-Partagez ce code avec votre famille.`
-  );
-
 };
-
 
 window.joinFamily =
 async function(code,name){
@@ -991,18 +987,17 @@ async function(code,name){
 
   await loadFamilyData();
 
-  window.realtimeStarted =
-    false;
+ window.realtimeStarted = false;
 
-  window.startRealtimeSync();
+window.startRealtimeSync();
 
-  render();
+db.showFamilyConfig = true;
 
-  alert(
-`✅ Bienvenue ${name}
+db.familyStep = 99;
 
-Vous avez rejoint le foyer ${code}`
-  );
+await save();
+
+render();
 
 };
 
@@ -1145,7 +1140,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '1.2.10';
+const APP_VERSION = '1.2.11';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -2576,14 +2571,6 @@ async function(){
   familyName
  );
 
- db.showFamilyConfig = false;
-
- db.familyStep = 1;
-
- save();
-
- render();
-
 };
 	
 window.showJoinFamily =
@@ -2593,7 +2580,7 @@ function(){
 
  save();
 
- render();
+render();
 
 };
 
@@ -2625,14 +2612,6 @@ async function(){
   code,
   db.pendingName
  );
-
- db.showFamilyConfig = false;
-
- db.familyStep = 1;
-
- save();
-
- render();
 
 };
 	
