@@ -2146,6 +2146,36 @@ storeBtn.innerHTML =
 </span>
 `;
 
+const pendingAmount =
+  db.waitingForAmount &&
+  !db.showMenuView &&
+  !db.showBudgetView;
+	
+catalogBtn.classList.toggle(
+  'active',
+  db.mode === 'catalog'
+);
+
+storeBtn.classList.toggle(
+  'active',
+  (
+    db.mode === 'store' ||
+    pendingAmount
+  ) &&
+  !db.showMenuView &&
+  !db.showBudgetView
+);
+
+menuBtn.classList.toggle(
+  'active',
+  db.showMenuView
+);
+
+budgetBtnHeader.classList.toggle(
+  'active',
+  db.showBudgetView
+);
+	
 if(
  db.mode === 'store' &&
  shoppingFinished &&
@@ -2199,26 +2229,6 @@ oninput="
 
  return;
 }
-
-catalogBtn.classList.toggle(
- 'active',
- db.mode === 'catalog'
-);
-
-storeBtn.classList.toggle(
- 'active',
- db.mode === 'store'
-);
-
-menuBtn.classList.toggle(
- 'active',
- db.showMenuView
-);
-
-budgetBtnHeader.classList.toggle(
- 'active',
- db.showBudgetView
-);
 	
 if(db.mode === 'catalog'){
 
@@ -3234,7 +3244,9 @@ storeBtn.onclick = () => {
 
 menuBtn.onclick = () => {
 
+  if(!db.waitingForAmount){
   db.mode = '';
+}
 
   db.showMenuView = true;
   db.showBudgetView = false;
@@ -3246,14 +3258,15 @@ menuBtn.onclick = () => {
 
 budgetBtnHeader.onclick = () => {
 
-  db.mode = '';
+  if(!db.waitingForAmount){
+    db.mode = '';
+  }
 
   db.showMenuView = false;
   db.showBudgetView = true;
 
   save();
   render();
-
 };
 	
 darkBtn.onclick = toggleDark;
