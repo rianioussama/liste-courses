@@ -691,7 +691,8 @@ import {
   getFirestore,
   doc,
   getDoc,
-  setDoc
+  setDoc,
+onSnapshot
 }
 from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 	
@@ -946,6 +947,37 @@ async function(){
 
   console.log(
     window.sharedDb
+  );
+
+};
+
+window.startRealtimeSync =
+function(){
+
+  if(!window.familyId){
+    return;
+  }
+
+  onSnapshot(
+    doc(
+      firestore,
+      "families",
+      window.familyId
+    ),
+    snapshot => {
+
+      if(!snapshot.exists()){
+        return;
+      }
+
+      window.sharedDb =
+        snapshot.data().db;
+
+      console.log(
+        "Synchronisation reçue"
+      );
+
+    }
   );
 
 };
