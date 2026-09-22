@@ -759,6 +759,20 @@ if(!userSnap.exists()){
   );
 
 }
+
+const refreshedUserSnap =
+  await getDoc(userRef);
+
+const userData =
+  refreshedUserSnap.data();
+
+window.familyId =
+  userData.familyId || null;
+
+console.log(
+  "Family ID :",
+  window.familyId
+);
 	
   console.log(
     "Firebase connecté :",
@@ -829,6 +843,8 @@ window.createFamily = async function(){
     }
   );
 
+window.familyId = code;
+
   alert(
     "Code foyer : " + code
   );
@@ -839,6 +855,59 @@ window.createFamily = async function(){
   );
 
 }
+
+window.joinFamily =
+async function(code){
+
+  code =
+    code
+      .trim()
+      .toUpperCase();
+
+  const familyRef =
+    doc(
+      firestore,
+      "families",
+      code
+    );
+
+  const familySnap =
+    await getDoc(
+      familyRef
+    );
+
+  if(!familySnap.exists()){
+
+    alert(
+      "Code invalide"
+    );
+
+    return;
+  }
+
+  await setDoc(
+    doc(
+      firestore,
+      "users",
+      window.currentUser.uid
+    ),
+    {
+      familyId:code
+    },
+    {
+      merge:true
+    }
+  );
+
+window.familyId = code;
+	
+  alert(
+    "Foyer rejoint"
+  );
+
+}
+
+
 	
 </script>
 	
