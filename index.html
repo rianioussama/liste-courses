@@ -3151,16 +3151,6 @@ return;
     <p>
       Que souhaitez-vous faire ?
     </p>
-
-<button
- onclick="familyBack()"
- style="
-  width:100%;
-  margin-bottom:12px;
- "
->
-⬅ Retour
-</button>
 	
     <button
       onclick="showCreateFamily()"
@@ -3187,6 +3177,16 @@ return;
       🔗 Rejoindre un foyer
     </button>
 
+<button
+ onclick="familyBack()"
+ style="
+  width:100%;
+  margin-bottom:12px;
+ "
+>
+⬅ Retour
+</button>
+	
   </div>
 
   `;
@@ -3205,24 +3205,20 @@ return;
 
 ${familyProgress(3)}
 
-<button
- onclick="familyBack()"
- style="
-  width:100%;
-  margin-bottom:12px;
- "
->
-⬅ Retour
-</button>
-	
+
     <input
-      id="familyCode"
-      placeholder="Code d'invitation"
-      style="text-transform:uppercase"
-      oninput="
-        this.classList.remove('input-error');
-      "
-    >
+  id="familyCode"
+  placeholder="Code d'invitation"
+  style="
+    width:100%;
+    margin-bottom:12px;
+    text-transform:uppercase;
+  "
+  oninput="
+    this.classList.remove('input-error');
+    this.value = this.value.toUpperCase();
+  "
+>
 
     <button
       onclick="joinFamilyFromUI()"
@@ -3236,6 +3232,16 @@ ${familyProgress(3)}
       Rejoindre
     </button>
 
+<button
+ onclick="familyBack()"
+ style="
+  width:100%;
+  margin-bottom:12px;
+ "
+>
+⬅ Retour
+</button>
+	
   </div>
 
   `;
@@ -3253,16 +3259,6 @@ app.innerHTML = `
 </h2>
 
 ${familyProgress(3)}
-
-<button
- onclick="familyBack()"
- style="
-  width:100%;
-  margin-bottom:12px;
- "
->
-⬅ Retour
-</button>
 
 <input
  id="newFamilyName"
@@ -3283,6 +3279,16 @@ ${familyProgress(3)}
  "
 >
 Créer
+</button>
+
+<button
+ onclick="familyBack()"
+ style="
+  width:100%;
+  margin-bottom:12px;
+ "
+>
+⬅ Retour
 </button>
 
 </div>
