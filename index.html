@@ -962,6 +962,8 @@ async function(){
 window.startRealtimeSync =
 function(){
 
+console.log("Listener démarré");
+	
   if(!window.familyId){
     return;
   }
@@ -1025,7 +1027,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '1.2.1';
+const APP_VERSION = '1.2.2';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
