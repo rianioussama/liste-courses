@@ -570,7 +570,25 @@ body.dark .menu-select{
   position:relative;
   flex:1;
 }
-	
+
+.back-link{
+  margin-top:12px;
+  text-align:center;
+  color:#4f46e5;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.back-link:hover{
+  opacity:.8;
+}
+
+.back-link:active{
+  transform:scale(.98);
+}
+
 </style>
       
 </head>
@@ -1181,7 +1199,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '1.3.1';
+const APP_VERSION = '1.3.2';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -3272,15 +3290,12 @@ return;
       🔗 Rejoindre un foyer
     </button>
 
-<button
- onclick="familyBack()"
- style="
-  width:100%;
-  margin-bottom:12px;
- "
+<div
+  class="back-link"
+  onclick="familyBack()"
 >
-⬅ Retour
-</button>
+  ← Retour
+</div>
 	
   </div>
 
@@ -3327,15 +3342,12 @@ ${familyProgress(3)}
       Rejoindre
     </button>
 
-<button
- onclick="familyBack()"
- style="
-  width:100%;
-  margin-bottom:12px;
- "
+<div
+  class="back-link"
+  onclick="familyBack()"
 >
-⬅ Retour
-</button>
+  ← Retour
+</div>
 	
   </div>
 
@@ -3376,15 +3388,12 @@ ${familyProgress(3)}
 Créer
 </button>
 
-<button
- onclick="familyBack()"
- style="
-  width:100%;
-  margin-bottom:12px;
- "
+<div
+  class="back-link"
+  onclick="familyBack()"
 >
-⬅ Retour
-</button>
+  ← Retour
+</div>
 
 </div>
 
