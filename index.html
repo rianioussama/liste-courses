@@ -120,20 +120,24 @@ header{
   font-weight:bold;
 }
 
-.header-nav button{
+.header-nav > button,
+#toolsWrapper{
   flex:1;
+}
+
+.header-nav button{
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   gap:4px;
 
-transition:
-	background .25s,
-	transform .25s,
-	box-shadow .25s;
-	
- min-height:60px;
+  transition:
+    background .25s,
+    transform .25s,
+    box-shadow .25s;
+
+  min-height:60px;
   padding:10px 6px;
 
   border-radius:14px;
@@ -143,7 +147,7 @@ transition:
   font-weight:600;
   line-height:1.1;
 }
-
+	
 .nav-icon{
   position:relative;
   display:inline-flex;
@@ -648,6 +652,11 @@ body.dark .menu-select{
 
   </div>
 
+</div>
+	</div>
+
+<div id="contextActions"
+     class="context-actions">
 </div>
 
 </header>
