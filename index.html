@@ -825,7 +825,15 @@ window.createFamily = async function(){
         products:[],
         shoppingHistory:[],
         meals:[],
-        weeklyMenu:{}
+        weeklyMenu:{
+		  lundi:{midi:'',soir:'',collapsed:false},
+		  mardi:{midi:'',soir:'',collapsed:false},
+		  mercredi:{midi:'',soir:'',collapsed:false},
+		  jeudi:{midi:'',soir:'',collapsed:false},
+		  vendredi:{midi:'',soir:'',collapsed:false},
+		  samedi:{midi:'',soir:'',collapsed:false},
+		  dimanche:{midi:'',soir:'',collapsed:false}
+		}
       }
     }
   );
@@ -970,12 +978,20 @@ function(){
         return;
       }
 
-      window.sharedDb =
-        snapshot.data().db;
+     window.sharedDb =
+  snapshot.data().db;
 
-      console.log(
-        "Synchronisation reçue"
-      );
+db =
+  structuredClone(
+    window.sharedDb
+  );
+
+render();
+
+console.log(
+  "Synchronisation reçue"
+);
+		
 
     }
   );
