@@ -2546,33 +2546,43 @@ function(){
 
 };
 
+window.showCreateFamily =
+function(){
+
+ db.familyStep = 4;
+
+ save();
+ render();
+
+};
+
 window.createFamilyFromUI =
 async function(){
 
-const familyName =
- document
-  .getElementById(
+ const input =
+  document.getElementById(
    "newFamilyName"
-  )
-  ?.value
-  ?.trim();
-
-if(!familyName){
-
- document
-  .getElementById(
-   "newFamilyName"
-  )
-  .classList.add(
-   "input-error"
   );
 
- return;
-}
-	
+ const familyName =
+  input?.value?.trim();
+
+ if(!familyName){
+
+   input.classList.add(
+    "input-error"
+   );
+
+   return;
+ }
+
+ input.classList.remove(
+  "input-error"
+ );
+
  await createFamily(
   db.pendingName,
-	familyName
+  familyName
  );
 
  db.showFamilyConfig = false;
@@ -2584,7 +2594,7 @@ if(!familyName){
  render();
 
 };
-
+	
 window.showJoinFamily =
 function(){
 
@@ -2654,10 +2664,10 @@ const familyInfo =
 
 if(familyInfo){
 
-  familyInfo.textContent =
-    window.familyId
-      ? '🏠 Foyer : ' + window.familyId
-      : '🏠 Aucun foyer';
+familyInfo.textContent =
+  window.familyId
+    ? '👨‍👩‍👧‍👦 ' + window.familyName
+    : '👨‍👩‍👧‍👦 Aucun foyer';
 
 	const membersInfo =
   document.getElementById(
@@ -2808,11 +2818,13 @@ const pendingAmount =
 	
 catalogBtn.classList.toggle(
   'active',
+  !db.showFamilyConfig &&
   db.mode === 'catalog'
 );
 
 storeBtn.classList.toggle(
   'active',
+  !db.showFamilyConfig &&
   (
     db.mode === 'store' ||
     pendingAmount
@@ -2823,11 +2835,13 @@ storeBtn.classList.toggle(
 
 menuBtn.classList.toggle(
   'active',
+  !db.showFamilyConfig &&
   db.showMenuView
 );
 
 budgetBtnHeader.classList.toggle(
   'active',
+  !db.showFamilyConfig &&
   db.showBudgetView
 );
 	
@@ -3051,18 +3065,9 @@ return;
     <p>
       Que souhaitez-vous faire ?
     </p>
-
-	<input
- id="newFamilyName"
- placeholder="Nom du foyer"
- style="
-  width:100%;
-  margin-bottom:12px;
- "
->
 	
     <button
-      onclick="createFamilyFromUI()"
+      onclick="showCreateFamily()"
       style="
         width:100%;
         background:#22c55e;
@@ -3133,6 +3138,47 @@ return;
 
  }
 
+else if(db.familyStep === 4){
+
+app.innerHTML = `
+
+<div class="card">
+
+<h2>
+🏠 Créer un foyer
+</h2>
+
+<p>
+Nom du foyer
+</p>
+
+<input
+ id="newFamilyName"
+ placeholder="Ex : Famille Oussama"
+ style="
+  width:100%;
+  margin-bottom:12px;
+ "
+>
+
+<button
+ onclick="createFamilyFromUI()"
+ style="
+  width:100%;
+  background:#22c55e;
+  color:white;
+  font-weight:700;
+ "
+>
+Créer
+</button>
+
+</div>
+
+`;
+
+}
+	
  actions.style.display='none';
  progressCard.style.display='none';
 
