@@ -779,6 +779,7 @@ console.log(
     "Firebase connecté :",
     credential.user.uid
   );
+	window.firebaseReady = true;
 
 } catch(error){
 
@@ -959,11 +960,17 @@ async function(){
 
 };
 
+window.realtimeStarted = false;
+
 window.startRealtimeSync =
 function(){
 
-console.log("Listener démarré");
-	
+  if(window.realtimeStarted){
+    return;
+  }
+
+  window.realtimeStarted = true;
+
   if(!window.familyId){
     return;
   }
@@ -980,20 +987,19 @@ console.log("Listener démarré");
         return;
       }
 
-     window.sharedDb =
-  snapshot.data().db;
+      window.sharedDb =
+        snapshot.data().db;
 
-db =
-  structuredClone(
-    window.sharedDb
-  );
+      db =
+        structuredClone(
+          window.sharedDb
+        );
 
-render();
+      render();
 
-console.log(
-  "Synchronisation reçue"
-);
-		
+      console.log(
+        "Synchronisation reçue"
+      );
 
     }
   );
@@ -1027,7 +1033,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '1.2.2';
+const APP_VERSION = '1.2.3';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -3671,33 +3677,56 @@ if(
 }
 
 (async () => {
-await loadMeals();
- if(
-  db.categories.length === 0 &&
-  db.products.length === 0
- ){
-  await loadCatalog();
- }
 
-if(window.familyId){
+  await loadMeals();
 
-  await loadFamilyData();
+  if(
+    db.categories.length === 0 &&
+    db.products.length === 0
+  ){
+    await loadCatalog();
+  }
 
-  if(window.sharedDb){
+  const waitFirebase = () =>
+    new Promise(resolve => {
 
-    db = window.sharedDb;
+      const timer =
+        setInterval(() => {
+
+          if(window.firebaseReady){
+
+            clearInterval(timer);
+
+            resolve();
+
+          }
+
+        },100);
+
+    });
+
+  await waitFirebase();
+
+  if(window.familyId){
+
+    await window.loadFamilyData();
+
+    if(window.sharedDb){
+
+      db =
+        structuredClone(
+          window.sharedDb
+        );
+
+    }
+
+    window.startRealtimeSync();
 
   }
 
-}
+  render();
 
-if(window.startRealtimeSync){
-  window.startRealtimeSync();
-}
-	
- render();
-
- showAppNotification();
+  showAppNotification();
 
 })();
 
