@@ -91,7 +91,7 @@ header{
 
 .header-nav{
   display:flex;
-  gap:10px;
+  gap:8px;
 }
 
 .context-actions{
@@ -121,18 +121,42 @@ header{
 }
 
 .header-nav button{
-
   flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
 
-  padding:14px;
+transition:
+	background .25s,
+	transform .25s,
+	box-shadow .25s;
+	
+ min-height:60px;
+  padding:10px 6px;
 
   border-radius:14px;
-
   background:white;
 
-  font-size:22px;
-
+  font-size:12px;
   font-weight:600;
+  line-height:1.1;
+}
+
+.nav-icon{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  overflow:visible;
+  font-size:22px;
+  transition:.2s;
+}
+	
+.nav-label{
+  font-size:.70rem;
+  font-weight:700;
 }
 	
 button,
@@ -192,11 +216,21 @@ button{
 .active{
   background:#22c55e !important;
   color:white;
+
   box-shadow:
-    0 4px 12px
-    rgba(34,197,94,.3);
+    0 8px 18px rgba(34,197,94,.35);
+
+  transform:scale(1.03);
 }
 
+.active .nav-label{
+  color:white;
+}
+
+.active .nav-icon{
+  transform:scale(1.1);
+}
+	
 .disabled-btn{
   opacity:.45;
   filter:grayscale(100%);
@@ -392,15 +426,29 @@ button{
 }
 
 #toolsBtn{
-  flex:0;
+  flex:1;
   min-width:60px;
 }
 
 .badge-count{
   position:absolute;
-  top:4px;
-  right:4px;
-  margin-left:0;
+  top:-6px;
+  right:-12px;
+
+  background:#ef4444;
+  color:white;
+
+  min-width:18px;
+  height:18px;
+
+  border-radius:999px;
+
+  font-size:.7rem;
+  font-weight:700;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 #storeBtn{
@@ -551,26 +599,32 @@ body.dark .menu-select{
 <div class="header-nav">
 
   <button id="catalogBtn" title="Catalogue">
-    📝
+    <span class="nav-icon">📝</span>
+    <span class="nav-label">Catalogue</span>
   </button>
 
   <button id="storeBtn" title="Courses">
-    🛒
+    <span class="nav-icon">🛒</span>
+    <span class="nav-label">Courses</span>
   </button>
 
   <button id="menuBtn" title="Menu">
-    🍽️
+    <span class="nav-icon">🍽️</span>
+    <span class="nav-label">Menu</span>
   </button>
 
   <button id="budgetBtnHeader" title="Budget">
-    📊
+    <span class="nav-icon">📊</span>
+    <span class="nav-label">Budget</span>
   </button>
 
   <button id="toolsBtn" title="Outils">
-    ⚙️
+    <span class="nav-icon">⚙️</span>
+    <span class="nav-label">Outils</span>
   </button>
 
 </div>
+
 
 <div
   id="contextActions"
@@ -2076,9 +2130,19 @@ if(db.waitingForAmount){
 }
 
 storeBtn.innerHTML =
- cartCount > 0
- ? '🛒<span class="badge-count">'+cartCount+'</span>'
- : '🛒';
+`
+<span class="nav-icon">
+ 🛒
+ ${
+   cartCount > 0
+   ? '<span class="badge-count">'+cartCount+'</span>'
+   : ''
+ }
+</span>
+<span class="nav-label">
+ Courses
+</span>
+`;
 
 if(
  db.mode === 'store' &&
