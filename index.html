@@ -583,30 +583,43 @@ body.dark .menu-select{
   <h1>SmartCourses</h1>
 
   <div
-    id="familyInfo"
-    style="
-      display:none;
-      color:white;
-      margin-top:4px;
-      font-size:.80rem;
-      font-weight:700;
-    "
-  ></div>
+ id="headerInfos"
+ style="
+   display:flex;
+   align-items:center;
+   gap:8px;
+   flex-wrap:wrap;
+   margin-top:6px;
+ "
+>
 
-  <div
-    id="membersInfo"
-    style="
-      display:none;
-      margin-top:4px;
-      padding:2px 8px;
-      background:rgba(255,255,255,.15);
-      border-radius:999px;
-      color:white;
-      font-size:.72rem;
-      font-weight:600;
-      width:max-content;
-    "
-  ></div>
+ <div
+  id="familyInfo"
+  style="
+    display:none;
+    background:rgba(255,255,255,.18);
+    padding:4px 10px;
+    border-radius:999px;
+    color:white;
+    font-size:.75rem;
+    font-weight:600;
+  "
+></div>
+
+ <div
+  id="membersInfo"
+  style="
+    display:none;
+    background:rgba(255,255,255,.18);
+    padding:4px 10px;
+    border-radius:999px;
+    color:white;
+    font-size:.75rem;
+    font-weight:600;
+  "
+></div>
+
+</div>
 
 </div>
 
@@ -2637,6 +2650,63 @@ function closeFamilyView(){
 db.showFamilyConfig = false;
  
 }
+
+function familyProgress(step){
+
+  const max = 3;
+
+  const current =
+    Math.min(step, max);
+
+  return `
+    <div style="margin-bottom:16px;">
+
+      <div style="
+        font-size:.85rem;
+        font-weight:700;
+        margin-bottom:6px;
+      ">
+        Étape ${current}/${max}
+      </div>
+
+      <div style="
+        height:10px;
+        background:#e5e7eb;
+        border-radius:999px;
+        overflow:hidden;
+      ">
+        <div style="
+          width:${current*100/max}%;
+          height:100%;
+          background:#22c55e;
+        "></div>
+      </div>
+
+    </div>
+  `;
+
+}
+
+window.familyBack =
+async function(){
+
+ if(db.familyStep === 4){
+   db.familyStep = 2;
+ }
+
+ else if(db.familyStep === 3){
+   db.familyStep = 2;
+ }
+
+ else if(db.familyStep === 2){
+   db.familyStep = 1;
+ }
+
+ await save();
+
+ render();
+
+};
 	
 function render(){
 
@@ -2736,7 +2806,8 @@ const shoppingFinished =
 if(
  shoppingFinished &&
  !db.waitingForAmount &&
- !db.showMenuView
+ !db.showMenuView &&
+ !db.showFamilyConfig
 ){
   db.waitingForAmount = true;
   save();
@@ -2866,7 +2937,8 @@ if(
  db.mode === 'store' &&
  shoppingFinished &&
  !db.showBudgetView &&
- !db.showMenuView
+ !db.showMenuView &&
+ !db.showFamilyConfig
 ){
 actions.style.display = 'block';
  progressCard.style.display = 'none';
@@ -3033,6 +3105,8 @@ return;
       👨‍👩‍👧‍👦 Configuration du foyer
     </h2>
 
+	${familyProgress(1)}
+
    <input
   id="familyName"
   placeholder="Votre prénom"
@@ -3073,10 +3147,20 @@ return;
     <h2>
       Bonjour ${db.pendingName} 👋
     </h2>
-
+	${familyProgress(2)}
     <p>
       Que souhaitez-vous faire ?
     </p>
+
+<button
+ onclick="familyBack()"
+ style="
+  width:100%;
+  margin-bottom:12px;
+ "
+>
+⬅ Retour
+</button>
 	
     <button
       onclick="showCreateFamily()"
@@ -3119,6 +3203,18 @@ return;
       👨‍👩‍👧‍👦 Rejoindre un foyer
     </h2>
 
+${familyProgress(3)}
+
+<button
+ onclick="familyBack()"
+ style="
+  width:100%;
+  margin-bottom:12px;
+ "
+>
+⬅ Retour
+</button>
+	
     <input
       id="familyCode"
       placeholder="Code d'invitation"
@@ -3156,9 +3252,21 @@ app.innerHTML = `
 🏠 Créer un foyer
 </h2>
 
+${familyProgress(3)}
+
+<button
+ onclick="familyBack()"
+ style="
+  width:100%;
+  margin-bottom:12px;
+ "
+>
+⬅ Retour
+</button>
+
 <input
  id="newFamilyName"
- placeholder="Ex : Famille Oussama"
+ placeholder="Ex : Famille Riani"
  style="
   width:100%;
   margin-bottom:12px;
@@ -4191,7 +4299,7 @@ closeFamilyView();
 darkBtn.onclick = toggleDark;
 
 familyConfigBtn.onclick = () => {
-db.waitingForAmount = false;
+
   db.showFamilyConfig = true;
 
   if(window.familyId){
