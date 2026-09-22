@@ -1256,6 +1256,13 @@ if(db.pendingName === undefined){
 }
 
 if(
+  db.pendingName &&
+  !window.familyId
+){
+  db.familyStep = 2;
+}
+
+if(
  !Array.isArray(
   db.shoppingHistory
  )
@@ -2497,7 +2504,7 @@ function collapseAllMenuDays(){
 }
 
 window.continueFamilySetup =
-function(){
+async function(){
 
  const input =
   document.getElementById(
@@ -2524,9 +2531,11 @@ function(){
 
  db.pendingName = name;
 
+ await setDisplayName(name);
+
  db.familyStep = 2;
 
- save();
+ await save();
 
  render();
 
@@ -4254,7 +4263,14 @@ if(
 
     });
 
-  await waitFirebase();
+ await waitFirebase();
+
+if(
+  db.pendingName &&
+  !window.familyId
+){
+  db.familyStep = 2;
+}
 
  if(window.familyId){
 
