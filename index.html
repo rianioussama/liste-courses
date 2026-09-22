@@ -1864,7 +1864,7 @@ function finishShopping(){
 
   db.showBudgetView = true;
 
-  db.mode = 'store';
+  db.mode = '';
 
   db.waitingForAmount = false;
 
@@ -1997,7 +1997,8 @@ const shoppingFinished =
 
 if(
  shoppingFinished &&
- !db.waitingForAmount
+ !db.waitingForAmount &&
+ !db.showMenuView
 ){
   db.waitingForAmount = true;
   save();
