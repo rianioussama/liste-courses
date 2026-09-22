@@ -602,6 +602,14 @@ body.dark .menu-select{
 >
   🏠 Aucun foyer
 </div>
+	  <div
+ id="membersInfo"
+ style="
+   color:white;
+   font-size:.75rem;
+   opacity:.8;
+ "
+></div>
   </div>
 
   <div class="search-container">
@@ -891,6 +899,15 @@ async function(name){
 
   window.familyId = code;
 
+await loadFamilyData();
+
+window.realtimeStarted =
+  false;
+
+window.startRealtimeSync();
+
+render();
+	
   alert(
 `🏠 Foyer créé
 
@@ -1020,8 +1037,14 @@ async function(){
     return;
   }
 
-  window.sharedDb =
-    familySnap.data().db;
+ const familyData =
+  familySnap.data();
+
+window.sharedDb =
+  familyData.db;
+
+window.familyMembers =
+  familyData.members || {};
 
   console.log(
     "Données foyer chargées"
@@ -1114,7 +1137,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '1.2.5';
+const APP_VERSION = '1.2.6';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -2449,6 +2472,70 @@ function collapseAllMenuDays(){
   render();
 
 }
+
+window.createMyFamily =
+async function(){
+
+  const name =
+    document
+      .getElementById("familyName")
+      ?.value
+      ?.trim();
+
+  if(!name){
+
+    alert(
+      "Veuillez saisir votre prénom"
+    );
+
+    return;
+  }
+
+  await createFamily(name);
+
+  render();
+};
+
+window.joinMyFamily =
+async function(){
+
+  const name =
+    document
+      .getElementById("familyName")
+      ?.value
+      ?.trim();
+
+  const code =
+    document
+      .getElementById("familyCode")
+      ?.value
+      ?.trim();
+
+  if(!name){
+
+    alert(
+      "Veuillez saisir votre prénom"
+    );
+
+    return;
+  }
+
+  if(!code){
+
+    alert(
+      "Veuillez saisir un code foyer"
+    );
+
+    return;
+  }
+
+  await joinFamily(
+    code,
+    name
+  );
+
+  render();
+};
 	
 function render(){
 
@@ -2474,6 +2561,26 @@ if(familyInfo){
       ? '🏠 Foyer : ' + window.familyId
       : '🏠 Aucun foyer';
 
+	const membersInfo =
+  document.getElementById(
+    'membersInfo'
+  );
+
+if(
+  membersInfo &&
+  window.familyMembers
+){
+
+  membersInfo.textContent =
+    Object.values(
+      window.familyMembers
+    )
+    .map(
+      member => member.name
+    )
+    .join(" • ");
+
+}
 }
 	
 contextActions.innerHTML = '';
@@ -2712,6 +2819,74 @@ const q =
  (search.value || '').toLowerCase();
 
 app.innerHTML='';
+
+if(!window.familyId){
+
+app.innerHTML = `
+
+<div class="card">
+
+<h2>
+🏠 Configuration du foyer
+</h2>
+
+<p>
+Entrez votre prénom puis créez un foyer ou rejoignez un foyer existant.
+</p>
+
+<input
+  id="familyName"
+  type="text"
+  placeholder="Votre prénom"
+/>
+
+<br><br>
+
+<button
+  onclick="createMyFamily()"
+  style="
+    width:100%;
+    background:#22c55e;
+    color:white;
+    font-weight:700;
+  "
+>
+🏠 Créer un foyer
+</button>
+
+<hr style="margin:20px 0;">
+
+<input
+  id="familyCode"
+  type="text"
+  placeholder="Code famille"
+  style="text-transform:uppercase"
+/>
+
+<br><br>
+
+<button
+  onclick="joinMyFamily()"
+  style="
+    width:100%;
+    background:#4f46e5;
+    color:white;
+    font-weight:700;
+  "
+>
+👨‍👩‍👧‍👦 Rejoindre un foyer
+</button>
+
+</div>
+
+`;
+
+actions.style.display='none';
+progressCard.style.display='none';
+
+return;
+
+}
 
 if(db.showMenuView){
 
