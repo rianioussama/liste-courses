@@ -578,22 +578,37 @@ body.dark .menu-select{
 <body>
 
 <header>
-  <div class="header-top">
-    <h1>SmartCourses</h1>
-	 <div
- id="membersInfo"
- style="
-   display:inline-block;
-   margin-top:4px;
-   padding:2px 8px;
-   background:rgba(255,255,255,.15);
-   border-radius:999px;
-   color:white;
-   font-size:.72rem;
-   font-weight:600;
- "
-></div>
-  </div>
+<div class="header-top">
+
+  <h1>SmartCourses</h1>
+
+  <div
+    id="familyInfo"
+    style="
+      display:none;
+      color:white;
+      margin-top:4px;
+      font-size:.80rem;
+      font-weight:700;
+    "
+  ></div>
+
+  <div
+    id="membersInfo"
+    style="
+      display:none;
+      margin-top:4px;
+      padding:2px 8px;
+      background:rgba(255,255,255,.15);
+      border-radius:999px;
+      color:white;
+      font-size:.72rem;
+      font-weight:600;
+      width:max-content;
+    "
+  ></div>
+
+</div>
 
   <div class="search-container">
     <input
@@ -2640,21 +2655,21 @@ const familyInfo =
     'familyInfo'
   );
 
-if(familyInfo){
-
 if(window.familyId){
-
-  familyInfo.style.display = 'block';
 
   familyInfo.textContent =
     '🏡 ' +
     window.familyName;
 
+  familyInfo.style.display =
+    'block';
+
 }else{
 
   familyInfo.textContent = '';
 
-  familyInfo.style.display = 'none';
+  familyInfo.style.display =
+    'none';
 
 }
 
