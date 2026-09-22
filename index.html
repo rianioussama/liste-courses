@@ -1009,7 +1009,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '1.2.0';
+const APP_VERSION = '1.2.1';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -3673,7 +3673,9 @@ if(window.familyId){
 
 }
 
-startRealtimeSync();
+if(window.startRealtimeSync){
+  window.startRealtimeSync();
+}
 	
  render();
 
