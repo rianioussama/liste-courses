@@ -1876,18 +1876,53 @@ function finishShopping(){
 
 function resetWeeklyMenu(){
 
- db.weeklyMenu = {
-  lundi:{midi:'',soir:'',collapsed:false},
-  mardi:{midi:'',soir:'',collapsed:false},
-  mercredi:{midi:'',soir:'',collapsed:false},
-  jeudi:{midi:'',soir:'',collapsed:false},
-  vendredi:{midi:'',soir:'',collapsed:false},
-  samedi:{midi:'',soir:'',collapsed:false},
-  dimanche:{midi:'',soir:'',collapsed:false}
-};
+ const collapsedState = {};
 
-  save();
-  render();
+ Object.keys(db.weeklyMenu).forEach(day => {
+   collapsedState[day] =
+     db.weeklyMenu[day].collapsed;
+ });
+
+ db.weeklyMenu = {
+   lundi:{
+     midi:'',
+     soir:'',
+     collapsed:collapsedState.lundi
+   },
+   mardi:{
+     midi:'',
+     soir:'',
+     collapsed:collapsedState.mardi
+   },
+   mercredi:{
+     midi:'',
+     soir:'',
+     collapsed:collapsedState.mercredi
+   },
+   jeudi:{
+     midi:'',
+     soir:'',
+     collapsed:collapsedState.jeudi
+   },
+   vendredi:{
+     midi:'',
+     soir:'',
+     collapsed:collapsedState.vendredi
+   },
+   samedi:{
+     midi:'',
+     soir:'',
+     collapsed:collapsedState.samedi
+   },
+   dimanche:{
+     midi:'',
+     soir:'',
+     collapsed:collapsedState.dimanche
+   }
+ };
+
+ save();
+ render();
 
 }
 
@@ -1970,7 +2005,10 @@ if(
 
 if(
  !db.showBudgetView &&
- !db.waitingForAmount
+ (
+   !db.waitingForAmount ||
+   db.showMenuView
+ )
 ){
 
  contextActions.style.display =
