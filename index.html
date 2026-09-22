@@ -2212,137 +2212,137 @@ Object.values(
   ${
    days.map(day => {
 
-    const label =
-     day.charAt(0).toUpperCase()
-     +
-     day.slice(1);
+  const label =
+    day.charAt(0).toUpperCase() +
+    day.slice(1);
 
-    return `
-<div class="menu-day">
+  return `
+    <div class="menu-day">
 
-<div
- class="menu-title"
- onclick="toggleMenuDay('${day}')"
- style="cursor:pointer"
->
+      <div
+        class="menu-title"
+        onclick="toggleMenuDay('${day}')"
+        style="cursor:pointer"
+      >
+        <span>
+          ${
+            db.weeklyMenu[day].collapsed
+              ? '▶'
+              : '▼'
+          }
+        </span>
 
- <span>
-  ${
-   db.weeklyMenu[day].collapsed
-   ? '▶'
-   : '▼'
-  }
- </span>
+        <span>
+          📅 ${label}
+        </span>
 
- <span>
-  📅 ${label}
- </span>
+        <span
+          style="
+            margin-left:auto;
+            font-size:0.9rem;
+          "
+        >
+          ${
+            db.weeklyMenu[day].midi &&
+            db.weeklyMenu[day].soir
+              ? '✅'
+              : '⏳'
+          }
+        </span>
 
- <span style="
-   margin-left:auto;
-   font-size:0.9rem;
- ">
-   ${
-    db.weeklyMenu[day].midi &&
-    db.weeklyMenu[day].soir
-    ? '✅'
-    : '⏳'
-   }
- </span>
+      </div>
 
-</div>
-
-${
- !db.weeklyMenu[day].collapsed
- ? `
-
- <div class="menu-slot">
-
-  <div class="meta">
-   ☀️ Midi
-  </div>
-
-  <select
-   class="menu-select"
-   onchange="
-    db.weeklyMenu['${day}'].midi=this.value;
-    save();
-    render();
-   "
-  >
-
-   <option value="">
-    Aucun repas
-   </option>
-
-   ${
-    db.meals.map(meal => `
-     <option
-      value="${meal.name}"
       ${
-       db.weeklyMenu[day].midi===meal.name
-       ? 'selected'
-       : ''
+        !db.weeklyMenu[day].collapsed
+        ? `
+
+          <div class="menu-slot">
+
+            <div class="meta">
+              ☀️ Midi
+            </div>
+
+            <select
+              class="menu-select"
+              onchange="
+                db.weeklyMenu['${day}'].midi=this.value;
+                save();
+                render();
+              "
+            >
+
+              <option value="">
+                Aucun repas
+              </option>
+
+              ${
+                db.meals.map(meal => `
+                  <option
+                    value="${meal.name}"
+                    ${
+                      db.weeklyMenu[day].midi === meal.name
+                        ? 'selected'
+                        : ''
+                    }
+                  >
+                    ${meal.name}
+                  </option>
+                `).join('')
+              }
+
+            </select>
+
+          </div>
+
+          <div class="menu-slot">
+
+            <div
+              class="meta"
+              style="margin-top:12px"
+            >
+              🌙 Soir
+            </div>
+
+            <select
+              class="menu-select"
+              onchange="
+                db.weeklyMenu['${day}'].soir=this.value;
+                save();
+                render();
+              "
+            >
+
+              <option value="">
+                Aucun repas
+              </option>
+
+              ${
+                db.meals.map(meal => `
+                  <option
+                    value="${meal.name}"
+                    ${
+                      db.weeklyMenu[day].soir === meal.name
+                        ? 'selected'
+                        : ''
+                    }
+                  >
+                    ${meal.name}
+                  </option>
+                `).join('')
+              }
+
+            </select>
+
+          </div>
+
+        `
+        : ''
       }
-     >
-      ${meal.name}
-     </option>
-    `).join('')
-   }
 
-  </select>
+    </div>
+  `;
 
- </div>
-
- <div class="menu-slot">
-
-  <div
-   class="meta"
-   style="margin-top:12px"
-  >
-   🌙 Soir
-  </div>
-
-  <select
-   class="menu-select"
-   onchange="
-    db.weeklyMenu['${day}'].soir=this.value;
-    save();
-    render();
-   "
-  >
-
-   <option value="">
-    Aucun repas
-   </option>
-
-   ${
-    db.meals.map(meal => `
-     <option
-      value="${meal.name}"
-      ${
-       db.weeklyMenu[day].soir===meal.name
-       ? 'selected'
-       : ''
-      }
-     >
-      ${meal.name}
-     </option>
-    `).join('')
-   }
-
- </select>
-
- </div>
-
-</div>
-
- `
- : ''
-}
-`;
-
-   }).join('')
+}).join('')
   }
 
  </div>
