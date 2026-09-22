@@ -2399,7 +2399,7 @@ function finishShopping(){
   });
 
   db.showPurchased = false;
-
+db.showFamilyConfig = false;
   db.showBudgetView = true;
 
   db.mode = '';
@@ -2616,6 +2616,12 @@ async function(){
  );
 
 };
+
+function closeFamilyView(){
+ 
+db.showFamilyConfig = false;
+ 
+}
 	
 function render(){
 
@@ -4128,7 +4134,7 @@ Pensée pour simplifier l'organisation familiale au quotidien.`
 	
 catalogBtn.onclick = () => {
 
-	db.showFamilyConfig = false;
+	closeFamilyView();
  db.showBudgetView = false;
 db.showMenuView = false;
 	
@@ -4139,7 +4145,7 @@ db.showMenuView = false;
 };
 
 storeBtn.onclick = () => {
-db.showFamilyConfig = false;
+closeFamilyView();
  db.showBudgetView = false;
  db.showMenuView = false;
 
@@ -4154,7 +4160,7 @@ menuBtn.onclick = () => {
   if(!db.waitingForAmount){
   db.mode = '';
 }
-db.showFamilyConfig = false;
+closeFamilyView();
   db.showMenuView = true;
   db.showBudgetView = false;
 
@@ -4168,7 +4174,7 @@ budgetBtnHeader.onclick = () => {
   if(!db.waitingForAmount){
     db.mode = '';
   }
-db.showFamilyConfig = false;
+closeFamilyView();
   db.showMenuView = false;
   db.showBudgetView = true;
 
@@ -4179,7 +4185,7 @@ db.showFamilyConfig = false;
 darkBtn.onclick = toggleDark;
 
 familyConfigBtn.onclick = () => {
-
+db.waitingForAmount = false;
   db.showFamilyConfig = true;
 
   if(window.familyId){
