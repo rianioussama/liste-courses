@@ -2509,11 +2509,6 @@ function(){
    "familyName"
   );
 
- const error =
-  document.getElementById(
-   "familyNameError"
-  );
-
  const name =
   input?.value?.trim();
 
@@ -2523,8 +2518,7 @@ function(){
    "input-error"
   );
 
-  error.style.display =
-   "block";
+  input.focus();
 
   return;
  }
@@ -2532,9 +2526,6 @@ function(){
  input.classList.remove(
   "input-error"
  );
-
- error.style.display =
-  "none";
 
  db.pendingName = name;
 
@@ -3019,20 +3010,10 @@ return;
     margin-top:8px;
     margin-bottom:12px;
   "
->
-
-<div
-  id="familyNameError"
-  style="
-    display:none;
-    color:#ef4444;
-    margin-bottom:12px;
-    font-size:.85rem;
-    font-weight:600;
+  oninput="
+    this.classList.remove('input-error');
   "
 >
-  Le prénom est obligatoire
-</div>
 
     <button
       onclick="continueFamilySetup()"
