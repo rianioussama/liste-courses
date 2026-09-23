@@ -1223,7 +1223,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '2.0.1';
+const APP_VERSION = '2.0.2';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -2911,6 +2911,10 @@ if(
 	
 contextActions.innerHTML = '';
 contextActions.style.display = 'none';
+
+if(db.showFamilyConfig){
+  return renderFamilyView();
+}
 	
 const cartCount =
  db.products.filter(
@@ -2945,6 +2949,7 @@ if(
 }
 
 if(
+ !db.showFamilyConfig &&
  !db.showBudgetView &&
  (
    !db.waitingForAmount ||
