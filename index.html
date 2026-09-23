@@ -589,6 +589,120 @@ body.dark .menu-select{
   transform:scale(.98);
 }
 
+header{
+  transition:
+    padding .25s ease,
+    transform .25s ease;
+}
+
+.header-top h1{
+  transition:
+    font-size .25s ease;
+}
+
+.search-container{
+  transition:
+    opacity .2s ease,
+    max-height .25s ease;
+}
+
+.header-scrolled header{
+  padding:10px 16px;
+}
+
+.header-scrolled .header-top{
+  margin-bottom:4px;
+}
+
+.header-scrolled .header-top h1{
+  font-size:1.15rem;
+}
+
+.header-scrolled .header-nav button{
+  min-height:48px;
+}
+
+.header-scrolled .nav-icon{
+  font-size:18px;
+}
+
+.header-scrolled .nav-label{
+  font-size:.65rem;
+}
+
+#toolsWrapper{
+  flex:0 0 60px;
+}
+
+#toolsBtn{
+  min-height:60px;
+  padding:0;
+}
+
+#toolsBtn .nav-label{
+  display:none;
+}
+
+#toolsBtn .nav-icon{
+  font-size:28px;
+}
+
+#familyInfo,
+#membersInfo{
+
+  background:rgba(255,255,255,.22);
+
+  backdrop-filter:blur(8px);
+
+  font-weight:700;
+
+  padding:6px 12px;
+
+  border-radius:999px;
+}
+
+.header-top{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:12px;
+}
+
+@media(max-width:768px){
+
+.header-nav{
+
+  position:fixed;
+
+  bottom:12px;
+  left:12px;
+  right:12px;
+
+  z-index:999;
+
+  background:white;
+
+  border-radius:20px;
+
+  padding:6px;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.18);
+}
+
+.main{
+  padding-bottom:100px;
+}
+
+.nav-label{
+  display:none;
+}
+
+.header-nav button{
+  min-height:50px;
+}
+}
+	
 </style>
       
 </head>
@@ -641,7 +755,9 @@ body.dark .menu-select{
 
 </div>
 
-  <div class="search-container">
+  <div 
+	  id="searchContainer"
+	  class="search-container">
     <input
       id="search"
       placeholder="🔍 Rechercher un produit..."
@@ -673,8 +789,7 @@ body.dark .menu-select{
  <div id="toolsWrapper">
 
   <button id="toolsBtn" title="Outils">
-    <span class="nav-icon">⚙️</span>
-    <span class="nav-label">Outils</span>
+   <span class="nav-icon">⋮</span>
   </button>
 
   <div id="toolsDropdown" class="dropdown">
@@ -1223,7 +1338,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '2.1.1';
+const APP_VERSION = '2.2.0';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -2851,6 +2966,28 @@ db.dark
 ? 'dark'
 : '';
 
+const searchContainer =
+  document.getElementById(
+    'searchContainer'
+  );
+
+searchContainer.style.display =
+(
+  db.mode === 'catalog'
+  ||
+  db.mode === 'store'
+)
+&&
+!db.showMenuView
+&&
+!db.showBudgetView
+&&
+!db.showFamilyConfig
+?
+'block'
+:
+'none';
+	
 const familyInfo =
   document.getElementById(
     'familyInfo'
@@ -4625,6 +4762,31 @@ Object.keys(db.weeklyMenu).forEach(day => {
 
 })();
 
+let lastScrollY = 0;
+
+window.addEventListener(
+  'scroll',
+  () => {
+
+    if(window.scrollY > 80){
+
+      document.body.classList.add(
+        'header-scrolled'
+      );
+
+    }else{
+
+      document.body.classList.remove(
+        'header-scrolled'
+      );
+
+    }
+
+    lastScrollY = window.scrollY;
+
+  }
+);
+	
 </script>
 
 </body>
