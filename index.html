@@ -892,14 +892,6 @@ header{
   z-index:999;
 }
 
-.item-removing{
-
-  pointer-events:none;
-
-  animation:
-    purchasedFade .45s ease forwards;
-
-}
 
 @keyframes purchasedFade{
 
@@ -935,6 +927,18 @@ header{
 
 }
 
+.item-removing{
+
+  pointer-events:none;
+
+  will-change:
+    transform,
+    opacity;
+
+  animation:
+    purchasedFade .45s ease forwards;
+
+}
 	
 </style>
       
@@ -1530,11 +1534,13 @@ Object.keys(db.weeklyMenu).forEach(day => {
 			
 	}
 
-      render();
+      if(!window.isAnimatingPurchase){
+  render();
+}
 
-      console.log(
-        "Synchronisation reçue"
-      );
+console.log(
+  "Synchronisation reçue"
+);
 
     }
   );
@@ -1568,7 +1574,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '3.0.2';
+const APP_VERSION = '3.0.3';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -1576,6 +1582,8 @@ const APP_NOTIFICATION = {
   message: '🎉 Nouveau : gestion collaborative du foyer ! Créez ou rejoignez un foyer familial et partagez vos listes de courses, menus et produits avec tous les membres en temps réel.'
 };
 
+window.isAnimatingPurchase = false;
+	
 const defaults={
 	showPurchased:false,
 showFavoritesView:false,
@@ -1880,7 +1888,7 @@ function getSharedDb(){
 
 function uid(){
 
- return Date.now() + Math.random();
+  return crypto.randomUUID();
 
 }
 
@@ -2692,20 +2700,46 @@ async function togglePurchased(id){
     row
   ){
 
-    row.classList.add(
-      'item-removing'
-    );
+window.isAnimatingPurchase = true;
 
-    await save();
-    await saveShared();
+row.classList.add(
+  'item-removing'
+);
 
-    setTimeout(() => {
+await save();
+await saveShared();
 
-      render();
+setTimeout(() => {
 
-    },450);
+  window.isAnimatingPurchase = false;
 
-    return;
+if(window.sharedDb){
+
+  const uiState = {
+    showFamilyConfig: db.showFamilyConfig,
+    familyStep: db.familyStep,
+    mode: db.mode,
+    showMenuView: db.showMenuView,
+    showBudgetView: db.showBudgetView,
+    waitingForAmount: db.waitingForAmount,
+    pendingName: db.pendingName,
+    categoryState: db.categoryState,
+    showPurchased: db.showPurchased,
+    showFavoritesView: db.showFavoritesView,
+    showSuggestionsView: db.showSuggestionsView
+  };
+
+  db = structuredClone(window.sharedDb);
+
+  Object.assign(db, uiState);
+
+}
+
+render();
+
+},450);
+
+return;
   }
 
   await save();
@@ -3361,7 +3395,10 @@ const showSearch =
 (
   db.mode === 'catalog'
   ||
-  db.mode === 'store'
+  (
+    db.mode === 'store' &&
+    !db.waitingForAmount
+  )
 )
 &&
 !db.showMenuView
@@ -5128,19 +5165,8 @@ Object.keys(db.weeklyMenu).forEach(day => {
   showAppNotification();
 
 })();
-
-document.addEventListener(
-  'pointerdown',
-  () => {
-
-    lastInteraction =
-      Date.now();
-
-  }
-);
 	
 let lastScrollY = 0;
-let lastInteraction = 0;
 
 	window.addEventListener(
   'scroll',
