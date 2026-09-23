@@ -1574,7 +1574,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '3.0.3';
+const APP_VERSION = '3.0.4';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -3381,41 +3381,7 @@ if(window.innerWidth <= 768){
 
 }
 
-const searchCard =
-  document.getElementById(
-    'searchCard'
-  );
 
-const searchWrapper =
-  document.getElementById(
-    'searchStickyWrapper'
-  );
-
-const showSearch =
-(
-  db.mode === 'catalog'
-  ||
-  (
-    db.mode === 'store' &&
-    !db.waitingForAmount
-  )
-)
-&&
-!db.showMenuView
-&&
-!db.showBudgetView
-&&
-!db.showFamilyConfig;
-
-searchCard.style.display =
-  showSearch
-    ? 'block'
-    : 'none';
-
-searchWrapper.style.display =
-  showSearch
-    ? 'block'
-    : 'none';
 	
 const familyInfo =
   document.getElementById(
@@ -3510,6 +3476,45 @@ if(
   save();
 }
 
+const searchCard =
+  document.getElementById(
+    'searchCard'
+  );
+
+const searchWrapper =
+  document.getElementById(
+    'searchStickyWrapper'
+  );
+
+if(
+  db.waitingForAmount
+  &&
+  !db.showBudgetView
+  &&
+  !db.showFamilyConfig
+){
+  db.mode = 'store';
+}
+
+const showSearch =
+  !db.waitingForAmount
+  &&
+  !db.showMenuView
+  &&
+  !db.showBudgetView
+  &&
+  !db.showFamilyConfig;
+
+searchCard.style.display =
+  showSearch
+    ? 'block'
+    : 'none';
+
+searchWrapper.style.display =
+  showSearch
+    ? 'block'
+    : 'none';
+	
 if(
  !db.showFamilyConfig &&
  !db.showBudgetView &&
