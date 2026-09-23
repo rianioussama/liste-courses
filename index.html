@@ -88,7 +88,10 @@ header{
 
     position:sticky;
 
-    top:12px;
+	 top:calc(
+    var(--mobile-header-height)
+    + 8px
+  );
 
     z-index:90;
 
@@ -262,8 +265,31 @@ button{
 }
 
 .done{
- text-decoration:line-through;
- opacity:.5;
+
+  text-decoration:line-through;
+
+  opacity:.6;
+
+  transition:
+    opacity .3s,
+    transform .3s;
+
+}
+
+.item{
+
+  transition:
+    background .25s ease,
+    transform .25s ease;
+
+}
+	
+.item:has(input:checked){
+
+  background:#ecfdf5;
+
+  border-radius:12px;
+
 }
 
 .active{
@@ -887,6 +913,53 @@ body.header-hidden #headerContent{
   }
 
 }
+
+.item-removing{
+
+  pointer-events:none;
+
+  animation:
+    purchasedFade .45s ease forwards;
+
+}
+
+@keyframes purchasedFade{
+
+  0%{
+
+    opacity:1;
+
+    transform:
+      translateX(0)
+      scale(1);
+
+  }
+
+  50%{
+
+    opacity:.8;
+
+    transform:
+      translateX(8px)
+      scale(.98);
+
+  }
+
+  100%{
+
+    opacity:0;
+
+    transform:
+      translateX(24px)
+      scale(.95);
+
+  }
+
+}
+
+:root{
+  --mobile-header-height:70px;
+}
 	
 </style>
       
@@ -1508,7 +1581,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '3.0.0';
+const APP_VERSION = '3.0.1';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -2616,13 +2689,40 @@ async function togglePurchased(id){
     return;
   }
 
-  product.purchased = !product.purchased;
+  const row =
+    document.querySelector(
+      `[data-product-id="${id}"]`
+    );
+
+  product.purchased =
+    !product.purchased;
+
+  if(
+    product.purchased &&
+    !db.showPurchased &&
+    row
+  ){
+
+    row.classList.add(
+      'item-removing'
+    );
+
+    await save();
+    await saveShared();
+
+    setTimeout(() => {
+
+      render();
+
+    },450);
+
+    return;
+  }
 
   await save();
+  await saveShared();
 
-await saveShared();
-
-render();
+  render();
 
 }
 
@@ -5021,9 +5121,20 @@ Object.keys(db.weeklyMenu).forEach(day => {
 
 })();
 
-let lastScrollY = 0;
+document.addEventListener(
+  'pointerdown',
+  () => {
 
-window.addEventListener(
+    lastInteraction =
+      Date.now();
+
+  }
+);
+	
+let lastScrollY = 0;
+let lastInteraction = 0;
+
+	window.addEventListener(
   'scroll',
   () => {
 
@@ -5031,6 +5142,7 @@ window.addEventListener(
       window.scrollY;
 
     // Header compact
+
     if(currentScrollY > 30){
 
       document.body.classList.add(
@@ -5045,7 +5157,8 @@ window.addEventListener(
 
     }
 
-    // Descente => cacher
+    // Scroll vers le bas
+
     if(
       currentScrollY > lastScrollY &&
       currentScrollY > 100
@@ -5055,19 +5168,33 @@ window.addEventListener(
         'header-hidden'
       );
 
+      document.documentElement
+        .style
+        .setProperty(
+          '--mobile-header-height',
+          '0px'
+        );
+
     }
 
-    // Remontée => montrer
+    // Scroll vers le haut
+
     else{
 
-      document.body.classList.remove(
-        'header-hidden'
-      );
+  document.body.classList.remove(
+    'header-hidden'
+  );
 
-    }
+  document.documentElement
+    .style
+    .setProperty(
+      '--mobile-header-height',
+      '70px'
+    );
 
-    lastScrollY =
-      currentScrollY;
+}
+
+    lastScrollY = currentScrollY;
 
   }
 );
