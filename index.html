@@ -73,38 +73,44 @@ header{
 }
 
 .search-card{
-	position:relative;
-  padding:14px;
 
-  margin-bottom:16px;
+  padding:12px;
+
+  margin:0;
+
+  background:var(--card);
 
   backdrop-filter:blur(10px);
+
+  box-shadow:
+    0 6px 18px rgba(0,0,0,.08);
+
+}
+
+#searchStickyWrapper{
+
+  display:none;
 
 }
 
 @media(max-width:768px){
 
-  .search-card{
+  #searchStickyWrapper{
 
     position:sticky;
 
-	 top:calc(
-    var(--mobile-header-height)
-    + 8px
-  );
+    top:0;
 
-    z-index:90;
+    z-index:98;
 
-	margin-bottom:12px;
+    background:var(--bg);
 
-    background:var(--card);
-
-    box-shadow:
-      0 8px 24px rgba(0,0,0,.08);
+    padding:8px 12px;
 
   }
 
 }
+
 	
 #search{
 
@@ -885,34 +891,6 @@ header{
 .header-nav{
   z-index:999;
 }
-	
-body.header-hidden #headerContent{
-
-  max-height:0;
-
-  opacity:0;
-
-  transform:translateY(-20px);
-
-  pointer-events:none;
-
-}
-
-@media(max-width:768px){
-
-  body.header-hidden #headerContent{
-
-    max-height:0;
-
-    opacity:0;
-
-    transform:translateY(-20px);
-
-    pointer-events:none;
-
-  }
-
-}
 
 .item-removing{
 
@@ -957,9 +935,6 @@ body.header-hidden #headerContent{
 
 }
 
-:root{
-  --mobile-header-height:70px;
-}
 	
 </style>
       
@@ -1058,21 +1033,25 @@ body.header-hidden #headerContent{
 
 </header>
 
-<div class="main">
+<div id="searchStickyWrapper">
 
-<div
-  id="searchCard"
-  class="card search-card"
-  style="display:none"
->
-
-  <input
-    id="search"
-    aria-label="Rechercher un produit"
-    placeholder="🔍 Rechercher un produit..."
+  <div
+    id="searchCard"
+    class="card search-card"
+    style="display:none"
   >
 
+    <input
+      id="search"
+      aria-label="Rechercher un produit"
+      placeholder="🔍 Rechercher un produit..."
+    >
+
+  </div>
+
 </div>
+	
+<div class="main">
 	
 <div
  id="progressCard"
@@ -1511,7 +1490,7 @@ window.sharedDb =
 	  )
 	){
 	
-	  const uiState = {
+	 const uiState = {
   showFamilyConfig: db.showFamilyConfig,
   familyStep: db.familyStep,
   mode: db.mode,
@@ -1519,13 +1498,21 @@ window.sharedDb =
   showBudgetView: db.showBudgetView,
   waitingForAmount: db.waitingForAmount,
   pendingName: db.pendingName,
-categoryState: db.categoryState
+  categoryState: db.categoryState,
+
+  showPurchased: db.showPurchased,
+  showFavoritesView: db.showFavoritesView,
+  showSuggestionsView: db.showSuggestionsView
 };
 
 const categoryState =
   db.categoryState || {};
 
 db = structuredClone(window.sharedDb);
+
+if(!db.weeklyMenu){
+  db.weeklyMenu = structuredClone(defaults.weeklyMenu);
+}
 
 Object.assign(db, uiState);
 
@@ -1581,7 +1568,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '3.0.1';
+const APP_VERSION = '3.0.2';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -1590,12 +1577,14 @@ const APP_NOTIFICATION = {
 };
 
 const defaults={
+	showPurchased:false,
+showFavoritesView:false,
+showSuggestionsView:false,
 pendingFamilyName:'',
 	showFamilyConfig:false,
 familyStep:1,
 pendingName:'',
 	mode:'catalog',
- showPurchased:false,
 waitingForAmount:false,
  dark:false,
  showBudgetView:false,
@@ -3357,13 +3346,18 @@ if(window.innerWidth <= 768){
     'SmartCourses';
 
 }
-	
+
 const searchCard =
   document.getElementById(
     'searchCard'
   );
 
-searchCard.style.display =
+const searchWrapper =
+  document.getElementById(
+    'searchStickyWrapper'
+  );
+
+const showSearch =
 (
   db.mode === 'catalog'
   ||
@@ -3374,11 +3368,17 @@ searchCard.style.display =
 &&
 !db.showBudgetView
 &&
-!db.showFamilyConfig
-?
-'block'
-:
-'none';
+!db.showFamilyConfig;
+
+searchCard.style.display =
+  showSearch
+    ? 'block'
+    : 'none';
+
+searchWrapper.style.display =
+  showSearch
+    ? 'block'
+    : 'none';
 	
 const familyInfo =
   document.getElementById(
@@ -5082,7 +5082,11 @@ if(
   showBudgetView: db.showBudgetView,
   waitingForAmount: db.waitingForAmount,
   pendingName: db.pendingName,
-	categoryState: db.categoryState
+  categoryState: db.categoryState,
+
+  showPurchased: db.showPurchased,
+  showFavoritesView: db.showFavoritesView,
+  showSuggestionsView: db.showSuggestionsView
 };
 
 const categoryState =
@@ -5090,6 +5094,10 @@ const categoryState =
 
 db = structuredClone(window.sharedDb);
 
+if(!db.weeklyMenu){
+  db.weeklyMenu = structuredClone(defaults.weeklyMenu);
+}
+	  
 Object.assign(db, uiState);
 
 db.categoryState = categoryState;
@@ -5168,13 +5176,6 @@ let lastInteraction = 0;
         'header-hidden'
       );
 
-      document.documentElement
-        .style
-        .setProperty(
-          '--mobile-header-height',
-          '0px'
-        );
-
     }
 
     // Scroll vers le haut
@@ -5184,13 +5185,6 @@ let lastInteraction = 0;
   document.body.classList.remove(
     'header-hidden'
   );
-
-  document.documentElement
-    .style
-    .setProperty(
-      '--mobile-header-height',
-      '70px'
-    );
 
 }
 
