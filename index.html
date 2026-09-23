@@ -1160,24 +1160,20 @@ window.sharedDb =
   showMenuView: db.showMenuView,
   showBudgetView: db.showBudgetView,
   waitingForAmount: db.waitingForAmount,
-  pendingName: db.pendingName
+  pendingName: db.pendingName,
+categoryState: db.categoryState
 };
+
+const categoryState =
+  db.categoryState || {};
 
 db = structuredClone(window.sharedDb);
 
 Object.assign(db, uiState);
-			
-	db.categories.forEach(category => {
 
-  if(category.collapsed === undefined){
+db.categoryState = categoryState;
 
-	    category.collapsed = true;
-	
-	  }
-	
-	});
-
-		Object.keys(db.weeklyMenu).forEach(day => {
+Object.keys(db.weeklyMenu).forEach(day => {
 
   if(db.weeklyMenu[day].collapsed === undefined){
 
@@ -1322,6 +1318,10 @@ if(db.showSuggestionsView === undefined){
  db.showSuggestionsView = false;
 }
 
+if(!db.categoryState){
+  db.categoryState = {};
+}
+	
 if(db.pendingFamilyName === undefined){
  db.pendingFamilyName = '';
 }
@@ -1415,12 +1415,6 @@ db.categories.forEach(category=>{
  if(category.order===undefined){
 
   category.order=0;
-
- }
-
- if(category.collapsed===undefined){
-
-  category.collapsed=true;
 
  }
 
@@ -1855,8 +1849,7 @@ function importTxtCatalog(text){
     category = {
       id: uid(),
       name: categoryName,
-      order: db.categories.length + 1,
-      collapsed: false
+      order: db.categories.length + 1
     };
 
     db.categories.push(category);
@@ -1905,19 +1898,12 @@ function importTxtCatalog(text){
 
 function toggleCategory(id){
 
- const category=
-  getCategoryById(id);
+  db.categoryState[id] =
+    !(db.categoryState[id] ?? true);
 
- if(!category){
-  return;
- }
+  save();
 
- category.collapsed=
-  !category.collapsed;
-
- save();
-
- render();
+  render();
 
 }
 
@@ -2268,9 +2254,10 @@ function closeToolsMenu(){
 }
 
 function collapseAll(){
-  db.categories.forEach(
-    c => c.collapsed = true
-  );
+
+  db.categories.forEach(c => {
+    db.categoryState[c.id] = true;
+  });
 
   save();
   closeToolsMenu();
@@ -2278,9 +2265,10 @@ function collapseAll(){
 }
 
 function expandAll(){
-  db.categories.forEach(
-    c => c.collapsed = false
-  );
+
+  db.categories.forEach(c => {
+    db.categoryState[c.id] = false;
+  });
 
   save();
   closeToolsMenu();
@@ -4136,6 +4124,9 @@ sortCategories();
 
 for(const cat of db.categories){
 
+const isCollapsed =
+  db.categoryState[cat.id] ?? true;
+	
 let items=
 
  db.products.filter(p=>{
@@ -4200,7 +4191,7 @@ let html =
   '<div class="card category-card" data-id="'+cat.id+'">' +
   '<div class="row category-header" onclick="toggleCategory('+cat.id+')">' +
   '<span class="category-arrow ' +
-  (cat.collapsed ? '' : 'open') +
+  (isCollapsed ? '' : 'open') +
   '">❯</span>' +
   '<h3>' +
 	'<span class="category-title">' +
@@ -4255,7 +4246,7 @@ items.sort((a,b)=>{
   );
 
 });
-if(!cat.collapsed){
+if(!isCollapsed){
 for(const p of items){
 
 const badgeSuggest =
@@ -4585,20 +4576,18 @@ if(
   showMenuView: db.showMenuView,
   showBudgetView: db.showBudgetView,
   waitingForAmount: db.waitingForAmount,
-  pendingName: db.pendingName
+  pendingName: db.pendingName,
+	categoryState: db.categoryState
 };
+
+const categoryState =
+  db.categoryState || {};
 
 db = structuredClone(window.sharedDb);
 
 Object.assign(db, uiState);
 
-	  db.categories.forEach(category => {
-
-  if(category.collapsed === undefined){
-    category.collapsed = true;
-  }
-
-});
+db.categoryState = categoryState;
 
 Object.keys(db.weeklyMenu).forEach(day => {
 
