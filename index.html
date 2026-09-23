@@ -96,28 +96,33 @@ header{
 
 .context-actions{
 
-  display:none;
+  position:fixed;
 
-  justify-content:center;
-
-  gap:10px;
-
-  margin-top:10px;
+  right:16px;
+  bottom:110px;
+	
+  z-index:998;
 
 }
 
 .context-actions button{
 
-  width:44px;
-  height:44px;
+  width:54px;
+  height:54px;
 
   border-radius:50%;
 
-  background:white;
+  background:#4f46e5;
 
-  font-size:18px;
+  color:white;
 
-  font-weight:bold;
+  border:none;
+
+  font-size:22px;
+
+  box-shadow:
+    0 8px 24px rgba(79,70,229,.35);
+
 }
 
 .header-nav > button,
@@ -268,6 +273,7 @@ button{
 }
 
 .dropdown{
+
   display:none;
 
   position:absolute;
@@ -287,8 +293,32 @@ button{
   min-width:240px;
 
   z-index:9999;
+
+  opacity:0;
+
+  transform:translateY(10px);
+
+  transition:
+    opacity .18s ease,
+    transform .18s ease;
+
+  pointer-events:none;
+
 }
 
+#quickActionsMenu{
+
+  position:fixed;
+
+  right:16px;
+  bottom:145px;
+
+  top:auto;
+
+  z-index:9999;
+
+}
+	
 .dropdown button{
   display:block;
   width:100%;
@@ -301,10 +331,15 @@ button{
 }
 
 .dropdown.show{
+
   display:block;
+
+  opacity:1;
+
+  transform:translateY(0);
+
+  pointer-events:auto;
 }
-
-
 
 .product-row{
   display:flex;
@@ -344,7 +379,7 @@ button{
 }
 
 .product-name{
- font-size:1.15rem;
+ font-size:1rem;
  font-weight:600;
 }
 
@@ -494,6 +529,14 @@ button{
 
 @media(max-width:768px){
 
+  .main{
+    padding-bottom:140px;
+  }
+
+}
+	
+@media(max-width:768px){
+
   .category-header h3{
     display:flex;
     flex-direction:column;
@@ -566,11 +609,6 @@ body.dark .menu-select{
  border-color:#4b5563;
 }
 
-#toolsWrapper{
-  position:relative;
-  flex:1;
-}
-
 .back-link{
   margin-top:12px;
   text-align:center;
@@ -606,31 +644,32 @@ header{
     max-height .25s ease;
 }
 
-.header-scrolled header{
+body.header-scrolled header{
   padding:10px 16px;
 }
 
-.header-scrolled .header-top{
+body.header-scrolled .header-top{
   margin-bottom:4px;
 }
 
-.header-scrolled .header-top h1{
+body.header-scrolled .header-top h1{
   font-size:1.15rem;
 }
 
-.header-scrolled .header-nav button{
+body.header-scrolled .header-nav button{
   min-height:48px;
 }
 
-.header-scrolled .nav-icon{
+body.header-scrolled .nav-icon{
   font-size:18px;
 }
 
-.header-scrolled .nav-label{
+body.header-scrolled .nav-label{
   font-size:.65rem;
 }
 
 #toolsWrapper{
+  position:relative;
   flex:0 0 60px;
 }
 
@@ -670,6 +709,17 @@ header{
 
 @media(max-width:768px){
 
+  #quickActionsMenu{
+
+    right:16px;
+    bottom:155px;
+
+  }
+
+}
+	
+@media(max-width:768px){
+
 .header-nav{
 
   position:fixed;
@@ -702,6 +752,66 @@ header{
   min-height:50px;
 }
 }
+
+@media(max-width:768px){
+
+  .dropdown{
+
+    bottom:70px;
+    top:auto;
+
+    right:0;
+
+    max-height:70vh;
+    overflow:auto;
+
+  }
+
+}
+
+#headerInfos{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:6px;
+}
+
+@media(max-width:768px){
+
+  #headerInfos{
+    flex-wrap:nowrap;
+    overflow-x:auto;
+  }
+
+  #familyInfo,
+  #membersInfo{
+    flex-shrink:0;
+  }
+
+}
+
+@media(max-width:768px){
+
+  .header-top{
+    display:block;
+  }
+
+  #headerInfos{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:nowrap;
+    margin-top:8px;
+    overflow-x:auto;
+  }
+
+  #familyInfo,
+  #membersInfo{
+    flex-shrink:0;
+  }
+
+}
 	
 </style>
       
@@ -714,16 +824,7 @@ header{
 
   <h1>SmartCourses</h1>
 
-  <div
- id="headerInfos"
- style="
-   display:flex;
-   align-items:center;
-   gap:8px;
-   flex-wrap:wrap;
-   margin-top:6px;
- "
->
+<div id="headerInfos">
 
  <div
   id="familyInfo"
@@ -789,7 +890,8 @@ header{
  <div id="toolsWrapper">
 
   <button id="toolsBtn" title="Outils">
-   <span class="nav-icon">⋮</span>
+   <span class="nav-icon">⚙️</span>
+	<span class="nav-label">Outils</span>
   </button>
 
   <div id="toolsDropdown" class="dropdown">
@@ -825,6 +927,11 @@ header{
 
 <div id="contextActions"
      class="context-actions">
+</div>
+
+<div
+ id="quickActionsMenu"
+ class="dropdown">
 </div>
 
 </header>
@@ -1338,7 +1445,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '2.2.0';
+const APP_VERSION = '2.2.1';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -2889,11 +2996,11 @@ async function(){
 
 };
 
-function closeFamilyView(){
+async function closeFamilyView(){
  
 db.showFamilyConfig = false;
 
-save();
+await save();
 	
 }
 
@@ -2953,6 +3060,87 @@ async function(){
  render();
 
 };
+
+function toggleQuickActions(){
+
+document
+  .getElementById(
+    'toolsDropdown'
+  )
+  .classList.remove('show');
+	
+ const menu =
+  document.getElementById(
+    'quickActionsMenu'
+  );
+
+ if(menu.classList.contains('show')){
+
+   menu.classList.remove('show');
+   return;
+
+ }
+
+ if(window.quickActionContext === 'menu'){
+
+   menu.innerHTML = `
+
+   <button onclick="
+     resetWeeklyMenu();
+     toggleQuickActions();
+   ">
+     ↺ Réinitialiser le menu
+   </button>
+
+   <button onclick="
+     collapseAllMenuDays();
+     toggleQuickActions();
+   ">
+     ➖ Tout replier
+   </button>
+
+   <button onclick="
+     expandAllMenuDays();
+     toggleQuickActions();
+   ">
+     ➕ Tout déplier
+   </button>
+
+   `;
+
+ }else{
+
+   menu.innerHTML = `
+
+   <button onclick="
+     resetSelection();
+     toggleQuickActions();
+   ">
+     ↺ Réinitialiser
+   </button>
+
+   <button onclick="
+     collapseAll();
+     toggleQuickActions();
+   ">
+     ➖ Tout replier
+   </button>
+
+   <button onclick="
+     expandAll();
+     toggleQuickActions();
+   ">
+     ➕ Tout déplier
+   </button>
+
+   `;
+
+ }
+
+ menu.classList.add('show');
+
+}
+
 	
 function render(){
 
@@ -3093,57 +3281,22 @@ if(
  contextActions.style.display =
   'flex';
 
-if(db.showMenuView){
+const isMenuView =
+  db.showMenuView;
 
-  contextActions.innerHTML = `
-  <button
-   onclick="resetWeeklyMenu()"
-   title="Réinitialiser menu"
-  >
-   ↺
-  </button>
+contextActions.innerHTML = `
+<button
+ onclick="toggleQuickActions()"
+ title="Actions rapides"
+>
+ ⚡
+</button>
+`;
 
-  <button
-   onclick="collapseAllMenuDays()"
-   title="Tout replier"
-  >
-   ➖
-  </button>
-
-  <button
-   onclick="expandAllMenuDays()"
-   title="Tout déplier"
-  >
-   ➕
-  </button>
-  `;
-
-}else{
-
-  contextActions.innerHTML = `
-  <button
-   onclick="resetSelection()"
-   title="Réinitialiser"
-  >
-   ↺
-  </button>
-
-  <button
-   onclick="collapseAll()"
-   title="Tout plier"
-  >
-   ➖
-  </button>
-
-  <button
-   onclick="expandAll()"
-   title="Tout déplier"
-  >
-   ➕
-  </button>
-  `;
-
-}
+window.quickActionContext =
+  isMenuView
+  ? 'menu'
+  : 'catalog';
 
 }
 	
@@ -4639,16 +4792,36 @@ document.getElementById(
   APP_VERSION;
 	
 toolsBtn.onclick = () => {
-  toolsDropdown.classList.toggle('show');
+
+  document
+    .getElementById(
+      'quickActionsMenu'
+    )
+    .classList.remove('show');
+
+  toolsDropdown.classList.toggle(
+    'show'
+  );
+
 };
+
 
 document.addEventListener('click', e => {
 
-  if (
+  if(
     !e.target.closest('#toolsBtn') &&
     !e.target.closest('#toolsDropdown')
   ){
     toolsDropdown.classList.remove('show');
+  }
+
+  if(
+    !e.target.closest('#quickActionsMenu') &&
+    !e.target.closest('.context-actions')
+  ){
+    document
+      .getElementById('quickActionsMenu')
+      .classList.remove('show');
   }
 
 });
@@ -4762,13 +4935,11 @@ Object.keys(db.weeklyMenu).forEach(day => {
 
 })();
 
-let lastScrollY = 0;
-
 window.addEventListener(
   'scroll',
   () => {
 
-    if(window.scrollY > 80){
+    if(window.scrollY > 30){
 
       document.body.classList.add(
         'header-scrolled'
@@ -4781,8 +4952,6 @@ window.addEventListener(
       );
 
     }
-
-    lastScrollY = window.scrollY;
 
   }
 );
