@@ -1467,7 +1467,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '2.2.5';
+const APP_VERSION = '2.2.6';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -3186,27 +3186,27 @@ if(window.innerWidth <= 768){
   if(db.showBudgetView){
 
     headerTitle.textContent =
-      '📊 Budget';
+      'Budget';
 
   }else if(db.showMenuView){
 
     headerTitle.textContent =
-      '🍽️ Menu de la semaine';
+      'Menu de la semaine';
 
   }else if(db.mode === 'store'){
 
     headerTitle.textContent =
-      '🛒 Courses';
+      'Courses';
 
   }else if(db.showFamilyConfig){
 
   headerTitle.textContent =
-    '🏡 Foyer';
+    'Foyer';
 
 }else{
 
   headerTitle.textContent =
-    '📝 Catalogue';
+    'Catalogue';
 
 }
 
