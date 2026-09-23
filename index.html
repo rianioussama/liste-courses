@@ -455,7 +455,7 @@ button{
  color:#4338ca;
  border-radius:999px;
  padding:4px 10px;
- font-size:.8rem;
+ font-size:.75rem;
  font-weight:700;
  margin-left:10px;
 }
@@ -581,7 +581,7 @@ button{
  gap:10px;
  margin-bottom:12px;
  font-weight:700;
- font-size:1.1rem;
+ font-size:1rem;
  color:#4338ca;
 }
 
@@ -779,20 +779,6 @@ body.header-scrolled .nav-label{
 
 @media(max-width:768px){
 
-  #headerInfos{
-    flex-wrap:nowrap;
-    overflow-x:auto;
-  }
-
-  #familyInfo,
-  #membersInfo{
-    flex-shrink:0;
-  }
-
-}
-
-@media(max-width:768px){
-
   .header-top{
     display:block;
   }
@@ -812,6 +798,17 @@ body.header-scrolled .nav-label{
   }
 
 }
+
+header{
+  transition:
+    transform .25s ease,
+    padding .25s ease;
+}
+
+body.header-hidden header{
+  transform:translateY(-120%);
+}
+
 	
 </style>
       
@@ -822,7 +819,7 @@ body.header-scrolled .nav-label{
 <header>
 <div class="header-top">
 
-  <h1>SmartCourses</h1>
+<h1 id="headerTitle">SmartCourses</h1>
 
 <div id="headerInfos">
 
@@ -855,15 +852,6 @@ body.header-scrolled .nav-label{
 </div>
 
 </div>
-
-  <div 
-	  id="searchContainer"
-	  class="search-container">
-    <input
-      id="search"
-      placeholder="🔍 Rechercher un produit..."
-    >
-  </div>
 
 <div class="header-nav">
 
@@ -924,6 +912,15 @@ body.header-scrolled .nav-label{
 
 </div>
 	</div>
+
+<div 
+	  id="searchContainer"
+	  class="search-container">
+    <input
+      id="search"
+      placeholder="🔍 Rechercher un produit..."
+    >
+  </div>
 
 <div id="contextActions"
      class="context-actions">
@@ -1445,7 +1442,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '2.2.1';
+const APP_VERSION = '2.2.2';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -3154,6 +3151,47 @@ db.dark
 ? 'dark'
 : '';
 
+const headerTitle =
+  document.getElementById(
+    'headerTitle'
+  );
+
+if(window.innerWidth <= 768){
+
+  if(db.showBudgetView){
+
+    headerTitle.textContent =
+      '📊 Budget';
+
+  }else if(db.showMenuView){
+
+    headerTitle.textContent =
+      '🍽️ Menu de la semaine';
+
+  }else if(db.mode === 'store'){
+
+    headerTitle.textContent =
+      '🛒 Courses';
+
+  }else if(db.showFamilyConfig){
+
+  headerTitle.textContent =
+    '🏡 Foyer';
+
+}else{
+
+  headerTitle.textContent =
+    '📝 Catalogue';
+
+}
+
+}else{
+
+  headerTitle.textContent =
+    'SmartCourses';
+
+}
+	
 const searchContainer =
   document.getElementById(
     'searchContainer'
@@ -4931,11 +4969,17 @@ Object.keys(db.weeklyMenu).forEach(day => {
 
 })();
 
+let lastScrollY = 0;
+
 window.addEventListener(
   'scroll',
   () => {
 
-    if(window.scrollY > 30){
+    const currentScrollY =
+      window.scrollY;
+
+    // Header compact
+    if(currentScrollY > 30){
 
       document.body.classList.add(
         'header-scrolled'
@@ -4948,6 +4992,30 @@ window.addEventListener(
       );
 
     }
+
+    // Descente => cacher
+    if(
+      currentScrollY > lastScrollY &&
+      currentScrollY > 100
+    ){
+
+      document.body.classList.add(
+        'header-hidden'
+      );
+
+    }
+
+    // Remontée => montrer
+    else{
+
+      document.body.classList.remove(
+        'header-hidden'
+      );
+
+    }
+
+    lastScrollY =
+      currentScrollY;
 
   }
 );
