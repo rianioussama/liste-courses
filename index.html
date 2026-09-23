@@ -644,8 +644,8 @@ header{
     max-height .25s ease;
 }
 
-body.header-scrolled header{
-  padding:10px 16px;
+body.header-scrolled #headerContent{
+  padding-bottom:0;
 }
 
 body.header-scrolled .header-top{
@@ -806,10 +806,15 @@ header{
 }
 
 #headerContent{
-transform-origin:top;
+
+  overflow:hidden;
+
+  max-height:200px;
+
   transition:
-    transform .25s ease,
-    opacity .25s ease;
+    max-height .25s ease,
+    opacity .25s ease,
+    transform .25s ease;
 
 }
 
@@ -819,11 +824,29 @@ transform-origin:top;
 	
 body.header-hidden #headerContent{
 
-  transform:translateY(-120%);
+  max-height:0;
 
   opacity:0;
 
+  transform:translateY(-20px);
+
   pointer-events:none;
+
+}
+
+@media(max-width:768px){
+
+  body.header-hidden #headerContent{
+
+    max-height:0;
+
+    opacity:0;
+
+    transform:translateY(-20px);
+
+    pointer-events:none;
+
+  }
 
 }
 	
