@@ -805,10 +805,27 @@ header{
     padding .25s ease;
 }
 
-body.header-hidden header{
-  transform:translateY(-120%);
+#headerContent{
+transform-origin:top;
+  transition:
+    transform .25s ease,
+    opacity .25s ease;
+
 }
 
+.header-nav{
+  z-index:999;
+}
+	
+body.header-hidden #headerContent{
+
+  transform:translateY(-120%);
+
+  opacity:0;
+
+  pointer-events:none;
+
+}
 	
 </style>
       
@@ -817,39 +834,33 @@ body.header-hidden header{
 <body>
 
 <header>
-<div class="header-top">
 
-<h1 id="headerTitle">SmartCourses</h1>
+<div id="headerContent">
 
-<div id="headerInfos">
+  <div class="header-top">
 
- <div
-  id="familyInfo"
-  style="
-    display:none;
-    background:rgba(255,255,255,.18);
-    padding:4px 10px;
-    border-radius:999px;
-    color:white;
-    font-size:.75rem;
-    font-weight:600;
-  "
-></div>
+    <h1 id="headerTitle">SmartCourses</h1>
 
- <div
-  id="membersInfo"
-  style="
-    display:none;
-    background:rgba(255,255,255,.18);
-    padding:4px 10px;
-    border-radius:999px;
-    color:white;
-    font-size:.75rem;
-    font-weight:600;
-  "
-></div>
+    <div id="headerInfos">
 
-</div>
+      <div id="familyInfo"></div>
+
+      <div id="membersInfo"></div>
+
+    </div>
+
+  </div>
+
+  <div
+    id="searchContainer"
+    class="search-container">
+
+    <input
+      id="search"
+      placeholder="🔍 Rechercher un produit..."
+    >
+
+  </div>
 
 </div>
 
@@ -912,15 +923,6 @@ body.header-hidden header{
 
 </div>
 	</div>
-
-<div 
-	  id="searchContainer"
-	  class="search-container">
-    <input
-      id="search"
-      placeholder="🔍 Rechercher un produit..."
-    >
-  </div>
 
 <div id="contextActions"
      class="context-actions">
@@ -1442,7 +1444,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '2.2.2';
+const APP_VERSION = '2.2.3';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
