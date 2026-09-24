@@ -1790,7 +1790,7 @@ async function(data){
 
 const splashStartedAt = Date.now();
 	
-const APP_VERSION = '3.2.1';
+const APP_VERSION = '3.2.2';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -3193,55 +3193,68 @@ render();
 
 }
 
-function resetWeeklyMenu(){
+async function resetWeeklyMenu(){
 
- const collapsedState = {};
+  const collapsedState = {};
 
- Object.keys(db.weeklyMenu).forEach(day => {
-   collapsedState[day] =
-     db.weeklyMenu[day].collapsed;
- });
+  Object.keys(db.weeklyMenu).forEach(day => {
 
- db.weeklyMenu = {
-   lundi:{
-     midi:'',
-     soir:'',
-     collapsed:collapsedState.lundi
-   },
-   mardi:{
-     midi:'',
-     soir:'',
-     collapsed:collapsedState.mardi
-   },
-   mercredi:{
-     midi:'',
-     soir:'',
-     collapsed:collapsedState.mercredi
-   },
-   jeudi:{
-     midi:'',
-     soir:'',
-     collapsed:collapsedState.jeudi
-   },
-   vendredi:{
-     midi:'',
-     soir:'',
-     collapsed:collapsedState.vendredi
-   },
-   samedi:{
-     midi:'',
-     soir:'',
-     collapsed:collapsedState.samedi
-   },
-   dimanche:{
-     midi:'',
-     soir:'',
-     collapsed:collapsedState.dimanche
-   }
- };
+    collapsedState[day] =
+      db.weeklyMenu[day].collapsed;
 
- save();
- render();
+  });
+
+  db.weeklyMenu = {
+
+    lundi:{
+      midi:'',
+      soir:'',
+      collapsed:collapsedState.lundi
+    },
+
+    mardi:{
+      midi:'',
+      soir:'',
+      collapsed:collapsedState.mardi
+    },
+
+    mercredi:{
+      midi:'',
+      soir:'',
+      collapsed:collapsedState.mercredi
+    },
+
+    jeudi:{
+      midi:'',
+      soir:'',
+      collapsed:collapsedState.jeudi
+    },
+
+    vendredi:{
+      midi:'',
+      soir:'',
+      collapsed:collapsedState.vendredi
+    },
+
+    samedi:{
+      midi:'',
+      soir:'',
+      collapsed:collapsedState.samedi
+    },
+
+    dimanche:{
+      midi:'',
+      soir:'',
+      collapsed:collapsedState.dimanche
+    }
+
+  };
+
+  await save();
+
+  await saveShared();
+
+  render();
 
 }
 
