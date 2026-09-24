@@ -1788,7 +1788,9 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '3.2.0';
+const splashStartedAt = Date.now();
+	
+const APP_VERSION = '3.2.1';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -5296,13 +5298,26 @@ function hideSplashScreen(){
     return;
   }
 
-  splash.classList.add(
-    'splash-hidden'
-  );
+  const elapsed =
+    Date.now() - splashStartedAt;
+
+  const remaining =
+    Math.max(
+      0,
+      2000 - elapsed
+    );
 
   setTimeout(() => {
-    splash.remove();
-  }, 550);
+
+    splash.classList.add(
+      'splash-hidden'
+    );
+
+    setTimeout(() => {
+      splash.remove();
+    }, 550);
+
+  }, remaining);
 
 }
 	
