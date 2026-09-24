@@ -6,8 +6,6 @@
   name="viewport"
   content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width,initial-scale=1">
 
 <link rel="manifest" href="manifest.json">
 
@@ -1580,7 +1578,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '3.1.2';
+const APP_VERSION = '3.1.3';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -4728,7 +4726,7 @@ if(items.length===0){
 }
 let html =
   '<div class="card category-card" data-id="'+cat.id+'">' +
-  '<div class="row category-header" onclick="toggleCategory('+cat.id+')">' +
+  '<div class="row category-header" onclick="toggleCategory('${cat.id}')">' +
   '<span class="category-arrow ' +
   (isCollapsed ? '' : 'open') +
   '">❯</span>' +
@@ -4799,7 +4797,7 @@ if(db.mode==='catalog'){
 html +=
 '<div class="product-row">'+
 
-'<button class="favorite-btn '+(p.favorite ? 'favorite-active' : '')+'" onclick="toggleFavorite('+p.id+')">'+
+'<button class="favorite-btn '+(p.favorite ? 'favorite-active' : '')+'" onclick="toggleFavorite('${p.id}')">'+
 (p.favorite ? '⭐' : '☆')+
 '</button>'+
 
@@ -4824,15 +4822,15 @@ p.lastPurchase
 
 (
 p.inList
-? '<button onclick="toggleList('+p.id+')">✅</button>'
-: '<button onclick="addToList('+p.id+')">🛒</button>'
+? '<button onclick="toggleList('${p.id}')">✅</button>'
+: '<button onclick="addToList('${p.id}')">🛒</button>'
 )+
 
 (
 p.inList
-? '<button class="qty-btn" onclick="decreaseQuantity('+p.id+')">−</button>'+
+? '<button class="qty-btn" onclick="decreaseQuantity('${p.id}')">−</button>'+
 '<strong>'+getListQuantity(p)+'</strong>'+
-'<button class="qty-btn" onclick="increaseQuantity('+p.id+')">+</button>'
+'<button class="qty-btn" onclick="increaseQuantity('${p.id}')">+</button>'
 : ''
 )+
 
@@ -4853,7 +4851,7 @@ if(db.mode==='store'){
    : ''
   )+
 
-  ' onchange="togglePurchased('+p.id+')">' +
+  ' onchange="togglePurchased('${p.id}')">' +
 
   '<span class="'+
 
