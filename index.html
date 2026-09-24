@@ -943,12 +943,219 @@ header{
 *{
   -webkit-tap-highlight-color: transparent;
 }
+
+/* =========================
+   ÉCRAN DE DÉMARRAGE
+========================= */
+
+#splashScreen{
+
+  position:fixed;
+  inset:0;
+
+  z-index:99999;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #4f46e5,
+      #6366f1
+    );
+
+  opacity:1;
+  visibility:visible;
+
+  transition:
+    opacity .5s ease,
+    visibility .5s ease;
+
+}
+
+#splashScreen.splash-hidden{
+
+  opacity:0;
+  visibility:hidden;
+
+  pointer-events:none;
+
+}
+
+.splash-content{
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+
+  padding:30px;
+
+  text-align:center;
+
+  color:white;
+
+}
+
+.splash-logo-wrapper{
+
+  width:120px;
+  height:120px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  margin-bottom:22px;
+
+  border-radius:30px;
+
+  background:
+    rgba(255,255,255,.15);
+
+  box-shadow:
+    0 20px 50px
+    rgba(0,0,0,.18);
+
+  backdrop-filter:blur(10px);
+
+  animation:
+    splashPulse
+    1.8s
+    ease-in-out
+    infinite;
+
+}
+
+.splash-logo{
+
+  width:94px;
+  height:94px;
+
+  object-fit:contain;
+
+}
+
+.splash-title{
+
+  font-size:2rem;
+  font-weight:800;
+  letter-spacing:-.5px;
+
+}
+
+.splash-subtitle{
+
+  margin-top:7px;
+
+  font-size:.9rem;
+
+  opacity:.8;
+
+}
+
+.splash-loader{
+
+  width:150px;
+  height:4px;
+
+  margin-top:30px;
+
+  overflow:hidden;
+
+  border-radius:999px;
+
+  background:
+    rgba(255,255,255,.2);
+
+}
+
+.splash-loader-bar{
+
+  width:45%;
+  height:100%;
+
+  border-radius:999px;
+
+  background:white;
+
+  animation:
+    splashLoading
+    1.2s
+    ease-in-out
+    infinite;
+
+}
+
+@keyframes splashPulse{
+
+  0%,
+  100%{
+
+    transform:scale(1);
+
+  }
+
+  50%{
+
+    transform:scale(1.06);
+
+  }
+
+}
+
+@keyframes splashLoading{
+
+  0%{
+
+    transform:
+      translateX(-150%);
+
+  }
+
+  100%{
+
+    transform:
+      translateX(350%);
+
+  }
+
+}
 	
 </style>
       
 </head>
 
 <body>
+
+<div id="splashScreen">
+
+  <div class="splash-content">
+
+    <div class="splash-logo-wrapper">
+      <img
+        src="icon-192.png"
+        class="splash-logo"
+        alt="SmartCourses"
+      >
+    </div>
+
+    <div class="splash-title">
+      SmartCourses
+    </div>
+
+    <div class="splash-subtitle">
+      Vos courses, vos menus, simplement.
+    </div>
+
+    <div class="splash-loader">
+      <div class="splash-loader-bar"></div>
+    </div>
+
+  </div>
+
+</div>
 
 <header>
 
@@ -1185,6 +1392,9 @@ console.log(
     "Erreur Firebase :",
     error
   );
+
+  window.firebaseReady = true;
+  window.firebaseError = true;
 
 }
 
@@ -1578,7 +1788,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '3.1.6';
+const APP_VERSION = '3.2.0';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -5075,6 +5285,27 @@ if(
 
 }
 
+function hideSplashScreen(){
+
+  const splash =
+    document.getElementById(
+      'splashScreen'
+    );
+
+  if(!splash){
+    return;
+  }
+
+  splash.classList.add(
+    'splash-hidden'
+  );
+
+  setTimeout(() => {
+    splash.remove();
+  }, 550);
+
+}
+	
 (async () => {
 
   await loadMeals();
@@ -5175,7 +5406,9 @@ Object.keys(db.weeklyMenu).forEach(day => {
 
 }
 
-  render();
+    render();
+
+  hideSplashScreen();
 
   showAppNotification();
 
