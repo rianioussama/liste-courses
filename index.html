@@ -1578,7 +1578,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '3.1.5';
+const APP_VERSION = '3.1.6';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -4792,86 +4792,92 @@ shouldSuggest(p)
 : '';
 
 
-if(db.mode==='catalog'){
+if(db.mode === 'catalog'){
 
-html +=
-'<div class="product-row">'+
+html += `
+<div class="product-row">
 
-'<button class="favorite-btn '+(p.favorite ? 'favorite-active' : '')+'" onclick="toggleFavorite('${p.id}')">'+
-(p.favorite ? '⭐' : '☆')+
-'</button>'+
+  <button
+    class="favorite-btn ${p.favorite ? 'favorite-active' : ''}"
+    onclick="toggleFavorite('${p.id}')"
+  >
+    ${p.favorite ? '⭐' : '☆'}
+  </button>
 
-'<div class="product-main">'+
+  <div class="product-main">
 
-'<div class="product-name">'+
-p.name+
-badgeSuggest+
-'</div>'+
+    <div class="product-name">
+      ${p.name}
+      ${badgeSuggest}
+    </div>
 
-'<div class="product-meta">'+
-(
-p.lastPurchase
-? '🕒 '+daysAgo(p.lastPurchase)
-: 'Jamais acheté'
-)+
-'</div>'+
+    <div class="product-meta">
+      ${
+        p.lastPurchase
+          ? '🕒 ' + daysAgo(p.lastPurchase)
+          : 'Jamais acheté'
+      }
+    </div>
 
-'</div>'+
+  </div>
 
-'<div class="product-actions">'+
+  <div class="product-actions">
 
-(
-p.inList
-? '<button onclick="toggleList('${p.id}')">✅</button>'
-: '<button onclick="addToList('${p.id}')">🛒</button>'
-)+
+    ${
+      p.inList
+        ? `<button onclick="toggleList('${p.id}')">✅</button>`
+        : `<button onclick="addToList('${p.id}')">🛒</button>`
+    }
 
-(
-p.inList
-? '<button class="qty-btn" onclick="decreaseQuantity('${p.id}')">−</button>'+
-'<strong>'+getListQuantity(p)+'</strong>'+
-'<button class="qty-btn" onclick="increaseQuantity('${p.id}')">+</button>'
-: ''
-)+
+    ${
+      p.inList
+        ? `
+          <button
+            class="qty-btn"
+            onclick="decreaseQuantity('${p.id}')"
+          >
+            −
+          </button>
 
-'</div>'+
-'</div>';
+          <strong>${getListQuantity(p)}</strong>
+
+          <button
+            class="qty-btn"
+            onclick="increaseQuantity('${p.id}')"
+          >
+            +
+          </button>
+        `
+        : ''
+    }
+
+  </div>
+
+</div>
+`;
 
 }
-if(db.mode==='store'){
+	
+if(db.mode === 'store'){
 
- html+=
- '<div class="item" data-product-id="'+p.id+'">'+
+html += `
+<div
+  class="item"
+  data-product-id="${p.id}"
+>
 
-  '<input type="checkbox" '+
+  <input
+    type="checkbox"
+    ${p.purchased ? 'checked' : ''}
+    onchange="togglePurchased('${p.id}')"
+  >
 
-  (
-   p.purchased
-   ? 'checked'
-   : ''
-  )+
+  <span class="${p.purchased ? 'done' : ''}">
+    ${p.name} x${getListQuantity(p)}
+  </span>
 
-  ' onchange="togglePurchased('${p.id}')">' +
-
-  '<span class="'+
-
-  (
-   p.purchased
-   ? 'done'
-   : ''
-  )+
-
-  '">' +
-
-  p.name+
-
-  ' x'+
-
-  getListQuantity(p)+
-
-  '</span>'+
-
-  '</div>';
+</div>
+`;
 
 }
 
