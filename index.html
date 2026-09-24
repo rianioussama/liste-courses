@@ -1578,7 +1578,7 @@ async function(data){
 	
 <script>
 
-const APP_VERSION = '3.1.4';
+const APP_VERSION = '3.1.5';
 	
 const APP_NOTIFICATION = {
   version: APP_VERSION,
@@ -4489,7 +4489,7 @@ if(db.mode === 'catalog'){
 		</div>
 
 		<button
-		  onclick="addToList(${p.id})"
+		  onclick="addToList('${p.id}')"
 		>
 		  🛒
 		</button>
@@ -4562,7 +4562,7 @@ if(db.mode === 'catalog'){
 		</div>
 
 		<button
-		  onclick="addToList(${p.id})"
+		  onclick="addToList('${p.id}')"
 		>
 		  🛒
 		</button>
